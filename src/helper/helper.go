@@ -1,20 +1,26 @@
 package helper
 
-type saltDataType []byte
-
-const (
-	//Create set password byte length to 200
-	pwByteLen = 200
+import (
+	"crypto/rand"
 )
 
-/*
- *Generate random data for a given len
- *
- *len: the length of the data
- *
- *
- *return: byte of data
- */
-func generateSalt() saltDataType {
-	return saltDataType(make([]byte, 200))
+//GenerateRandomBytes : random data
+func GenerateRandomBytes(len int) ([]byte, error) {
+	newData := make([]byte, len)
+	_, err := rand.Read(newData)
+	if err != nil {
+		return nil, err
+	}
+
+	return newData, nil
+}
+
+//GetUsername : Get the user useranme
+func GetUsername(email string) {
+
+}
+
+//GetEmail : Get the user email address
+func GetEmail(username string) {
+
 }

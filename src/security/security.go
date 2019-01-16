@@ -9,6 +9,11 @@ func checkAccessToken() {
 
 }
 
+//Check if the token is valid
+func checkRefreshToken() {
+
+}
+
 //Generate refresh toek
 func generateAccessToken() {
 

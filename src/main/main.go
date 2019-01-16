@@ -1,5 +1,5 @@
 package main
 
 func main() {
-	signIn()
+	CreateAccount("t", "g", "g")
 }
