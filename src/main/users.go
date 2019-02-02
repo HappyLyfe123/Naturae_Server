@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+type User struct {
+	Username string
+	Email    string
+	Salt     string
+	Password string
+}
+
 //CreateAccount : User want to create an account
 /*
  * emai: user email address
@@ -15,6 +22,8 @@ import (
 func CreateAccount(email, username, password string) {
 	//Check if email, username, or password is empty
 	if len(strings.TrimSpace(email)) != 0 || len(strings.TrimSpace(username)) != 0 || len(strings.TrimSpace(password)) != 0 {
+
+	} else {
 
 	}
 }

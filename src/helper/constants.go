@@ -6,6 +6,7 @@ const (
 	accepted            = 202
 	cancelled           = 203
 	invalidArugment     = 204
+	denied              = 205
 	found               = 302
 	badRequest          = 400
 	unauthorized        = 402
@@ -81,4 +82,9 @@ func GetBadGatewayStatusCode() int {
 //GetServiceUnavailableStatusCode : Return service unavailable status code
 func GetServiceUnavailableStatusCode() int {
 	return serviceUnavilable
+}
+
+//GetDeniedStatusCode : Return denied status code
+func GetDeniedStatusCode() int {
+	return denied
 }

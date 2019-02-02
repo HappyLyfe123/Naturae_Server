@@ -1,26 +1,42 @@
 package security
 
-func checkAppKey() bool {
+import (
+	"fmt"
+
+	"../helper"
+)
+
+// CheckAppKey : Check if the app key is valid
+/*
+ *
+ *
+ */
+func CheckAppKey() bool {
+	fmt.Println("Work")
 	return true
 }
 
-//Check if the token is valid
-func checkAccessToken() {
-
+// CheckAccessToken : Check is access token is valid
+/*
+ *
+ *
+ */
+func CheckAccessToken() {
+	fmt.Println(helper.GetDeniedStatusCode())
 }
 
 //Check if the token is valid
-func checkRefreshToken() {
+func CheckRefreshToken() {
 
 }
 
 //Generate refresh toek
-func generateAccessToken() {
+func GenerateAccessToken() {
 
 }
 
 //Generate access token
-func generateRefreshToken() {
+func GenerateRefreshToken() {
 
 }
 
@@ -28,6 +44,6 @@ func generateRefreshToken() {
  * Generate an access token and refresh token for user
  *
  */
-func generateToken() {
+func GenerateToken() {
 
 }
