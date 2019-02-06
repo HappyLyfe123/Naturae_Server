@@ -4,8 +4,7 @@ const (
 	ok                  = 200
 	created             = 201
 	accepted            = 202
-	cancelled           = 203
-	invalidArugment     = 204
+	invalidArgument     = 204
 	denied              = 205
 	found               = 302
 	badRequest          = 400
@@ -16,7 +15,11 @@ const (
 	requestTimeout      = 408
 	internalServerError = 500
 	badGateway          = 502
-	serviceUnavilable   = 503
+	serviceUnavailable  = 503
+	gmailSMTPServer     = "smtp.gmail.com:587"
+	gmailSMTPHost       = "smtp.gmail.com"
+	gmailEmailAddress   = "naturae.outdoor@gmail.com"
+	appName             = "Naturae"
 )
 
 //GetOkStatusCode : Return ok status code
@@ -81,7 +84,7 @@ func GetBadGatewayStatusCode() int {
 
 //GetServiceUnavailableStatusCode : Return service unavailable status code
 func GetServiceUnavailableStatusCode() int {
-	return serviceUnavilable
+	return serviceUnavailable
 }
 
 //GetDeniedStatusCode : Return denied status code
@@ -89,8 +92,27 @@ func GetDeniedStatusCode() int {
 	return denied
 }
 
-//GetInvalidArugment : Return invalid arugment
+//GetInvalidArugment : Return invalid argument
 func GetInvalidArugment() int {
-	return invalidArugment
+	return invalidArgument
+}
 
+//GetGmailSMTPServer : Return Gmail SMTP server
+func GetGmailSMTPServer() string {
+	return gmailSMTPServer
+}
+
+//GetGmailSMTPHost : Return Gmail SMTP Host
+func GetGmailSMTPHost() string {
+	return gmailSMTPHost
+}
+
+//GetGmailEmailAdddress : Return Gmail email address
+func GetGmailEmailAdddress() string {
+	return gmailEmailAddress
+}
+
+//GetAppName : Return app name
+func GetAppName() string {
+	return appName
 }

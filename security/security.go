@@ -1,18 +1,21 @@
 package security
 
 import (
+	"Naturae_Server/helpers"
 	"crypto/sha512"
 	"encoding/base64"
 	"fmt"
+	"strings"
 	"time"
-
-	"../helpers"
 )
 
 // CheckAppKey : Check if the app key is valid
-func CheckAppKey() bool {
-	fmt.Println("Work")
-	return true
+func CheckAppKey(appKey string) bool {
+	if strings.Compare(appKey, "") == 0 {
+		return true
+	} else {
+		return false
+	}
 }
 
 // CheckAccessToken : Check is access token is valid
@@ -29,7 +32,6 @@ func CheckRefreshToken() {
 func GenerateAccessToken() (time.Time, time.Time) {
 	startTime := time.Now()
 	endTime := startTime.AddDate(0, 0, 1)
-
 	return startTime, endTime
 }
 
@@ -38,7 +40,7 @@ func GenerateRefreshToken() {
 
 }
 
-//Hash password with salt using sha512
+//HashPassword : Hash password with salt using sha512
 func HashPassword(userPassword, salt string) string {
 	hasher := sha512.New()
 	password := helpers.ConvertStringToByte(salt + userPassword)

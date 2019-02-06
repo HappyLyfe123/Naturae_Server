@@ -1,12 +1,13 @@
 package users
 
 import (
-	sha512 "crypto/sha512"
+	"Naturae_Server/helpers"
+	"Naturae_Server/security"
+	"context"
+	"crypto/sha512"
+	"errors"
 	"strings"
 	"time"
-
-	"../helpers"
-	"../security"
 )
 
 type user struct {
@@ -23,8 +24,14 @@ type token struct {
 	EndTime   time.Time
 }
 
-var saltLength int16 = 200
+var collectionList = map[string]string{
+	"Users":        "Users",
+	"AccessToken":  "Access_Token",
+	"RefreshToken": "Refresh_Token",
+}
 
+var saltLength int16 = 200
+var databaseName string = "Naturae-Server"
 
 //CreateAccount : User want to create an account
 /*
@@ -44,9 +51,11 @@ func CreateAccount(email, username, password string) error {
 		hashPassword := security.HashPassword(password, salt)
 		//Save the user into a struct
 		newUser := user{username, email, salt, hashPassword}
-
+		//Connect to the users collection in the database
+		userCollection := helpers.ConnectToCollection(databaseName, collectionList["Users"])
+		userCollection.InsertOne(context.TODO(), newUser)
 	} else {
-
+		return errors.New("Invalid Argument")
 	}
 
 	return nil
@@ -66,7 +75,7 @@ func SignIn(email string) {
 // ForgotPassword : User forget password and want to reset it
 /*
  *
- * email: user emal
+ * email: user email
  *
  */
 func ForgotPassword(email string) {

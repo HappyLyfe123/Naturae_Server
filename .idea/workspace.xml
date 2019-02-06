@@ -2,15 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdf9c54f-18fc-4e36-a9c4-3800abb51626" name="Default Changelist" comment="Nothing much">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/helpers/helper.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/helpers/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/helper/helper.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/main" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/users.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/security/security.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/security/security.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/helper.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/helper.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/security/security.go" beforeDir="false" afterPath="$PROJECT_DIR$/security/security.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/users.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/users.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,33 +19,62 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main.go">
+        <entry file="file://$PROJECT_DIR$/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+            <state>
+              <caret column="9" selection-start-column="9" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/users/users.go">
+        <entry file="file://$PROJECT_DIR$/helpers/helper.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-608">
-              <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+            <state relative-caret-position="257">
+              <caret line="59" column="54" selection-start-line="59" selection-start-column="54" selection-end-line="59" selection-end-column="54" />
+              <folding>
+                <element signature="e#17#142#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/users/users.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="646">
+              <caret line="46" column="23" lean-forward="true" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/helpers/helper.go">
+        <entry file="file://$PROJECT_DIR$/security/security.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="31" column="1" lean-forward="true" selection-start-line="31" selection-start-column="1" selection-end-line="31" selection-end-column="1" />
+            <state relative-caret-position="255">
+              <caret line="16" column="17" lean-forward="true" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+              <folding>
+                <element signature="e#18#105#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/helpers/constants.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="444">
+              <caret line="116" column="18" selection-start-line="116" selection-start-column="18" selection-end-line="116" selection-end-column="18" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>USER</find>
+    </findStrings>
   </component>
   <component name="GOROOT" path="/usr/local/go" />
   <component name="Git.Settings">
@@ -60,6 +87,11 @@
         <option value="$PROJECT_DIR$/src/main.go" />
         <option value="$PROJECT_DIR$/src/users/users.go" />
         <option value="$PROJECT_DIR$/src/helpers/helper.go" />
+        <option value="$PROJECT_DIR$/main/main.go" />
+        <option value="$PROJECT_DIR$/helpers/constants.go" />
+        <option value="$PROJECT_DIR$/helpers/helper.go" />
+        <option value="$PROJECT_DIR$/users/users.go" />
+        <option value="$PROJECT_DIR$/security/security.go" />
       </list>
     </option>
   </component>
@@ -86,18 +118,16 @@
             <path>
               <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="helpers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
               <item name="users" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -133,24 +163,49 @@
       </list>
     </option>
   </component>
+  <component name="RunManager">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Naturae_Server" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/main/main.go" />
+      <package value="Naturae_Server" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build main.go" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16178267" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17277168" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32941177" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32941177" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.32941177" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32941177" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -166,33 +221,51 @@
     <option name="LAST_COMMIT_MESSAGE" value="Nothing much" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/quickstart.go">
+    <entry file="file://$PROJECT_DIR$/src/main/quickstart.go" />
+    <entry file="file://$PROJECT_DIR$/src/main.go" />
+    <entry file="file://$PROJECT_DIR$/src/users/users.go" />
+    <entry file="file://$PROJECT_DIR$/src/helpers/helper.go" />
+    <entry file="file://$PROJECT_DIR$/Naturae-Server.code-workspace">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/constants.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="116" column="18" selection-start-line="116" selection-start-column="18" selection-end-line="116" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
         <state>
+          <caret column="9" selection-start-column="9" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/helpers/helper.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="59" column="54" selection-start-line="59" selection-start-column="54" selection-end-line="59" selection-end-column="54" />
           <folding>
-            <element signature="e#14#202#0" expanded="true" />
+            <element signature="e#17#142#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.go">
+    <entry file="file://$PROJECT_DIR$/users/users.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        <state relative-caret-position="646">
+          <caret line="46" column="23" lean-forward="true" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/users/users.go">
+    <entry file="file://$PROJECT_DIR$/security/security.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-608">
-          <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/helpers/helper.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="31" column="1" lean-forward="true" selection-start-line="31" selection-start-column="1" selection-end-line="31" selection-end-column="1" />
+        <state relative-caret-position="255">
+          <caret line="16" column="17" lean-forward="true" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+          <folding>
+            <element signature="e#18#105#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

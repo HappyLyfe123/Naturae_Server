@@ -4,15 +4,27 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
-	"log"
 	"net/smtp"
+	"os"
 
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
+//Declare local global variable
+var dbClient *mongo.Client
+var emailClient smtp.Auth
+var err error
+
+type Email struct {
+	Receiver string
+	Subject  string
+	Body     string
+}
+
 //GenerateRandomBytes : random data
 func GenerateRandomBytes(len int16) (string, error) {
 	newData := make([]byte, len)
+	//Generate a pseudorandom number
 	_, err := rand.Read(newData)
 	if err != nil {
 		return "", err
@@ -20,36 +32,32 @@ func GenerateRandomBytes(len int16) (string, error) {
 	return base64.StdEncoding.EncodeToString(newData), nil
 }
 
-//GetUsername : Get the user useranme
-func GetUsername(email string) {
-	//collection := ConnectToDB().Database("Naturae-Server").Collection("Users")
-
-}
-
-//GetEmail : Get the user email address
-func GetEmail(username string) {
-
-}
-
 //ConnectToDBClient : connect to the database client
-func ConnectToDBClient(username, password *string)(*mongo.Client, error){
-	client, err := mongo.Connect(context.TODO(), "mongodb+srv://"+*username+":"+*password+"@naturae-server-hxywc.mongodb.net/test?retryWrites=true")
-	if err != nil{
+//Return : mongodb client or err
+func ConnectToDBClient() (*mongo.Client, error) {
+	//Connect to the mongo database server
+	dbClient, err = mongo.Connect(context.TODO(), "mongodb+srv://"+os.Getenv("DATABASE_USERNAME")+
+		":"+os.Getenv("DATABASE_PASSWORD")+"@naturae-server-hxywc.mongodb.net/test?retryWrites=true")
+	if err != nil {
+		//Return error back to the calling methods
 		return nil, err
 	}
-	return client, nil
+	//Return mongodb client object back to calling method
+	return dbClient, nil
 }
 
-//ConnectToDB : Connect to the database
-func ConnectToDB(databaseName *string, client *mongo.Client) *mongo.Database{
-
-	database := client.Database(*databaseName)
-	return database
+//Connect to the Gmail email client
+func ConnectToGmailClient() {
+	//Initialize emailClient
+	emailClient = smtp.PlainAuth("", GetGmailEmailAdddress(), os.Getenv("GMAIL_PASSWORD"), GetGmailSMTPHost())
 }
 
 //ConnectToCollection : connect to a collection in the database
-func ConnectToCollection(database *mongo.Database, collectionName *string) *mongo.Collection {
-	return database.Collection(*collectionName)
+//databaseName : the database name to connect to
+//collectionName : the collection name to connect to
+//Return : mongodb collection object
+func ConnectToCollection(databaseName, collectionName string) *mongo.Collection {
+	return dbClient.Database(databaseName).Collection(collectionName)
 }
 
 //CloseDatabase : close the current collection to the database
@@ -67,22 +75,19 @@ func ConvertStringToByte(stringData string) []byte {
 }
 
 //SendEmail : send email to the specific user
-func SendEmail(recieverEmail, body, subject *string) {
-	from := "naturae.outdoor@gmail.com"
-	pass := "B#sGwqrEp*C17xbmcDMChQYwHQ#wgL"
-	to := *recieverEmail
-	msg := "From: " + from + "\n" +
-		"To: " + to + "\n" +
-		"Subject: " + *subject + "\n\n" +
-		*body
+func SendEmail(sendEmail *Email) error {
 
-	err := smtp.SendMail("smtp.gmail.com:587",
-		smtp.PlainAuth("", from, pass, "smtp.gmail.com"),
-		from, []string{to}, []byte(msg))
+	//Format the message
+	msg := "From: " + GetAppName() + "\n" +
+		"To: " + sendEmail.Receiver + "\n" +
+		"Subject: " + sendEmail.Subject + "\n\n" +
+		sendEmail.Body
+
+	//Send an email using smtp
+	err := smtp.SendMail(GetGmailSMTPServer(), emailClient, GetAppName(), []string{sendEmail.Receiver}, []byte(msg))
 
 	if err != nil {
-		log.Printf("smtp error: %s", err)
-		return
+		return err
 	}
-
+	return nil
 }

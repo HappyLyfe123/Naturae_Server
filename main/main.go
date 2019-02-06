@@ -1,19 +1,14 @@
 package main
 
-import (
-	"fmt"
-	"github.com/mongodb/mongo-go-driver/mongo"
-	"os"
-)
-
-var dbClient *mongo.Client = nil;
+import "Naturae_Server/helpers"
 
 func main() {
+	initApp()
 
-	//Connect to the database sever
+}
 
-	fmt.Println(os.Getenv("DATABASE_USERNAME"))
-	fmt.Println(os.Getenv("DATABASE_PASSWORD"))
-	fmt.Println("Work")
-
+func initApp() {
+	//Initialize global variable in the helper package
+	go helpers.ConnectToDBClient()
+	go helpers.ConnectToGmailClient()
 }
