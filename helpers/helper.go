@@ -15,6 +15,7 @@ var dbClient *mongo.Client
 var emailClient smtp.Auth
 var err error
 
+//Email : Emailing structure for sending email
 type Email struct {
 	Receiver string
 	Subject  string
@@ -23,12 +24,14 @@ type Email struct {
 
 //GenerateRandomBytes : random data
 func GenerateRandomBytes(len int16) (string, error) {
+	//Generate an array of the specific byte in length
 	newData := make([]byte, len)
 	//Generate a pseudorandom number
 	_, err := rand.Read(newData)
 	if err != nil {
 		return "", err
 	}
+	//Convert the new byte of data into base64 string
 	return base64.StdEncoding.EncodeToString(newData), nil
 }
 
@@ -46,7 +49,7 @@ func ConnectToDBClient() (*mongo.Client, error) {
 	return dbClient, nil
 }
 
-//Connect to the Gmail email client
+//ConnectToGmailClient : Connect to the Gmail email client
 func ConnectToGmailClient() {
 	//Initialize emailClient
 	emailClient = smtp.PlainAuth("", GetGmailEmailAdddress(), os.Getenv("GMAIL_PASSWORD"), GetGmailSMTPHost())
@@ -61,6 +64,7 @@ func ConnectToCollection(databaseName, collectionName string) *mongo.Collection 
 }
 
 //CloseDatabase : close the current collection to the database
+//@dtabase : the databe client that is to be close
 func CloseDatabase(database *mongo.Client) error {
 	err := database.Disconnect(context.TODO())
 	if err != nil {
@@ -69,7 +73,7 @@ func CloseDatabase(database *mongo.Client) error {
 	return nil
 }
 
-//ConvertStringToByte : convert a string to bytes
+//ConvertStringToByte : convert a string to bytes array
 func ConvertStringToByte(stringData string) []byte {
 	return []byte(stringData)
 }

@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+//Create a struct for storing user info
 type user struct {
 	Username string
 	Email    string
@@ -17,6 +18,7 @@ type user struct {
 	Password string
 }
 
+//Create a struct for token
 type token struct {
 	Username  string
 	TokenID   string
@@ -24,13 +26,17 @@ type token struct {
 	EndTime   time.Time
 }
 
+//A map of all of the collection list in the main database
 var collectionList = map[string]string{
 	"Users":        "Users",
 	"AccessToken":  "Access_Token",
 	"RefreshToken": "Refresh_Token",
 }
 
+//The length of the salt for password hashing
 var saltLength int16 = 200
+
+//The name of the database
 var databaseName string = "Naturae-Server"
 
 //CreateAccount : User want to create an account
