@@ -4,7 +4,7 @@ const (
 	ok                  = 200
 	created             = 201
 	accepted            = 202
-	invalidArgument     = 204
+	invalidArguments    = 204
 	denied              = 205
 	found               = 302
 	badRequest          = 400
@@ -16,74 +16,79 @@ const (
 	internalServerError = 500
 	badGateway          = 502
 	serviceUnavailable  = 503
+	passwordSaltLength  = 200
+	authCodeMaxNum      = 900000
+	authCodeMinNum      = 100000
 	gmailSMTPServer     = "smtp.gmail.com:587"
 	gmailSMTPHost       = "smtp.gmail.com"
 	gmailEmailAddress   = "naturae.outdoor@gmail.com"
 	appName             = "Naturae"
+	usersDatabase       = "Users"
+	databaseName        = "Naturae-Server"
 )
 
 //GetOkStatusCode : Return ok status code
-func GetOkStatusCode() int {
+func GetOkStatusCode() int16 {
 	return ok
 }
 
 //GetCreatedStatusCode : Return created status code
-func GetCreatedStatusCode() int {
+func GetCreatedStatusCode() int16 {
 	return created
 }
 
 //GetAcceptedStatusCode : Return accepted status code
-func GetAcceptedStatusCode() int {
+func GetAcceptedStatusCode() int16 {
 	return accepted
 }
 
 //GetFoundStatusCode : Return found status code
-func GetFoundStatusCode() int {
+func GetFoundStatusCode() int16 {
 	return found
 }
 
 //GetBadRequestStatusCode : Return bad request status code
-func GetBadRequestStatusCode() int {
+func GetBadRequestStatusCode() int16 {
 	return badRequest
 }
 
 //GetUnauthorizedStatusCode : Return unauthorized status code
-func GetUnauthorizedStatusCode() int {
+func GetUnauthorizedStatusCode() int16 {
 	return unauthorized
 }
 
 //GetForbiddenStatusCode : Return forbidden status code
-func GetForbiddenStatusCode() int {
+func GetForbiddenStatusCode() int16 {
 	return forbidden
 }
 
 //GetNotFoundStatusCode : Return not found status code
-func GetNotFoundStatusCode() int {
+func GetNotFoundStatusCode() int16 {
 	return notFound
 }
 
 //GetNotAcceptableStatusCode : Return not acceptable status code
-func GetNotAcceptableStatusCode() int {
+func GetNotAcceptableStatusCode() int16 {
 	return notAcceptable
 }
 
 //GetRequestTimeoutStatusCode : Return request timeout status code
-func GetRequestTimeoutStatusCode() int {
+func GetRequestTimeoutStatusCode() int16 {
 	return requestTimeout
 }
 
 //GetInternalServerErrorStatusCode : Return internal server error status code
-func GetInternalServerErrorStatusCode() int {
+func GetInternalServerErrorStatusCode() int16 {
 	return internalServerError
 }
 
 //GetBadGatewayStatusCode : Return bad gateway status code
-func GetBadGatewayStatusCode() int {
+func GetBadGatewayStatusCode() int16 {
 	return badGateway
 }
 
 //GetServiceUnavailableStatusCode : Return service unavailable status code
-func GetServiceUnavailableStatusCode() int {
+func GetServiceUnavailableStatusCode() int16 {
 	return serviceUnavailable
 }
 
@@ -92,9 +97,24 @@ func GetDeniedStatusCode() int {
 	return denied
 }
 
+//GetSaltLength : return the salt length
+func GetSaltLength() int {
+	return passwordSaltLength
+}
+
 //GetInvalidArugment : Return invalid argument
-func GetInvalidArugment() int {
-	return invalidArgument
+func GetInvalidArgument() int16 {
+	return invalidArguments
+}
+
+//GetAuthCodeMaxNum : the max number
+func GetAuthCodeMaxNum() int64 {
+	return authCodeMaxNum
+}
+
+//GetGetAuthCodeMaxNum : the min
+func GetAuthCodeMinNum() int64 {
+	return authCodeMinNum
 }
 
 //GetGmailSMTPServer : Return Gmail SMTP server
@@ -107,12 +127,22 @@ func GetGmailSMTPHost() string {
 	return gmailSMTPHost
 }
 
-//GetGmailEmailAdddress : Return Gmail email address
-func GetGmailEmailAdddress() string {
+//GetGmailEmailAddress : Return Gmail email address
+func GetGmailEmailAddress() string {
 	return gmailEmailAddress
+}
+
+//GetDatabaseName : Get the name of the main database name
+func GetDatabaseName() string {
+	return databaseName
 }
 
 //GetAppName : Return app name
 func GetAppName() string {
 	return appName
+}
+
+//GetUsersDB : Return the name of the users database
+func GetUsersDB() string {
+	return usersDatabase
 }
