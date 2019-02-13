@@ -10,7 +10,6 @@ import (
 func main() {
 	//Connect to all of the services that is needed to run the server
 	//initApp()
-
 }
 
 //Initialize all of the variable to be uses
