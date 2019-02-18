@@ -145,16 +145,16 @@ func GetAppName() string {
 }
 
 //GetAccountInfoColl : return the name of the account info collection
-func GetAccountInfoColl() string {
+func GetAccountInfoCollection() string {
 	return accountInfoCollection
 }
 
 //GetAccessTokenColl : get the name for access token collection
-func GetAccessTokenColl() string {
+func GetAccessTokenCollection() string {
 	return accessTokenCollection
 }
 
 //GetRefreshTokenColl : get the name for refresh token collection
-func GetRefreshTokenColl() string {
+func GetRefreshTokenCollection() string {
 	return refreshTokenCollection
 }

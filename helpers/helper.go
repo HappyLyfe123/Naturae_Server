@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"net/smtp"
 	"os"
 	"regexp"
@@ -114,22 +115,12 @@ func IsEmailValid(email *string, database *mongo.Database, collectionName string
 	emailRegexp := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9]" +
 		"(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 	//Check if the email format is correct
-	if emailRegexp.MatchString(*email) {
-		//Generate a filter to for checking the database
-		filter := bson.D{{"Email", *email}}
-		//Connect to the collection in the database
-		userCollection := ConnectToCollection(database, &collectionName)
-		//Check if the email exist in the database
-		//Return true if the email doesn't exist in the database
-		if userCollection.FindOne(context.TODO(), filter) == nil {
-			return true
-
-		}
+	if !emailRegexp.MatchString(*email) {
+		log.Println("Invalid email format")
 		//Return false if the email exist in the database
 		return false
 	}
-
-	return false
+	return true
 }
 
 //IsPasswordValid : check if the password matches the gideline
@@ -153,6 +144,7 @@ func IsPasswordValid(password *string) bool {
 			special = true
 			character++
 		default:
+			log.Println("Password Invalid")
 			return false
 		}
 	}
@@ -170,6 +162,7 @@ func IsNameValid(name *string) bool {
 	for _, c := range *name {
 		//If the name doesn't match the guide it will return false
 		if !regexp.MustCompile(`[a-zA-Z0-9._ '-]`).MatchString(string(c)) {
+			log.Println("invalid name")
 			return false
 		}
 

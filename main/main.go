@@ -3,6 +3,7 @@ package main
 import (
 	"Naturae_Server/helpers"
 	"Naturae_Server/users"
+	"fmt"
 	"log"
 )
 
@@ -10,8 +11,11 @@ func main() {
 	//Connect to all of the services that is needed to run the server
 	initApp()
 	email := "visalhok123@gmail.com"
-	name := "Visal"
-	users.SendAuthenticationEmail(&email, &name)
+	firstName := "Visal"
+	lastName := "Hok"
+	password := "ABab1234!@#"
+	newAccount := users.CreateAccount(&email, &firstName, &lastName, &password)
+	fmt.Println(newAccount.Error)
 }
 
 //Initialize all of the variable to be uses

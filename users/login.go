@@ -6,7 +6,7 @@ import "Naturae_Server/helpers"
 func Login(email *string) {
 	//Connect to the Users database
 	currDatabase := helpers.ConnectToDB("Users")
-	currUser := helpers.FindUser(email, currDatabase, helpers.GetAccountInfoColl())
+	currUser := helpers.FindUser(email, currDatabase, helpers.GetAccountInfoCollection())
 	if currUser != nil {
 
 	}

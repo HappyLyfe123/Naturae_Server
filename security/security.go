@@ -47,8 +47,10 @@ func GenerateToken(userEmail *string, lifeSpan []int) (newToken *Token) {
 	//Generate an end time for the token
 	//Index 0 = year Index 1 = month Index 2 = day
 	expireTime := startTime.AddDate(lifeSpan[0], lifeSpan[1], lifeSpan[2])
+	randomData, _ := GenerateRandomBytes(300)
+	tokenID := helpers.ConvertByteToString(randomData)
 
-	newToken = &Token{*userEmail, "", startTime, expireTime}
+	newToken = &Token{*tokenID, *userEmail, startTime, expireTime}
 
 	return
 }
@@ -65,16 +67,16 @@ func GenerateHash(userPassword, salt *[]byte) *[]byte {
 }
 
 //GenerateRandomBytes : random data
-func GenerateRandomBytes(len int) (newData *[]byte, err error) {
+func GenerateRandomBytes(len int) (*[]byte, error) {
 	//Generate an array of the specific byte in length
-	*newData = make([]byte, len)
+	newData := make([]byte, len)
 	//Generate a pseudorandom number
-	_, err = rand.Read(*newData)
+	_, err := rand.Read(newData)
 	if err != nil {
-		return
+		return &newData, err
 	}
 	//Convert the new byte of data into base64 string
-	return
+	return &newData, err
 }
 
 //GenerateRandomNumber : generate a random between 100000 and 999999
