@@ -1,30 +1,32 @@
 package helpers
 
 const (
-	ok                  = 200
-	created             = 201
-	accepted            = 202
-	invalidArguments    = 204
-	denied              = 205
-	found               = 302
-	badRequest          = 400
-	unauthorized        = 402
-	forbidden           = 403
-	notFound            = 404
-	notAcceptable       = 406
-	requestTimeout      = 408
-	internalServerError = 500
-	badGateway          = 502
-	serviceUnavailable  = 503
-	passwordSaltLength  = 200
-	authCodeMaxNum      = 900000
-	authCodeMinNum      = 100000
-	gmailSMTPServer     = "smtp.gmail.com:587"
-	gmailSMTPHost       = "smtp.gmail.com"
-	gmailEmailAddress   = "naturae.outdoor@gmail.com"
-	appName             = "Naturae"
-	usersDatabase       = "Users"
-	databaseName        = "Naturae-Server"
+	ok                     = 200
+	created                = 201
+	accepted               = 202
+	invalidArguments       = 204
+	denied                 = 205
+	found                  = 302
+	badRequest             = 400
+	unauthorized           = 402
+	forbidden              = 403
+	notFound               = 404
+	notAcceptable          = 406
+	requestTimeout         = 408
+	internalServerError    = 500
+	badGateway             = 502
+	serviceUnavailable     = 503
+	passwordSaltLength     = 200
+	authCodeMaxNum         = 900000
+	authCodeMinNum         = 100000
+	gmailSMTPServer        = "smtp.gmail.com:587"
+	gmailSMTPHost          = "smtp.gmail.com"
+	gmailEmailAddress      = "naturae.outdoor@gmail.com"
+	appName                = "Naturae"
+	databaseName           = "Naturae-Server"
+	accountInfoCollection  = "Account_Information"
+	accessTokenCollection  = "Access_Token"
+	refreshTokenCollection = "Refresh_Token"
 )
 
 //GetOkStatusCode : Return ok status code
@@ -102,7 +104,7 @@ func GetSaltLength() int {
 	return passwordSaltLength
 }
 
-//GetInvalidArugment : Return invalid argument
+//GetInvalidArgument : return invalid argument
 func GetInvalidArgument() int16 {
 	return invalidArguments
 }
@@ -112,7 +114,7 @@ func GetAuthCodeMaxNum() int64 {
 	return authCodeMaxNum
 }
 
-//GetGetAuthCodeMaxNum : the min
+//GetAuthCodeMinNum : the min
 func GetAuthCodeMinNum() int64 {
 	return authCodeMinNum
 }
@@ -137,12 +139,22 @@ func GetDatabaseName() string {
 	return databaseName
 }
 
-//GetAppName : Return app name
+//GetAppName : return app name
 func GetAppName() string {
 	return appName
 }
 
-//GetUsersDB : Return the name of the users database
-func GetUsersDB() string {
-	return usersDatabase
+//GetAccountInfoColl : return the name of the account info collection
+func GetAccountInfoColl() string {
+	return accountInfoCollection
+}
+
+//GetAccessTokenColl : get the name for access token collection
+func GetAccessTokenColl() string {
+	return accessTokenCollection
+}
+
+//GetRefreshTokenColl : get the name for refresh token collection
+func GetRefreshTokenColl() string {
+	return refreshTokenCollection
 }

@@ -21,6 +21,7 @@ type user struct {
 	IsAuthenticated bool
 }
 
+//NewAccount : structure
 type newAccount struct {
 	AccessToken  string
 	RefreshToken string
@@ -28,59 +29,53 @@ type newAccount struct {
 	Error        error
 }
 
-type TokenLifeSpan struct {
-	Year  int
-	Month int
-	Day   int
-}
-
-//Create local global variable for all of the database collection
-//associate with create account
-var accountInfo = "Account_Information"
-var accessToken = "Access_Token"
-var refreshToken = "Refresh_Token"
-
 //CreateAccount : User want to create an account
-/*
- * email: user email address
- * username: user username
- * password: user password
- *
- */
+//email: user email address
+//username: user username
+//password: user password
 func CreateAccount(email, firstName, lastName, password *string) newAccount {
 	//Connect to the Users database
 	currDatabase := helpers.ConnectToDB("Users")
 
 	//Check if the email, firstName, lastName, and password is in a valid format
-	if helpers.IsEmailValid(email, currDatabase, &accountInfo) && helpers.IsNameValid(firstName) && helpers.IsNameValid(lastName) &&
+	if helpers.IsEmailValid(email, currDatabase, helpers.GetAccountInfoColl()) && helpers.IsNameValid(firstName) && helpers.IsNameValid(lastName) &&
 		helpers.IsPasswordValid(password) {
 		//Generate random bytes of data to be use as salt for the password
 		salt, err := security.GenerateRandomBytes(helpers.GetSaltLength())
 		if err != nil {
 			return newAccount{}
 		}
+		//Generate a hash for the user password
 		hashPassword := security.GenerateHash(helpers.ConvertStringToByte(password), salt)
 
+		//Create a new user
 		newUser := user{*email, *firstName, *lastName, *helpers.ConvertByteToString(salt),
 			*helpers.ConvertByteToString(hashPassword), false}
+
+		//Generate access token and set it to have a life span of one day
+		accessToken := security.GenerateToken(email, []int{0, 0, 1})
+		//Generate refresh token and set it to have a life span of two months
+		refreshToken := security.GenerateToken(email, []int{0, 2, 0})
 
 		//Set a wait group for multi-threading
 		//It will wait for all of the thread process to finish before moving on
 		var wg sync.WaitGroup
-		saveNewUserToDB(&wg, currDatabase, &newUser)
+		//Save the user to the database
+		saveNewUserToDB(&wg, currDatabase, helpers.GetAccountInfoColl(), &newUser)
 		wg.Add(1)
-		saveAccessTokenToDB(&wg, currDatabase)
+		//Generate and save access token for the user
+		saveTokenToDB(&wg, currDatabase, helpers.GetAccessTokenColl(), accessToken)
 		wg.Add(1)
-		saveRefreshTokenToDB(&wg, currDatabase)
+		//Generate and save refresh token for the user
+		saveTokenToDB(&wg, currDatabase, helpers.GetRefreshTokenColl(), refreshToken)
 		wg.Add(1)
 		//Wait until all of the go routine to finish
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
-		sendConfirmationEmail(email, firstName)
+		SendAuthenticationEmail(email, firstName)
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-
-		return newAccount{nil, nil, helpers.GetInvalidArgument(),
+		return newAccount{"", "", helpers.GetInvalidArgument(),
 			errors.New("invalid input")}
 	}
 
@@ -88,40 +83,36 @@ func CreateAccount(email, firstName, lastName, password *string) newAccount {
 }
 
 //Save the user to database
-func saveNewUserToDB(wg *sync.WaitGroup, database *mongo.Database, user *user) {
+func saveNewUserToDB(wg *sync.WaitGroup, database *mongo.Database, collectionName string, user *user) {
 	defer wg.Done()
 	//Connect to the users collection in the database
-	accountInfoCollection := helpers.ConnectToCollection(database, &accountInfo)
+	accountInfoCollection := helpers.ConnectToCollection(database, &collectionName)
 	//Save the user into the database
 	accountInfoCollection.InsertOne(context.TODO(), user)
 
 }
 
 //Save access token to the database
-func saveAccessTokenToDB(wg *sync.WaitGroup, database *mongo.Database) {
+func saveTokenToDB(wg *sync.WaitGroup, database *mongo.Database, collectionName string, token *security.Token) {
 	defer wg.Done()
-	saveAccessTokenCollection := helpers.ConnectToCollection(database, &accessToken)
-
-	saveAccessTokenCollection.InsertOne(context.TODO(), "")
+	//Connect to the database collection
+	currCollection := helpers.ConnectToCollection(database, &collectionName)
+	//Save token to the database
+	currCollection.InsertOne(context.TODO(), *token)
 
 }
 
-//Save refresh token to the database
-func saveRefreshTokenToDB(wg *sync.WaitGroup, database *mongo.Database) {
-	defer wg.Done()
-	saveAccessTokenCollection := helpers.ConnectToCollection(database, &refreshToken)
-	saveAccessTokenCollection.InsertOne(context.TODO(), "")
-}
-
-//Send a confirmation email to the user to make sure it's the user email address
-func sendConfirmationEmail(userEmail, firstName *string) {
+//SendAuthenticationEmail : Send a confirmation email to the user to make sure it's the user email address
+func SendAuthenticationEmail(userEmail, firstName *string) {
 	//The system will be send a 6 digits number to the user provided email
 	//This six digits number will be use to ensure that it's the user email
-	body := fmt.Sprintf("Hello, %s\nThanks for creating your Naturae account. To continue, please\n"+
-		"verify your email address by entering the following code. %d\nThis code will expire in 30 minutes."+
-		"Thank you,\nNature Develper Team", *firstName, security.GenerateRandomNumber(helpers.GetAuthCodeMinNum(),
+	body := fmt.Sprintf("Hello, %s\nThanks for creating your Naturae account. To continue, please "+
+		"verify your email address by entering the following code.\n%d\nThis code will expire in 30 minutes."+
+		"\nThank you,\nNature Develper Team", *firstName, security.GenerateRandomNumber(helpers.GetAuthCodeMinNum(),
 		helpers.GetAuthCodeMaxNum()))
-
-	fmt.Println(body)
-
+	//Send the email to the user
+	err := helpers.SendEmail(&helpers.Email{*userEmail, "Account Authentication", body})
+	if err != nil {
+		fmt.Println(err)
+	}
 }

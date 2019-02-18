@@ -2,7 +2,6 @@ package security
 
 import (
 	"Naturae_Server/helpers"
-	"Naturae_Server/users"
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
@@ -11,7 +10,7 @@ import (
 	"time"
 )
 
-type token struct {
+type Token struct {
 	TokenID    string
 	Email      string
 	StartTime  time.Time
@@ -42,14 +41,14 @@ func CheckRefreshToken(username, tokenID string) {
 //GenerateToken : Generate an access token and refresh token for user
 //userEmail : the user that the token will be created for
 //lifeSpan : the amount of time that the token going to last
-func GenerateToken(userEmail *string, lifeSpan users.TokenLifeSpan) (newToken *token) {
+func GenerateToken(userEmail *string, lifeSpan []int) (newToken *Token) {
 	//Generate a start time for the token
 	startTime := time.Now()
 	//Generate an end time for the token
-	//AccessToken have a 1 day lifespan
-	expireTime := startTime.AddDate(lifeSpan.Year, lifeSpan.Month, lifeSpan.Day)
+	//Index 0 = year Index 1 = month Index 2 = day
+	expireTime := startTime.AddDate(lifeSpan[0], lifeSpan[1], lifeSpan[2])
 
-	newToken = &token{*userEmail, "", startTime, expireTime}
+	newToken = &Token{*userEmail, "", startTime, expireTime}
 
 	return
 }
