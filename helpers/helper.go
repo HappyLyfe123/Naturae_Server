@@ -87,11 +87,11 @@ func ConvertByteToString(bytesData *[]byte) *string {
 
 //FindUser : find the user information the in database
 func FindUser(email *string, database *mongo.Database, collectionName string) *mongo.SingleResult {
-	findUuserFilter := bson.D{{"Email", *email}}
+	findUserFilter := bson.D{{"Email", *email}}
 	userCollection := ConnectToCollection(database, &collectionName)
 	//Check if the email exist in the database
 	//Return true if the email doesn't exist in the database
-	user := userCollection.FindOne(context.TODO(), findUuserFilter)
+	user := userCollection.FindOne(context.TODO(), findUserFilter)
 	return user
 }
 
