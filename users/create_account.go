@@ -60,7 +60,7 @@ func CreateAccount(email, firstName, lastName, password string) NewAccount {
 		hashPassword := security.GenerateHash(helpers.ConvertStringToByte(password), salt)
 
 		//Create a new user
-		newUser := helpers.UserAccount{Email: email, First_Name: firstName, Last_Name: lastName, Salt: helpers.ConvertByteToString(salt),
+		newUser := userAccount{Email: email, First_Name: firstName, Last_Name: lastName, Salt: helpers.ConvertByteToString(salt),
 			Password: helpers.ConvertByteToString(hashPassword), Is_Authenticated: false}
 
 		//Generate access token and set it to have a life span of one day
@@ -91,7 +91,7 @@ func CreateAccount(email, firstName, lastName, password string) NewAccount {
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
 		sendAuthenticationCode(email, firstName, generatedCode)
-
+		fmt.Println("A new account was created for: ", email)
 		return NewAccount{AccessToken: accessToken.Token_ID, RefreshToken: refreshToken.Token_ID, ErrorList: nil}
 	} else {
 		//Either email, firstName, lastName, or password is invalid
@@ -101,7 +101,7 @@ func CreateAccount(email, firstName, lastName, password string) NewAccount {
 }
 
 //SaveNewUser : Save the user to database
-func saveNewUser(wg *sync.WaitGroup, database *mongo.Database, collectionName string, user *helpers.UserAccount) {
+func saveNewUser(wg *sync.WaitGroup, database *mongo.Database, collectionName string, user *userAccount) {
 	defer wg.Done()
 	//If there an error, it will attempt to save the info to the database until the limit is reach
 	for numAttempt := 1; numAttempt < saveAttemptLimit; numAttempt++ {
@@ -112,10 +112,10 @@ func saveNewUser(wg *sync.WaitGroup, database *mongo.Database, collectionName st
 		if err != nil {
 			log.Println("Save user to DB error: ", err)
 		} else {
+			log.Println("Save ", user.Email, " to the DB")
 			break
 		}
 	}
-
 }
 
 //SaveAuthenCode : Save authentication code to the database
@@ -129,11 +129,11 @@ func saveAuthenticationCode(wg *sync.WaitGroup, database *mongo.Database, collec
 		if err != nil {
 			log.Println("Save authentication to DB error: ", err)
 		} else {
+			log.Println("Save ", newAuthenCode.Email, " authentication code to DB")
 			//Break out of the for loop
 			break
 		}
 	}
-
 }
 
 //SendAuthenticationEmail : Send a confirmation email to the user to make sure it's the user email address
@@ -150,6 +150,7 @@ func sendAuthenticationCode(userEmail, firstName string, authenCode string) {
 		err := helpers.SendEmail(&newMail)
 		//If there no error
 		if err == nil {
+			log.Println("Email ", userEmail, " authentication code")
 			break
 		}
 		log.Println("Send email error: ", err)

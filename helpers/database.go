@@ -3,20 +3,11 @@ package helpers
 import (
 	"context"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"log"
 	"os"
 
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
-
-//create a struct for storing user info in database
-type UserAccount struct {
-	Email            string
-	First_Name       string
-	Last_Name        string
-	Salt             string
-	Password         string
-	Is_Authenticated bool
-}
 
 type GetInfo interface {
 	GetAccountInfo()
@@ -36,29 +27,41 @@ type TokenAccess struct {
 	TokenID string
 }
 
-//Get the account info using email
-func (email EmailAccess) GetAccountInfo() {
+//GetAccountInfo: Get user account info using email
+func (email EmailAccess) GetAccountInfo() *UserLoginInfo {
+	var authenInfo UserLoginInfo
 	filter := bson.D{{Key: "email", Value: email}}
 	connectConnection := ConnectToDB(GetUserDatabase()).Collection(GetAccountInfoCollection())
-	connectConnection.FindOne(context.TODO(), filter)
+	err := connectConnection.FindOne(context.TODO(), filter).Decode(authenInfo)
+	if err != nil {
+
+	}
+	return &authenInfo
 }
 
+//GetAccountInfo : Get user account info using token
 func (tokenID TokenAccess) GetAccountInfo() {
-
+	filter := bson.D{{Key: "token_id", Value: tokenID}}
+	connectConnection := ConnectToDB(GetUserDatabase()).Collection(GetAccessTokenCollection())
+	connectConnection.FindOne(context.TODO(), filter)
 }
 
 //ConnectToDBAccount : connect to the database client
 //Return : mongodb client or err
-func ConnectToDBAccount() (err error) {
-	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.TODO(), "mongodb+srv://"+os.Getenv("DATABASE_USERNAME")+
-		":"+os.Getenv("DATABASE_PASSWORD")+"@naturae-server-hxywc.mongodb.net/test?retryWrites=true")
-	if err != nil {
-		//Return error back to the calling methods
-		return err
+func ConnectToDBAccount() {
+	var err error
+	for attemptNum := 0; attemptNum < GetConnectionAttemptLimit(); attemptNum++ {
+		//Connect to the mongo database server
+		dbAccount, err = mongo.Connect(context.TODO(), "mongodb+srv://"+os.Getenv("DATABASE_USERNAME")+
+			":"+os.Getenv("DATABASE_PASSWORD")+"@naturae-server-hxywc.mongodb.net/test?retryWrites=true")
+		if err != nil {
+			//Print out the error message
+			log.Println("Connecting to DB account error: ", err)
+		} else {
+			log.Println("Connect to Naturae DB")
+			break
+		}
 	}
-	//Return mongodb client object back to calling method
-	return nil
 }
 
 //ConnectToDB : connect to a database
@@ -82,5 +85,6 @@ func CloseConnectionToDatabase(database *mongo.Client) error {
 	if err != nil {
 		return err
 	}
+	log.Println("Close DB connection:")
 	return nil
 }

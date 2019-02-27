@@ -23,6 +23,7 @@ const (
 	passwordSaltLength     = 200
 	authCodeMaxNum         = 900000
 	authCodeMinNum         = 100000
+	connectionAttemptLimit = 10
 	gmailSMTPServer        = "smtp.gmail.com:587"
 	gmailSMTPHost          = "smtp.gmail.com"
 	gmailEmailAddress      = "naturae.outdoor@gmail.com"
@@ -193,4 +194,9 @@ func GetAccountVerification() string {
 //GetUserDatabase : get the user database name
 func GetUserDatabase() string {
 	return userDatabase
+}
+
+//GetConnectionAttemptLimit : the limit which a method could try to make an attemp to connect to something
+func GetConnectionAttemptLimit() int {
+	return connectionAttemptLimit
 }
