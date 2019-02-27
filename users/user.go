@@ -10,16 +10,6 @@ import (
 	"time"
 )
 
-//create a struct for storing user info in database
-type user struct {
-	Email            string
-	First_Name       string
-	Last_Name        string
-	Salt             string
-	Password         string
-	Is_Authenticated bool
-}
-
 //create authentication structure for user
 type userAuthentication struct {
 	Email      string
@@ -37,12 +27,18 @@ type token struct {
 //SaveToken : save token to the database
 func saveToken(wg *sync.WaitGroup, database *mongo.Database, collectionName string, token *token) {
 	defer wg.Done()
-	//Connect to the database collection
-	currCollection := helpers.ConnectToCollection(database, collectionName)
-	_, err := currCollection.InsertOne(context.TODO(), token)
-	if err != nil {
-		log.Println("Save token error: ", err)
+	//If there an error, it will attempt to save the info to the database until the limit is reach
+	for numOfAttempt := 0; numOfAttempt < saveAttemptLimit; numOfAttempt++ {
+		//Connect to the database collection
+		currCollection := helpers.ConnectToCollection(database, collectionName)
+		_, err := currCollection.InsertOne(context.TODO(), token)
+		if err != nil {
+			log.Println("Save token error: ", err)
+		} else {
+			break
+		}
 	}
+
 }
 
 //FindUser : find the user information the in database

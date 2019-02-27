@@ -2,21 +2,30 @@ package helpers
 
 import (
 	"context"
+	"github.com/mongodb/mongo-go-driver/bson"
 	"os"
 
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
-type AccountInfo struct {
-	Email     string
-	FirstName string
-	LastName  string
-	Salt      string
-	Password  string
+//create a struct for storing user info in database
+type UserAccount struct {
+	Email            string
+	First_Name       string
+	Last_Name        string
+	Salt             string
+	Password         string
+	Is_Authenticated bool
 }
 
 type GetInfo interface {
 	GetAccountInfo()
+}
+
+type UserLoginInfo struct {
+	Email    string
+	Salt     string
+	Password string
 }
 
 type EmailAccess struct {
@@ -29,7 +38,9 @@ type TokenAccess struct {
 
 //Get the account info using email
 func (email EmailAccess) GetAccountInfo() {
-
+	filter := bson.D{{Key: "email", Value: email}}
+	connectConnection := ConnectToDB(GetUserDatabase()).Collection(GetAccountInfoCollection())
+	connectConnection.FindOne(context.TODO(), filter)
 }
 
 func (tokenID TokenAccess) GetAccountInfo() {
