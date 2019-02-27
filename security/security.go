@@ -5,17 +5,11 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
+	"log"
 	"math/big"
 	"strings"
 	"time"
 )
-
-type Token struct {
-	TokenID    string
-	Email      string
-	StartTime  time.Time
-	ExpireTime time.Time
-}
 
 // CheckAppKey : Check if the app key is valid
 // @appKey : provided app key to be check
@@ -41,53 +35,77 @@ func CheckRefreshToken(username, tokenID string) {
 //GenerateToken : Generate an access token and refresh token for user
 //userEmail : the user that the token will be created for
 //lifeSpan : the amount of time that the token going to last
-func GenerateToken(userEmail *string, lifeSpan []int) (newToken *Token) {
+func GenerateToken(userEmail string, tokenType int8, tokenIDChan chan string, startTimeChan chan time.Time) {
+	//Initialize tokeID to an empty string
+	tokenID := ""
 	//Generate a start time for the token
 	startTime := time.Now()
 	//Generate an end time for the token
-	//Index 0 = year Index 1 = month Index 2 = day
-	expireTime := startTime.AddDate(lifeSpan[0], lifeSpan[1], lifeSpan[2])
-	randomData, _ := GenerateRandomBytes(300)
-	tokenID := helpers.ConvertByteToString(randomData)
+	randomData := GenerateRandomBytes(300)
+	//Generate a token id
+	tempTokenID := GenerateHash(randomData, helpers.ConvertStringToByte(userEmail))
 
-	newToken = &Token{*tokenID, *userEmail, startTime, expireTime}
+	if tokenType == 1 {
+		tokenID = helpers.ConvertByteToString(helpers.RandomizeData(tempTokenID))
+	} else {
+		tokenID = helpers.ConvertByteToString(tempTokenID)
+	}
 
-	return
+	tokenIDChan <- tokenID
+	startTimeChan <- startTime
+}
+
+//GenerateAuthenCode : generate an authentication to verify the user
+func GenerateAuthenCode() (string, time.Time) {
+	//The time that the authentication code is created
+	startTime := time.Now()
+	authenCode := GenerateRandomNumber(helpers.GetAuthCodeMinNum(), helpers.GetAuthCodeMaxNum()).String()
+
+	return authenCode, startTime
 }
 
 //GenerateHash : Hash password with salt using sha512
-func GenerateHash(userPassword, salt *[]byte) *[]byte {
+func GenerateHash(originalData, salt []byte) []byte {
 	//Add the salt to the end of the user password
 	//After adding salt to user password convert the password with
 	//salt into byte array
 	//Hash the byte array password using sha515 then convert the hash to
 	//base64 encoding and return it
-	hashPassword := sha512.New().Sum(append(*userPassword, *salt...))
-	return &hashPassword
+	hashPassword := sha512.New().Sum(append(originalData, salt...))
+	return hashPassword
 }
 
 //GenerateRandomBytes : random data
-func GenerateRandomBytes(len int) (*[]byte, error) {
+func GenerateRandomBytes(len int) []byte {
 	//Generate an array of the specific byte in length
 	newData := make([]byte, len)
-	//Generate a pseudorandom number
-	_, err := rand.Read(newData)
-	if err != nil {
-		return &newData, err
+	//If there an error it going to loop until there are no error
+	for {
+		//Generate a pseudorandom number
+		_, err := rand.Read(newData)
+		if err == nil {
+			return newData
+		} else {
+			log.Fatalf("Generate random bytes error: %v", err)
+		}
 	}
-	//Convert the new byte of data into base64 string
-	return &newData, err
+
 }
 
 //GenerateRandomNumber : generate a random between 100000 and 999999
-func GenerateRandomNumber(minNum, maxNum int64) (randomNum *big.Int) {
-	//Generate a number between 0 and the given number
-	randomNum, err := rand.Int(rand.Reader, big.NewInt(maxNum))
-	if err != nil {
-		fmt.Println(err)
-	}
-	//Add minNum to the generated number
-	randomNum.Add(randomNum, big.NewInt(minNum))
+func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
+	//It going to loop until there are no error
+	for {
+		//Generate a number between 0 and the given number
+		randomNum, err := rand.Int(rand.Reader, big.NewInt(maxNum))
+		if err != nil {
+			log.Fatalf("Random number generator error: %v", err)
+		}
+		//Add minNum to the generated number
+		randomNum.Add(randomNum, big.NewInt(minNum))
 
-	return
+		return randomNum
+
+	}
+
 }

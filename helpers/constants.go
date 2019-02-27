@@ -1,6 +1,10 @@
 package helpers
 
 const (
+	invalidName            = 100
+	invalidEmail           = 101
+	invalidPassword        = 102
+	emailExist             = 150
 	ok                     = 200
 	created                = 201
 	accepted               = 202
@@ -24,10 +28,32 @@ const (
 	gmailEmailAddress      = "naturae.outdoor@gmail.com"
 	appName                = "Naturae"
 	databaseName           = "Naturae-Server"
+	userDatabase           = "Users"
 	accountInfoCollection  = "Account_Information"
 	accessTokenCollection  = "Access_Token"
 	refreshTokenCollection = "Refresh_Token"
+	accountVerification    = "Account_Verification"
 )
+
+//GetInvalidNameCode : Return invalid name error code
+func GetInvalidNameCode() int16 {
+	return invalidName
+}
+
+//GetInvalidEmailCode : Return invalid email error code
+func GetInvalidEmailCode() int16 {
+	return invalidEmail
+}
+
+//GetInvalidPasswordCode : Return invalid password error code
+func GetInvalidPasswordCode() int16 {
+	return invalidPassword
+}
+
+//GetEmailExistCode : Return email exist error code
+func GetEmailExistCode() int16 {
+	return emailExist
+}
 
 //GetOkStatusCode : Return ok status code
 func GetOkStatusCode() int16 {
@@ -95,7 +121,7 @@ func GetServiceUnavailableStatusCode() int16 {
 }
 
 //GetDeniedStatusCode : Return denied status code
-func GetDeniedStatusCode() int {
+func GetDeniedStatusCode() int16 {
 	return denied
 }
 
@@ -129,8 +155,8 @@ func GetGmailSMTPHost() string {
 	return gmailSMTPHost
 }
 
-//GetGmailEmailAddress : Return Gmail email address
-func GetGmailEmailAddress() string {
+//GetAppEmailAddress : Return Gmail email address
+func GetAppEmailAddress() string {
 	return gmailEmailAddress
 }
 
@@ -144,17 +170,27 @@ func GetAppName() string {
 	return appName
 }
 
-//GetAccountInfoColl : return the name of the account info collection
+//GetAccountInfoCollection : return the name of the account info collection
 func GetAccountInfoCollection() string {
 	return accountInfoCollection
 }
 
-//GetAccessTokenColl : get the name for access token collection
+//GetAccessTokenCollection : get the name for access token collection
 func GetAccessTokenCollection() string {
 	return accessTokenCollection
 }
 
-//GetRefreshTokenColl : get the name for refresh token collection
+//GetRefreshTokenCollection : get the name for refresh token collection
 func GetRefreshTokenCollection() string {
 	return refreshTokenCollection
+}
+
+//GetAccountVerification : get the name for account veritication collection
+func GetAccountVerification() string {
+	return accountVerification
+}
+
+//GetUserDatabase : get the user database name
+func GetUserDatabase() string {
+	return userDatabase
 }
