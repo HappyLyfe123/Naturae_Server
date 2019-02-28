@@ -2,14 +2,27 @@ package main
 
 import (
 	"Naturae_Server/helpers"
+	"Naturae_Server/users"
+	"fmt"
 	"log"
+	"reflect"
+	"time"
 )
+
+type testStruct struct {
+}
 
 func main() {
 	//Close the connection to the database when the server is turn off
-	//defer cleanUpServer()
+	defer cleanUpServer()
 	//Connect to all of the services that is needed to run the server
-	//initApp()
+	initApp()
+	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+	i := users.RefreshToken{"a", "a", time.Now()}
+	err := users.SaveToken(nil, connectedDB, i)
+	if err != nil {
+		fmt.Println(reflect.TypeOf(err))
+	}
 	/*	email := "visalhok123@gmail.com"
 		firstName := "Visal"
 		lastName := "Hok"
@@ -25,25 +38,22 @@ func initApp() {
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
 	//Create listener for server
-	//createServer()
+	createServer()
 }
 
 //Close all of the connection to everything that the server is connected to
 func cleanUpServer() {
-	err := helpers.CloseConnectionToDatabase(helpers.GetCurrentDBConnection())
+	err := helpers.CloseConnectionToDatabaseAccount()
 	if err != nil {
-		log.Println("Close connection to DB error: ", err)
+		log.Println("Closed connection to DB error: ", err)
 	}
 }
 
-// //Initialize and start the server
-// func createServer() {
-// 	listener, err := net.Listen("tcp", ":8080")
-// 	if err != nil {
-// 		log.Fatalf("unable to listen prot 8080: %v", err)
-// 	}
+//Initialize and start the server
+func createServer() {
+	//listener, err := net.Listen("tcp", ":8080")
+	//if err != nil {
+	//	log.Fatalf("Unable to listen prot 8080: %v", err)
+	//}
 
-// 	srv := grpc.NewServer()
-// 	proto.RegisterServerRequestsServer(srv, &Server{})
-// 	srv.Serve(listener)
-// }
+}

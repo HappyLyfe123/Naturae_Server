@@ -16,12 +16,12 @@ import (
 )
 
 //Declare local global variable
-var dbAccount *mongo.Client
 var gmailAccount smtp.Auth
 
 type helperError struct {
-	ErrorCode    int16
-	ErrorMessage string
+	ErrorCode        int16
+	ErrorMessage     string
+	ErrorDescription string
 }
 
 //Email : Emailing structure for sending email
@@ -97,7 +97,7 @@ func IsEmailValid(email string) (bool, helperError) {
 func EmailExist(email string, database *mongo.Database, collectionName string) (bool, helperError) {
 	//Create a struct to get the result
 	var result struct {
-		Email string
+		email string
 	}
 
 	//Set a filter for the database to search through
@@ -112,10 +112,26 @@ func EmailExist(email string, database *mongo.Database, collectionName string) (
 		return false, helperError{}
 	}
 	return true, helperError{ErrorCode: GetEmailExistCode(), ErrorMessage: "Email exist"}
-
 }
 
-//IsPasswordValid : check if the password matches the gideline
+//TokenIDExist : check if the token id exist
+func TokenIDExist(database *mongo.Database, collectionName, tokenID string) bool {
+	var result struct {
+		token_id string
+	}
+	//
+	filter := bson.D{{Key: "token_id", Value: tokenID}}
+	tokenCollection := ConnectToCollection(database, collectionName)
+	err := tokenCollection.FindOne(context.TODO(), filter).Decode(&result)
+	//There no token id match token id
+	if err != nil {
+		return false
+	}
+	//There already exist a token id in the database
+	return true
+}
+
+//IsPasswordValid : check if the password matches the guideline
 func IsPasswordValid(password string) (bool, helperError) {
 	//Initialize all the local variables
 	var number, upper, lower, special bool

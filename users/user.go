@@ -2,49 +2,73 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"github.com/mongodb/mongo-go-driver/mongo"
-	"golang.org/x/net/context"
+	"context"
+	"github.com/pkg/errors"
 	"log"
 	"sync"
 	"time"
+
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 //create a struct for storing user info in database
 type userAccount struct {
-	Email            string
-	First_Name       string
-	Last_Name        string
-	Salt             string
-	Password         string
-	Is_Authenticated bool
+	Email           string
+	FirstName       string
+	LastName        string
+	Salt            string
+	Password        string
+	IsAuthenticated bool
 }
 
 //create authentication structure for user
 type userAuthentication struct {
-	Email      string
-	Code       string
-	Start_Time time.Time
+	Email     string
+	Code      string
+	StartTime time.Time
 }
 
-//create a struct for storing token
-type token struct {
-	Email      string
-	Token_ID   string
-	Start_Time time.Time
+//Create a struct for storing token
+type accessToken struct {
+	Email              string
+	TokenID            string
+	ChangeName         bool
+	ChangeProfileImage bool
+	SendFriendRequest  bool
+	SendMessage        bool
+	ReceieveMessage    bool
+	DeleteMessage      bool
+	ExpiredTime        time.Time
+}
+
+type RefreshToken struct {
+	Email       string
+	TokenID     string
+	ExpiredTime time.Time
 }
 
 //SaveToken : save token to the database
-func saveToken(wg *sync.WaitGroup, database *mongo.Database, collectionName string, token *token) {
-	defer wg.Done()
-	//If there an error, it will attempt to save the info to the database until the limit is reach
-	for numOfAttempt := 0; numOfAttempt < saveAttemptLimit; numOfAttempt++ {
-		//Connect to the database collection
-		currCollection := helpers.ConnectToCollection(database, collectionName)
-		_, err := currCollection.InsertOne(context.TODO(), token)
-		if err != nil {
-			log.Println("Save token error: ", err)
-		} else {
-			break
-		}
+func SaveToken(wg *sync.WaitGroup, database *mongo.Database, token interface{}) error {
+	//defer wg.Done()
+	var collectionName string
+	switch token.(type) {
+	case accessToken:
+		collectionName = helpers.GetAccessTokenCollection()
+		break
+	case RefreshToken:
+		collectionName = helpers.GetRefreshTokenCollection()
+		break
+	default:
+		log.Println("Invalid token type")
+		return errors.New("Invalid token type")
 	}
+	//Connect to the database collection
+	currCollection := helpers.ConnectToCollection(database, collectionName)
+	//Save token to the database
+	_, err := currCollection.InsertOne(context.TODO(), token)
+	if err != nil {
+		log.Println("Save token error: ", err)
+		return err
+	}
+	return nil
 }
