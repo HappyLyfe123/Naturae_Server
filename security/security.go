@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
+	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"math/big"
 	"strings"
@@ -105,6 +106,17 @@ func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
 		randomNum.Add(randomNum, big.NewInt(minNum))
 
 		return randomNum
+
+	}
+
+}
+
+func IsTokenValid(currDatabase *mongo.Database, tokenID, collectionName string){
+
+	//Check if it's a access token
+	if strings.Compare(helpers.GetAccessTokenCollection(), collectionName) == 1{
+
+	}else{
 
 	}
 

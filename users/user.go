@@ -2,7 +2,6 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"context"
 	"github.com/pkg/errors"
 	"log"
 	"sync"
@@ -32,12 +31,6 @@ type userAuthentication struct {
 type accessToken struct {
 	Email              string
 	TokenID            string
-	ChangeName         bool
-	ChangeProfileImage bool
-	SendFriendRequest  bool
-	SendMessage        bool
-	ReceieveMessage    bool
-	DeleteMessage      bool
 	ExpiredTime        time.Time
 }
 
@@ -51,6 +44,7 @@ type RefreshToken struct {
 func SaveToken(wg *sync.WaitGroup, database *mongo.Database, token interface{}) error {
 	//defer wg.Done()
 	var collectionName string
+	//Check to determine what type of toke to save
 	switch token.(type) {
 	case accessToken:
 		collectionName = helpers.GetAccessTokenCollection()
@@ -62,13 +56,16 @@ func SaveToken(wg *sync.WaitGroup, database *mongo.Database, token interface{}) 
 		log.Println("Invalid token type")
 		return errors.New("Invalid token type")
 	}
+
 	//Connect to the database collection
 	currCollection := helpers.ConnectToCollection(database, collectionName)
 	//Save token to the database
-	_, err := currCollection.InsertOne(context.TODO(), token)
+	_, err := currCollection.InsertOne(nil, token)
 	if err != nil {
 		log.Println("Save token error: ", err)
 		return err
 	}
 	return nil
 }
+
+
