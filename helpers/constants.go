@@ -1,28 +1,35 @@
 package helpers
 
 const (
-	invalidName            = 100
-	invalidEmail           = 101
-	invalidPassword        = 102
-	emailExist             = 150
-	ok                     = 200
-	created                = 201
-	accepted               = 202
-	invalidArguments       = 204
-	denied                 = 205
-	found                  = 302
-	badRequest             = 400
-	unauthorized           = 402
-	forbidden              = 403
-	notFound               = 404
-	notAcceptable          = 406
-	requestTimeout         = 408
-	internalServerError    = 500
-	badGateway             = 502
-	serviceUnavailable     = 503
-	passwordSaltLength     = 200
-	authCodeMaxNum         = 900000
-	authCodeMinNum         = 100000
+	invalidName      = 100
+	invalidEmail     = 103
+	invalidPassword  = 102
+	invalidToken     = 103
+	invalidTokenType = 104
+	emailExist       = 150
+
+	ok                  = 200
+	created             = 201
+	accepted            = 202
+	noError             = 203
+	invalidArguments    = 204
+	denied              = 205
+	duplicateInfo       = 206
+	badRequest          = 400
+	unauthorized        = 402
+	forbidden           = 403
+	notFound            = 404
+	notAcceptable       = 406
+	requestTimeout      = 408
+	internalServerError = 500
+	badGateway          = 502
+	serviceUnavailable  = 503
+
+	passwordSaltLength = 200
+	tokenLength        = 150
+	authCodeMaxNum     = 900000
+	authCodeMinNum     = 100000
+
 	gmailSMTPServer        = "smtp.gmail.com:587"
 	gmailSMTPHost          = "smtp.gmail.com"
 	gmailEmailAddress      = "naturae.outdoor@gmail.com"
@@ -50,6 +57,11 @@ func GetInvalidPasswordCode() int16 {
 	return invalidPassword
 }
 
+//GetInvalidTokenCode : Return invalid token error code
+func GetInvalidTokenCode() int16 {
+	return invalidToken
+}
+
 //GetEmailExistCode : Return email exist error code
 func GetEmailExistCode() int16 {
 	return emailExist
@@ -68,11 +80,6 @@ func GetCreatedStatusCode() int16 {
 //GetAcceptedStatusCode : Return accepted status code
 func GetAcceptedStatusCode() int16 {
 	return accepted
-}
-
-//GetFoundStatusCode : Return found status code
-func GetFoundStatusCode() int16 {
-	return found
 }
 
 //GetBadRequestStatusCode : Return bad request status code
@@ -125,9 +132,24 @@ func GetDeniedStatusCode() int16 {
 	return denied
 }
 
+//GetDuplicateInfoCode : Return duplicate information code
+func GetDuplicateInfoCode() int16 {
+	return duplicateInfo
+}
+
+//GetNoErrorCode : Return no error code
+func GetNoErrorCode() int16 {
+	return noError
+}
+
 //GetSaltLength : return the salt length
 func GetSaltLength() int {
 	return passwordSaltLength
+}
+
+//GetTokenLength : Return the length of the token
+func GetTokenLength() int {
+	return tokenLength
 }
 
 //GetInvalidArgument : return invalid argument

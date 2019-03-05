@@ -5,11 +5,12 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
-	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
 	"math/big"
 	"strings"
 	"time"
+
+	"github.com/mongodb/mongo-go-driver/mongo"
 )
 
 // CheckAppKey : Check if the app key is valid
@@ -33,27 +34,9 @@ func CheckRefreshToken(username, tokenID string) {
 
 }
 
-//GenerateToken : Generate an access token and refresh token for user
-//userEmail : the user that the token will be created for
-//lifeSpan : the amount of time that the token going to last
-func GenerateToken(userEmail string, tokenType int8, tokenIDChan chan string, startTimeChan chan time.Time) {
-	//Initialize tokeID to an empty string
-	tokenID := ""
-	//Generate a start time for the token
-	startTime := time.Now()
-	//Generate an end time for the token
-	randomData := GenerateRandomBytes(300)
-	//Generate a token id
-	tempTokenID := GenerateHash(randomData, helpers.ConvertStringToByte(userEmail))
-
-	if tokenType == 1 {
-		tokenID = helpers.ConvertByteToString(helpers.RandomizeData(tempTokenID))
-	} else {
-		tokenID = helpers.ConvertByteToString(tempTokenID)
-	}
-
-	tokenIDChan <- tokenID
-	startTimeChan <- startTime
+//GenerateTokenID : Generate a token id for the user
+func GenerateTokenID() string {
+	return helpers.ConvertByteToStringBase64(GenerateHash(GenerateRandomBytes(helpers.GetTokenLength()), nil))
 }
 
 //GenerateAuthenCode : generate an authentication to verify the user
@@ -82,7 +65,7 @@ func GenerateRandomBytes(len int) []byte {
 	newData := make([]byte, len)
 	//If there an error it going to loop until there are no error
 	for {
-		//Generate a pseudorandom number
+		//Generate a pseudo random number
 		_, err := rand.Read(newData)
 		if err == nil {
 			return newData
@@ -111,13 +94,9 @@ func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
 
 }
 
-func IsTokenValid(currDatabase *mongo.Database, tokenID, collectionName string){
-
-	//Check if it's a access token
-	if strings.Compare(helpers.GetAccessTokenCollection(), collectionName) == 1{
-
-	}else{
+func IsTokenValid(currDatabase *mongo.Database, collectionName, tokenID string) {
+	switch collectionName {
+	case helpers.GetAccessTokenCollection():
 
 	}
-
 }

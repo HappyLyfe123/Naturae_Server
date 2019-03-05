@@ -4,11 +4,13 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/smtp"
 	"os"
 	"regexp"
+	"strings"
 	"unicode"
 
 	"github.com/mongodb/mongo-go-driver/bson"
@@ -18,10 +20,11 @@ import (
 //Declare local global variable
 var gmailAccount smtp.Auth
 
-type helperError struct {
-	ErrorCode        int16
-	ErrorMessage     string
-	ErrorDescription string
+//AppError : naturae custom error
+type AppError struct {
+	Code        int16
+	Type        string
+	Description string
 }
 
 //Email : Emailing structure for sending email
@@ -29,6 +32,11 @@ type Email struct {
 	Receiver string
 	Subject  string
 	Body     string
+}
+
+//Error : create a custom error handling format
+func (error AppError) Error() string {
+	return fmt.Sprintf(`{"code": %d, "type" : "%s", "description": "%s"}`, error.Code, error.Type, error.Description)
 }
 
 //ConnectToGmailAccount : Connect to the Gmail email client
@@ -44,8 +52,8 @@ func ConvertStringToByte(stringData string) []byte {
 	return bytesData
 }
 
-//ConvertByteToString : Convert bytes array to string
-func ConvertByteToString(bytesData []byte) string {
+//ConvertByteToString : Convert bytes array to string as base64
+func ConvertByteToStringBase64(bytesData []byte) string {
 	//Convert bytes array into base64 string
 	stringData := base64.StdEncoding.EncodeToString(bytesData)
 	return stringData
@@ -80,7 +88,7 @@ func SendEmail(sendEmail *Email) error {
 }
 
 //IsEmailValid : Check if the email match the guideline and if there an existing account with that email address
-func IsEmailValid(email string) (bool, helperError) {
+func IsEmailValid(email string) (bool, AppError) {
 	//Generate an Regexp to check user email address
 	emailRegexp := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9]" +
 		"(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -88,13 +96,13 @@ func IsEmailValid(email string) (bool, helperError) {
 	if !emailRegexp.MatchString(email) {
 		log.Println("Invalid email format")
 		//Return false if the email exist in the database
-		return false, helperError{ErrorCode: GetInvalidEmailCode(), ErrorMessage: "Invalid email address"}
+		return false, AppError{Code: GetInvalidEmailCode(), Type: "Invalid email address", Description: ""}
 	}
-	return true, helperError{}
+	return true, AppError{}
 }
 
 //EmailExist : check in the database if there already an account with that email address
-func EmailExist(email string, database *mongo.Database, collectionName string) (bool, helperError) {
+func EmailExist(email string, database *mongo.Database, collectionName string) (bool, AppError) {
 	//Create a struct to get the result
 	var result struct {
 		email string
@@ -109,30 +117,33 @@ func EmailExist(email string, database *mongo.Database, collectionName string) (
 
 	//If there an error or no email found it will return false
 	if err != nil {
-		return false, helperError{}
+		return false, AppError{}
 	}
-	return true, helperError{ErrorCode: GetEmailExistCode(), ErrorMessage: "Email exist"}
+	return true, AppError{Code: GetEmailExistCode(), Type: "Email exist", Description: "Account with the email is taken"}
 }
 
 //TokenIDExist : check if the token id exist
-func TokenIDExist(database *mongo.Database, collectionName, tokenID string) bool {
+func TokenIDValid(database *mongo.Database, collectionName, tokenID, email string) bool {
 	var result struct {
-		token_id string
+		Email   string
+		TokenID string
 	}
-	//
-	filter := bson.D{{Key: "token_id", Value: tokenID}}
+	filter := bson.D{{Key: "TokenID", Value: tokenID}}
 	tokenCollection := ConnectToCollection(database, collectionName)
 	err := tokenCollection.FindOne(context.TODO(), filter).Decode(&result)
 	//There no token id match token id
-	if err != nil {
-		return false
+	if err == nil {
+		//Make sure that the token id belong to the correct user
+		if strings.Compare(result.Email, email) == 1 {
+			return true
+		}
 	}
 	//There already exist a token id in the database
-	return true
+	return false
 }
 
 //IsPasswordValid : check if the password matches the guideline
-func IsPasswordValid(password string) (bool, helperError) {
+func IsPasswordValid(password string) (bool, AppError) {
 	//Initialize all the local variables
 	var number, upper, lower, special bool
 	character := 0
@@ -152,31 +163,33 @@ func IsPasswordValid(password string) (bool, helperError) {
 			special = true
 			character++
 		default:
-			return false, helperError{ErrorCode: GetInvalidPasswordCode(), ErrorMessage: "Invalid password"}
+			return false, AppError{Code: GetInvalidPasswordCode(), Type: "invalid password", Description: "there are invalid character in the password"}
 		}
 	}
 	//Check if the password is at least 8 characters long
 	eightOrMore := character >= 8
 	//The password meet all of the guideline
 	if number && upper && lower && special && eightOrMore {
-		return true, helperError{}
+		return true, AppError{}
 	}
-	return false, helperError{ErrorCode: GetInvalidPasswordCode(), ErrorMessage: "Invalid passwords"}
+	return false, AppError{Code: GetInvalidPasswordCode(), Type: "invalid password", Description: "password is less than 8 characters"}
 }
 
 //IsNameValid : Check if the name contain any of not valid characters
-func IsNameValid(name string) (bool, helperError) {
+func IsNameValid(name string) (bool, AppError) {
 	for _, c := range name {
 		//If the name doesn't match the guide it will return false
 		if !regexp.MustCompile(`[a-zA-Z_ '-]`).MatchString(string(c)) {
-			return false, helperError{ErrorCode: GetInvalidNameCode(), ErrorMessage: "Invalid name"}
+			return false, AppError{Code: GetInvalidNameCode(), Type: "invalid name", Description: "there are invalid character in name"}
 		}
 	}
 	//Return that the name is valid
-	return true, helperError{}
+	return true, AppError{}
 }
 
-//GetCurrentDBConnection : Get the database that the server is currently connected to
-func GetCurrentDBConnection() *mongo.Client {
-	return dbAccount
+//ConvertStringToJSON : Convert string into json format
+func ConvertStringToJSON(data *string, format interface{}) interface{} {
+	result := format
+	json.Unmarshal([]byte(*data), &result)
+	return result
 }

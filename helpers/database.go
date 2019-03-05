@@ -26,9 +26,6 @@ func ConnectToDBAccount() {
 }
 
 //ConnectToDB : connect to a database
-//databaseName : the database name to connect to
-//collectionName : the collection name to connect to
-//Return : mongodb collection object
 func ConnectToDB(databaseName string) *mongo.Database {
 	return dbAccount.Database(databaseName)
 }
@@ -36,6 +33,11 @@ func ConnectToDB(databaseName string) *mongo.Database {
 //ConnectToCollection : connect to the database collection
 func ConnectToCollection(currDB *mongo.Database, collectionName string) *mongo.Collection {
 	return currDB.Collection(collectionName)
+}
+
+//GetCurrentDBConnection : Get the database that the server is currently connected to
+func GetCurrentDBConnection() *mongo.Client {
+	return dbAccount
 }
 
 //DropCollection : drop the collection that is currently connect it to
@@ -55,8 +57,7 @@ func DropDatabase(currDB *mongo.Database) error {
 	return nil
 }
 
-//CloseConnectionToDatabaseClient : close the current collection to the database
-//@database : the database client that is to be close
+//CloseConnectionToDatabaseAccount : close the current collection to the database
 func CloseConnectionToDatabaseAccount() error {
 	//Disconnect from the database account
 	err := dbAccount.Disconnect(context.TODO())

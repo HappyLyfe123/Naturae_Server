@@ -2,7 +2,7 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"github.com/pkg/errors"
+	"github.com/mongodb/mongo-go-driver/bson"
 	"log"
 	"sync"
 	"time"
@@ -20,52 +20,80 @@ type userAccount struct {
 	IsAuthenticated bool
 }
 
-//create authentication structure for user
-type userAuthentication struct {
-	Email     string
-	Code      string
-	StartTime time.Time
-}
-
-//Create a struct for storing token
 type accessToken struct {
-	Email              string
-	TokenID            string
-	ExpiredTime        time.Time
-}
-
-type RefreshToken struct {
 	Email       string
-	TokenID     string
+	ID          string
+	admin       bool
 	ExpiredTime time.Time
 }
 
-//SaveToken : save token to the database
-func SaveToken(wg *sync.WaitGroup, database *mongo.Database, token interface{}) error {
-	//defer wg.Done()
-	var collectionName string
-	//Check to determine what type of toke to save
-	switch token.(type) {
-	case accessToken:
-		collectionName = helpers.GetAccessTokenCollection()
-		break
-	case RefreshToken:
-		collectionName = helpers.GetRefreshTokenCollection()
-		break
-	default:
-		log.Println("Invalid token type")
-		return errors.New("Invalid token type")
-	}
-
-	//Connect to the database collection
-	currCollection := helpers.ConnectToCollection(database, collectionName)
-	//Save token to the database
-	_, err := currCollection.InsertOne(nil, token)
-	if err != nil {
-		log.Println("Save token error: ", err)
-		return err
-	}
-	return nil
+//Create a struct for storing token
+type refreshToken struct {
+	Email       string
+	ID          string
+	ExpiredTime time.Time
 }
 
+//The the user account info from the database
+func getUserAccountInfo(database *mongo.Database, email string) (*userAccount, error) {
 
+	var result userAccount
+	//Set a filter for the database to search through
+	filter := bson.D{{Key: "email", Value: email}}
+	//Connect to the collection database
+	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
+	//Make a request to the database
+	err := userCollection.FindOne(nil, filter).Decode(&result)
+	if err != nil {
+		return &result, err
+	}
+	return &result, nil
+}
+
+func getLoginInfo(database *mongo.Database, email string) (*loginInfo, error) {
+	var result loginInfo
+
+	filter := bson.D{{Key: "email", Value: email}}
+	//Connect to the collection database
+	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
+	//Make a request to the database
+	err := userCollection.FindOne(nil, filter).Decode(&result)
+	if err != nil {
+		return &loginInfo{}, err
+	}
+	return &result, nil
+
+}
+
+//Save access token to database
+func (token *accessToken) saveToken(wg *sync.WaitGroup, database *mongo.Database) helpers.AppError {
+	defer wg.Done()
+	connectedCollection := helpers.ConnectToCollection(database, helpers.GetAccessTokenCollection())
+	_, err := connectedCollection.InsertOne(nil, token)
+	if err != nil {
+		return helpers.AppError{Code: helpers.GetDuplicateInfoCode(), Type: "duplicate token id", Description: err.Error()}
+	}
+	log.Println("Save", token.Email, "access token to access token database")
+	return helpers.AppError{Code: helpers.GetNoErrorCode(), Type: "None", Description: "None"}
+}
+
+func (token *refreshToken) saveToken(wg *sync.WaitGroup, database *mongo.Database) helpers.AppError {
+	defer wg.Done()
+	connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
+	_, err := connectedCollection.InsertOne(nil, token)
+	if err != nil {
+		return helpers.AppError{Code: helpers.GetDuplicateInfoCode(), Type: "duplicate token id", Description: err.Error()}
+	}
+	log.Println("Save", token.Email, "refresh token to refresh token database")
+	return helpers.AppError{Code: helpers.GetNoErrorCode(), Type: "None", Description: "None"}
+}
+
+//Update the user first name in the database
+func upDateUserFirstName(name string) {
+
+}
+
+//Update the user last name in the database
+func upDateUserLastName(name string) {
+
+}
