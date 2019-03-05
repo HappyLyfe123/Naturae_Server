@@ -42,10 +42,10 @@ func GenerateTokenID() string {
 //GenerateAuthenCode : generate an authentication to verify the user
 func GenerateAuthenCode() (string, time.Time) {
 	//The time that the authentication code is created
-	startTime := time.Now()
+	expiredTime := time.Now().Add(time.Minute * 30)
 	authenCode := GenerateRandomNumber(helpers.GetAuthCodeMinNum(), helpers.GetAuthCodeMaxNum()).String()
 
-	return authenCode, startTime
+	return authenCode, expiredTime
 }
 
 //GenerateHash : Hash password with salt using sha512

@@ -13,9 +13,9 @@ import (
 
 //create authentication structure for user
 type userAuthentication struct {
-	Email     string
-	Code      string
-	StartTime time.Time
+	Email       string
+	Code        string
+	ExpiredTime time.Time
 }
 
 //NewAccount : create new account structure
@@ -117,7 +117,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, map
 		//Save authentication Code
 		go func() {
 			wg.Add(1)
-			saveAuthenticationCode(&wg, connectedDB, helpers.GetAccountVerification(), &newAuthenCode)
+			saveAuthenticationCode(&wg, connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
 		}()
 
 		//Wait until all of the go routine to finish

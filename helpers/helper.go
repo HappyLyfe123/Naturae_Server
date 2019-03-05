@@ -11,6 +11,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/mongodb/mongo-go-driver/bson"
@@ -185,6 +186,15 @@ func IsNameValid(name string) (bool, AppError) {
 	}
 	//Return that the name is valid
 	return true, AppError{}
+}
+
+//Check if the time is valid
+func IsTimeValid(expiredTime time.Time) bool {
+	if time.Now().After(expiredTime) {
+		return false
+	} else {
+		return true
+	}
 }
 
 //ConvertStringToJSON : Convert string into json format

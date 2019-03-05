@@ -41,5 +41,4 @@ func Login(email, password string) {
 	} else {
 		fmt.Println("Password does not match")
 	}
-
 }

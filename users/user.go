@@ -65,6 +65,20 @@ func getLoginInfo(database *mongo.Database, email string) (*loginInfo, error) {
 
 }
 
+func getAuthenCode(database *mongo.Database, email string) (*userAuthentication, error) {
+	var result userAuthentication
+	filter := bson.D{{Key: "email", Value: email}}
+	//Connect to the collection database
+	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountAuthentication())
+	//Make a request to the database
+	err := userCollection.FindOne(nil, filter).Decode(&result)
+	if err != nil {
+		return &userAuthentication{}, err
+	}
+	return &result, nil
+
+}
+
 //Save access token to database
 func (token *accessToken) saveToken(wg *sync.WaitGroup, database *mongo.Database) helpers.AppError {
 	defer wg.Done()

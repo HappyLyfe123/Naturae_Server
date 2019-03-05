@@ -39,7 +39,7 @@ const (
 	accountInfoCollection  = "Account_Information"
 	accessTokenCollection  = "Access_Token"
 	refreshTokenCollection = "Refresh_Token"
-	accountVerification    = "Account_Verification"
+	accountAuthentication  = "Account_Authentication"
 )
 
 //GetInvalidNameCode : Return invalid name error code
@@ -208,8 +208,8 @@ func GetRefreshTokenCollection() string {
 }
 
 //GetAccountVerification : get the name for account veritication collection
-func GetAccountVerification() string {
-	return accountVerification
+func GetAccountAuthentication() string {
+	return accountAuthentication
 }
 
 //GetUserDatabase : get the user database name
