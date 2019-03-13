@@ -2,7 +2,6 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"Naturae_Server/security"
 	"fmt"
 	"log"
 	"sync"
@@ -20,31 +19,32 @@ type userAuthentication struct {
 
 //NewAccount : create new account structure
 type NewAccount struct {
+	Success      bool
 	AccessToken  string
 	RefreshToken string
 }
 
 //CreateAccount : User want to create an account
-func CreateAccount(email, firstName, lastName, password string) (NewAccount, map[int16]string) {
+func CreateAccount(email, firstName, lastName, password string) (NewAccount, []helpers.AppError) {
 
 	//Connect to the users database
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-	errorList := make(map[int16]string)
+	var errorList []helpers.AppError
 	//Set a wait group for multi-threading
 	//It will wait for all of the thread process to finish before moving on
 	var wg sync.WaitGroup
 
 	//Check if the provided information meet the app requirement
 	isEmailValid, err := helpers.IsEmailValid(email)
-	errorList[err.Code] = err.Type
+	errorList = append(errorList, err)
 	isEmailExist, err := helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
-	errorList[err.Code] = err.Description
+	errorList = append(errorList, err)
 	isFirstNameValid, err := helpers.IsNameValid(firstName)
-	errorList[err.Code] = err.Type
+	errorList = append(errorList, err)
 	isLastNameValid, err := helpers.IsNameValid(lastName)
-	errorList[err.Code] = err.Type
+	errorList = append(errorList, err)
 	isPasswordValid, err := helpers.IsPasswordValid(password)
-	errorList[err.Code] = err.Type
+	errorList = append(errorList, err)
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
 	if isEmailValid && !isEmailExist && isFirstNameValid && isLastNameValid && isPasswordValid {
@@ -56,69 +56,37 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, map
 		defer close(endTime)
 
 		//Generate random bytes of data to be use as salt for the password
-		salt := security.GenerateRandomBytes(helpers.GetSaltLength())
+		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
 		//Generate a hash for the user password
-		hashPassword := security.GenerateHash(helpers.ConvertStringToByte(password), salt)
+		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
 
 		//Create a new user
 		newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
 			Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
 
 		//Generate access token and set it to have a life span of 6 hours
-		accessToken := accessToken{Email: email, ID: security.GenerateTokenID(), admin: false, ExpiredTime: time.Now().Add(time.Hour * 6)}
-		refreshToken := refreshToken{Email: email, ID: security.GenerateTokenID(), ExpiredTime: time.Now().AddDate(500, 0, 0)}
+		accessToken := helpers.GenerateAccessToken(email)
+		refreshToken := helpers.GenerateRefreshToken(email)
 
 		//Generate authentication Code
-		generatedCode, startTime := security.GenerateAuthenCode()
+		generatedCode, startTime := helpers.GenerateAuthenCode()
 		newAuthenCode := userAuthentication{email, generatedCode, startTime}
 
 		//Save the user to the database
-		go func() {
-			wg.Add(1)
-			saveNewUser(&wg, connectedDB, helpers.GetAccountInfoCollection(), &newUser)
-		}()
+		go saveNewUser(&wg, connectedDB, helpers.GetAccountInfoCollection(), &newUser)
+		wg.Add(1)
 
 		//Generate and save access token for the user
-		go func() {
-			numOfAttempt := 0
-			for saveSuccess := false; !saveSuccess; {
-				wg.Add(1)
-				err := accessToken.saveToken(&wg, connectedDB)
-				if err.Code == helpers.GetDuplicateInfoCode() {
-					log.Println("Saving access token error:", err)
-					accessToken.ID = security.GenerateTokenID()
-					numOfAttempt++
-				} else if numOfAttempt == 10 {
-					log.Fatalln("Saving access token limit reach in create account")
-				} else {
-					saveSuccess = true
-				}
-			}
-		}()
+		go saveAccessToken(&wg, connectedDB, &accessToken)
+		wg.Add(1)
 
 		//Generate and save refresh token for the user
-		go func() {
-			numOfAttempt := 0
-			for saveSuccess := false; !saveSuccess; {
-				wg.Add(1)
-				err := refreshToken.saveToken(&wg, connectedDB)
-				if err.Code == helpers.GetDuplicateInfoCode() {
-					log.Println("Saving refresh token error:", err)
-					refreshToken.ID = security.GenerateTokenID()
-					numOfAttempt++
-				} else if numOfAttempt == 10 {
-					log.Fatalln("Saving refresh token limit reach in create account")
-				} else {
-					saveSuccess = true
-				}
-			}
-		}()
+		go saveRefreshToken(&wg, connectedDB, &refreshToken)
+		wg.Add(1)
 
 		//Save authentication Code
-		go func() {
-			wg.Add(1)
-			saveAuthenticationCode(&wg, connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
-		}()
+		go saveAuthenticationCode(&wg, connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+		wg.Add(1)
 
 		//Wait until all of the go routine to finish
 		wg.Wait()
@@ -126,10 +94,10 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, map
 		//Send the user a welcome message and user authentication number to the provided email address
 		sendAuthenticationCode(email, firstName, generatedCode)
 		log.Println("A new account was created for:", email)
-		return NewAccount{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
+		return NewAccount{Success: true, AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return NewAccount{AccessToken: "", RefreshToken: ""}, errorList
+		return NewAccount{Success: false, AccessToken: "", RefreshToken: ""}, errorList
 	}
 
 }

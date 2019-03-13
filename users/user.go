@@ -5,7 +5,6 @@ import (
 	"github.com/mongodb/mongo-go-driver/bson"
 	"log"
 	"sync"
-	"time"
 
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
@@ -18,20 +17,6 @@ type userAccount struct {
 	Salt            string
 	Password        string
 	IsAuthenticated bool
-}
-
-type accessToken struct {
-	Email       string
-	ID          string
-	admin       bool
-	ExpiredTime time.Time
-}
-
-//Create a struct for storing token
-type refreshToken struct {
-	Email       string
-	ID          string
-	ExpiredTime time.Time
 }
 
 //The the user account info from the database
@@ -80,26 +65,39 @@ func getAuthenCode(database *mongo.Database, email string) (*userAuthentication,
 }
 
 //Save access token to database
-func (token *accessToken) saveToken(wg *sync.WaitGroup, database *mongo.Database) helpers.AppError {
+func saveAccessToken(wg *sync.WaitGroup, database *mongo.Database, token *helpers.AccessToken) {
 	defer wg.Done()
-	connectedCollection := helpers.ConnectToCollection(database, helpers.GetAccessTokenCollection())
-	_, err := connectedCollection.InsertOne(nil, token)
-	if err != nil {
-		return helpers.AppError{Code: helpers.GetDuplicateInfoCode(), Type: "duplicate token id", Description: err.Error()}
+	for saveSuccessful := false; saveSuccessful == false; {
+		connectedCollection := helpers.ConnectToCollection(database, helpers.GetAccessTokenCollection())
+		_, err := connectedCollection.InsertOne(nil, token)
+		//If there an duplicate ID generate a new a new ID and try to save again
+		if err != nil {
+			//Generate a new token ID
+			token.ID = helpers.GenerateTokenID()
+		} else {
+			log.Println("Save", token, "access token to access token database")
+			saveSuccessful = true
+		}
 	}
-	log.Println("Save", token.Email, "access token to access token database")
-	return helpers.AppError{Code: helpers.GetNoErrorCode(), Type: "None", Description: "None"}
+
 }
 
-func (token *refreshToken) saveToken(wg *sync.WaitGroup, database *mongo.Database) helpers.AppError {
+func saveRefreshToken(wg *sync.WaitGroup, database *mongo.Database, token *helpers.RefreshToken) {
 	defer wg.Done()
-	connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
-	_, err := connectedCollection.InsertOne(nil, token)
-	if err != nil {
-		return helpers.AppError{Code: helpers.GetDuplicateInfoCode(), Type: "duplicate token id", Description: err.Error()}
+
+	for saveSuccessful := false; saveSuccessful == false; {
+		connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
+		_, err := connectedCollection.InsertOne(nil, token)
+		if err != nil {
+			//Generate a new token ID
+			token.ID = helpers.GenerateTokenID()
+		} else {
+			log.Println("Save", token.Email, "refresh token to refresh token database")
+			saveSuccessful = true
+		}
+
 	}
-	log.Println("Save", token.Email, "refresh token to refresh token database")
-	return helpers.AppError{Code: helpers.GetNoErrorCode(), Type: "None", Description: "None"}
+
 }
 
 //Update the user first name in the database

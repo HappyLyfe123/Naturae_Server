@@ -2,11 +2,9 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"Naturae_Server/security"
-	"fmt"
+	"bytes"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"log"
-	"strings"
 )
 
 type loginInfo struct {
@@ -15,30 +13,50 @@ type loginInfo struct {
 	IsAuthenticated bool
 }
 
+type loginResponse struct {
+	Success      bool
+	AccessToken  string
+	RefreshToken string
+}
+
 //Login : Let the user login into their account
-func Login(email, password string) {
-	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-	databaseResult, err := getLoginInfo(connectedDB, email)
+func Login(email, password string) (loginResponse, helpers.AppError) {
+	userInfo := helpers.ConnectToDB(helpers.GetUserDatabase())
+	databaseResult, err := getLoginInfo(userInfo, email)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			log.Println("Getting login info in login error:", err)
-			return
-			//Check if the user already authenticated the account
 		} else {
-			log.Println("Getting login info format error: ")
-			return
+			log.Println("Getting login info format error: ", err)
 		}
+		//Check if the user already authenticated the account
 	} else if databaseResult.IsAuthenticated == false {
-		return
-	}
-	//Hash and salt the password the user provided
-	hashPassword := security.GenerateHash(helpers.ConvertStringToByte(password),
-		helpers.ConvertStringToByte(databaseResult.Salt))
 
-	//Check if the password match
-	if strings.Compare(databaseResult.Password, helpers.ConvertByteToStringBase64(hashPassword)) == 1 {
-		fmt.Println("Password match")
+		return loginResponse{Success: false, AccessToken: "", RefreshToken: ""}, helpers.AppError{Code: helpers.GetAccountNotVerifyCode(),
+			Type: "Account Verification", Description: "User account was not verify"}
 	} else {
-		fmt.Println("Password does not match")
+		//Hash the provide password with the stored salt from the database
+		checkPasswordHash := helpers.GenerateHash(helpers.ConvertStringToByte(password), helpers.ConvertStringToByte(databaseResult.Salt))
+		//Check if the two hash password match
+		if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkPasswordHash) == 1 {
+			accessToken, err := helpers.GetAccessToken(userInfo, email)
+			if err != nil {
+				log.Println("Getting access token error: ", err)
+				return loginResponse{Success: false, AccessToken: "", RefreshToken: ""},
+					helpers.AppError{Code: helpers.GetInternalServerErrorStatusCode(), Type: "Server error",
+						Description: "Internal server error"}
+			}
+			refreshToken, err := helpers.GetRefreshToken(userInfo, email)
+			if err != nil {
+				log.Println("Getting refresh token error: ", err)
+				return loginResponse{Success: false, AccessToken: "", RefreshToken: ""},
+					helpers.AppError{Code: helpers.GetInternalServerErrorStatusCode(), Type: "Server error",
+						Description: "Internal server error"}
+			}
+			return loginResponse{Success: true, AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, helpers.AppError{}
+		}
 	}
+	return loginResponse{Success: false, AccessToken: "", RefreshToken: ""},
+		helpers.AppError{Code: helpers.GetInvalidLoginCredentialCode(), Type: "Invalid login credential", Description: "Invalid " +
+			"email or password"}
 }

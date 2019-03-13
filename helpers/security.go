@@ -1,10 +1,10 @@
-package security
+package helpers
 
 import (
-	"Naturae_Server/helpers"
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
+	"github.com/mongodb/mongo-go-driver/bson"
 	"log"
 	"math/big"
 	"strings"
@@ -12,6 +12,20 @@ import (
 
 	"github.com/mongodb/mongo-go-driver/mongo"
 )
+
+type AccessToken struct {
+	Email       string
+	ID          string
+	Admin       bool
+	ExpiredTime time.Time
+}
+
+//Create a struct for storing token
+type RefreshToken struct {
+	Email       string
+	ID          string
+	ExpiredTime time.Time
+}
 
 // CheckAppKey : Check if the app key is valid
 // @appKey : provided app key to be check
@@ -26,7 +40,7 @@ func CheckAppKey(appKey string) bool {
 
 //CheckAccessToken : Check is access token is valid
 func CheckAccessToken(username, tokenID string) {
-	fmt.Println(helpers.GetDeniedStatusCode())
+	fmt.Println(GetDeniedStatusCode())
 }
 
 //CheckRefreshToken : Check if the token is valid
@@ -34,16 +48,30 @@ func CheckRefreshToken(username, tokenID string) {
 
 }
 
-//GenerateTokenID : Generate a token id for the user
+//GenerateAccessToken : Generate access token
+func GenerateAccessToken(email string) AccessToken {
+	//Create an access token that have a life span of 12 hours
+	return AccessToken{Email: email, ID: GenerateTokenID(),
+		Admin: false, ExpiredTime: time.Now().Add(time.Hour * 12)}
+
+}
+
+//GenerateRefreshToken : Generate refresh token
+func GenerateRefreshToken(email string) RefreshToken {
+	//Refresh token have a life span of 200 years
+	return RefreshToken{Email: email, ID: GenerateTokenID(), ExpiredTime: time.Now().AddDate(200, 0, 0)}
+}
+
+//GenerateTokenID : Generate an id for a token
 func GenerateTokenID() string {
-	return helpers.ConvertByteToStringBase64(GenerateHash(GenerateRandomBytes(helpers.GetTokenLength()), nil))
+	return ConvertByteToStringBase64(GenerateHash(GenerateRandomBytes(GetTokenLength()), nil))
 }
 
 //GenerateAuthenCode : generate an authentication to verify the user
 func GenerateAuthenCode() (string, time.Time) {
 	//The time that the authentication code is created
 	expiredTime := time.Now().Add(time.Minute * 30)
-	authenCode := GenerateRandomNumber(helpers.GetAuthCodeMinNum(), helpers.GetAuthCodeMaxNum()).String()
+	authenCode := GenerateRandomNumber(GetAuthCodeMinNum(), GetAuthCodeMaxNum()).String()
 
 	return authenCode, expiredTime
 }
@@ -94,9 +122,36 @@ func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
 
 }
 
+//IsTokenValid : check if the token is valid
 func IsTokenValid(currDatabase *mongo.Database, collectionName, tokenID string) {
 	switch collectionName {
-	case helpers.GetAccessTokenCollection():
+	case GetAccessTokenCollection():
 
 	}
+}
+
+func GetAccessToken(currDatabase *mongo.Database, email string) (AccessToken, error) {
+	var result AccessToken
+	filter := bson.D{{Key: "Email", Value: email}}
+	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
+	err := tokenCollection.FindOne(nil, filter).Decode(&result)
+	//There no token id match token id
+	if err != nil {
+		return result, err
+	}
+	//There already exist a token ID in the database
+	return result, nil
+}
+
+func GetRefreshToken(currDatabase *mongo.Database, email string) (RefreshToken, error) {
+	var result RefreshToken
+	filter := bson.D{{Key: "Email", Value: email}}
+	tokenCollection := ConnectToCollection(currDatabase, GetRefreshTokenCollection())
+	err := tokenCollection.FindOne(nil, filter).Decode(&result)
+	//There no token id match token id
+	if err != nil {
+		return result, err
+	}
+	//There already exist a token ID in the database
+	return result, nil
 }

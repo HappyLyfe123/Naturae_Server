@@ -10,7 +10,6 @@ import (
 	"net/smtp"
 	"os"
 	"regexp"
-	"strings"
 	"time"
 	"unicode"
 
@@ -121,26 +120,6 @@ func EmailExist(email string, database *mongo.Database, collectionName string) (
 		return false, AppError{}
 	}
 	return true, AppError{Code: GetEmailExistCode(), Type: "Email exist", Description: "Account with the email is taken"}
-}
-
-//TokenIDExist : check if the token id exist
-func TokenIDValid(database *mongo.Database, collectionName, tokenID, email string) bool {
-	var result struct {
-		Email   string
-		TokenID string
-	}
-	filter := bson.D{{Key: "TokenID", Value: tokenID}}
-	tokenCollection := ConnectToCollection(database, collectionName)
-	err := tokenCollection.FindOne(context.TODO(), filter).Decode(&result)
-	//There no token id match token id
-	if err == nil {
-		//Make sure that the token id belong to the correct user
-		if strings.Compare(result.Email, email) == 1 {
-			return true
-		}
-	}
-	//There already exist a token id in the database
-	return false
 }
 
 //IsPasswordValid : check if the password matches the guideline

@@ -2,20 +2,19 @@ package main
 
 import (
 	"Naturae_Server/helpers"
-	"Naturae_Server/users"
 	"log"
 )
 
 func main() {
 	//Close the connection to the database when the server is turn off
-	//defer cleanUpServer()
-	users.Login("visalhok123@gmail.com", "ABab1234!@#")
+	defer cleanUpServer()
+	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
-	email := "visalhok123@gmail.com"
-	firstName := "Visal"
-	lastName := "Hok"
-	password := "ABab1234!@#"
-	users.CreateAccount(email, firstName, lastName, password)
+	//email := "visalhok123@gmail.com"
+	//firstName := "Visal"
+	//lastName := "Hok"
+	//password := "ABab1234!@#"
+	//users.CreateAccount(email, firstName, lastName, password)
 }
 
 //Initialize all of the variable to be uses

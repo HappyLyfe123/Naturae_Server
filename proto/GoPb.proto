@@ -6,6 +6,7 @@ package proto;
 service ServerRequests{
     rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
     rpc Login (LoginRequest) returns(LoginReply){}
+    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
 }
 
 message CreateAccountRequest{
@@ -17,10 +18,10 @@ message CreateAccountRequest{
 }
 
 message CreateAccountReply{
-    string appKey = 1;
+    bool success = 1;
     string accessToken = 2;
     string refreshToken = 3;
-    map<string, string> errorList = 4;
+    repeated AppError errorList = 4;
 }
 
 message LoginRequest{
@@ -30,8 +31,24 @@ message LoginRequest{
 }
 
 message LoginReply{
-    string appKey = 1;
+    bool success = 1;
     string accessToken = 2;
     string refreshToken = 3;
-    map<string, string> errorList = 4;
+    AppError error = 4;
+}
+
+message AccountAuthenRequest{
+    string appKey = 1;
+    string email = 2;
+    string AuthenCode = 3;
+}
+
+message AccountAuthenReply{
+    bool success = 1;
+}
+
+message AppError{
+    int64 Code = 1;
+	string Type = 2;
+	string Description = 3;
 }

@@ -1,12 +1,13 @@
 package helpers
 
 const (
-	invalidName      = 100
-	invalidEmail     = 103
-	invalidPassword  = 102
-	invalidToken     = 103
-	invalidTokenType = 104
-	emailExist       = 150
+	invalidName            = 100
+	invalidEmail           = 103
+	invalidPassword        = 102
+	invalidLoginCredential = 103
+	invalidToken           = 104
+	accountNotVerify       = 106
+	emailExist             = 150
 
 	ok                  = 200
 	created             = 201
@@ -57,9 +58,19 @@ func GetInvalidPasswordCode() int16 {
 	return invalidPassword
 }
 
+//GetInvalidLoginCredential : Return invalid login credential error code
+func GetInvalidLoginCredentialCode() int16 {
+	return invalidLoginCredential
+}
+
 //GetInvalidTokenCode : Return invalid token error code
 func GetInvalidTokenCode() int16 {
 	return invalidToken
+}
+
+//GetAccountNotVerifyCode : Return account not verify code
+func GetAccountNotVerifyCode() int16 {
+	return accountNotVerify
 }
 
 //GetEmailExistCode : Return email exist error code
