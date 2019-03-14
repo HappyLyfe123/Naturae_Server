@@ -30,71 +30,105 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 	//Connect to the users database
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	var errorList []helpers.AppError
+	var err helpers.AppError
 	//Set a wait group for multi-threading
 	//It will wait for all of the thread process to finish before moving on
 	var wg sync.WaitGroup
 
+	wg.Add(5)
 	//Check if the provided information meet the app requirement
-	isEmailValid, err := helpers.IsEmailValid(email)
-	errorList = append(errorList, err)
-	isEmailExist, err := helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
-	errorList = append(errorList, err)
-	isFirstNameValid, err := helpers.IsNameValid(firstName)
-	errorList = append(errorList, err)
-	isLastNameValid, err := helpers.IsNameValid(lastName)
-	errorList = append(errorList, err)
-	isPasswordValid, err := helpers.IsPasswordValid(password)
-	errorList = append(errorList, err)
+	var isEmailValid bool
+	go func(err helpers.AppError) {
+		defer wg.Done()
+		isEmailValid, err = helpers.IsEmailValid(email)
+		errorList = append(errorList, err)
+	}(err)
+
+	var isEmailExist bool
+	go func(err helpers.AppError) {
+		defer wg.Done()
+		isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
+		errorList = append(errorList, err)
+	}(err)
+
+	var isFirstNameValid bool
+	go func(err helpers.AppError) {
+		defer wg.Done()
+		isFirstNameValid, err = helpers.IsNameValid(firstName)
+		errorList = append(errorList, err)
+	}(err)
+
+	var isLastNameValid bool
+	go func(err helpers.AppError) {
+		defer wg.Done()
+		isLastNameValid, err = helpers.IsNameValid(lastName)
+		errorList = append(errorList, err)
+	}(err)
+
+	var isPasswordValid bool
+	go func(err helpers.AppError) {
+		defer wg.Done()
+		isPasswordValid, err = helpers.IsPasswordValid(password)
+		errorList = append(errorList, err)
+	}(err)
+
+	wg.Wait()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
 	if isEmailValid && !isEmailExist && isFirstNameValid && isLastNameValid && isPasswordValid {
-		//Create a channel for token id and start time
-		tokenIDChan := make(chan string)
-		endTime := make(chan time.Time)
-		//Close the channel
-		defer close(tokenIDChan)
-		defer close(endTime)
+		//Create channels
+		accessToken := make(chan *helpers.AccessToken)
+		refreshToken := make(chan *helpers.RefreshToken)
 
-		//Generate random bytes of data to be use as salt for the password
-		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
-		//Generate a hash for the user password
-		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
+		//Close all of the channel when the method is done
+		defer close(accessToken)
+		defer close(refreshToken)
 
-		//Create a new user
-		newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
-			Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+		wg.Add(4)
+		go func() {
+			defer wg.Done()
+			//Generate random bytes of data to be use as salt for the password
+			salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
+			//Generate a hash for the user password
+			hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
 
-		//Generate access token and set it to have a life span of 6 hours
-		accessToken := helpers.GenerateAccessToken(email)
-		refreshToken := helpers.GenerateRefreshToken(email)
+			//Create a new user
+			newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
+				Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+
+			//Save the user to the database
+			saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
+		}()
+
+		//Generate access token
+		go func() {
+			defer wg.Done()
+			accessToken <- helpers.GenerateAccessToken(email)
+			saveAccessToken(connectedDB, <-accessToken)
+
+		}()
+
+		//Generate refresh token code
+
+		go func() {
+			defer wg.Done()
+			refreshToken <- helpers.GenerateRefreshToken(email)
+			saveRefreshToken(connectedDB, <-refreshToken)
+		}()
 
 		//Generate authentication Code
-		generatedCode, startTime := helpers.GenerateAuthenCode()
-		newAuthenCode := userAuthentication{email, generatedCode, startTime}
 
-		//Save the user to the database
-		go saveNewUser(&wg, connectedDB, helpers.GetAccountInfoCollection(), &newUser)
-		wg.Add(1)
-
-		//Generate and save access token for the user
-		go saveAccessToken(&wg, connectedDB, &accessToken)
-		wg.Add(1)
-
-		//Generate and save refresh token for the user
-		go saveRefreshToken(&wg, connectedDB, &refreshToken)
-		wg.Add(1)
-
-		//Save authentication Code
-		go saveAuthenticationCode(&wg, connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
-		wg.Add(1)
-
-		//Wait until all of the go routine to finish
+		go func() {
+			defer wg.Done()
+			authenCode, expiredTime := helpers.GenerateAuthenCode()
+			newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
+			saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+			sendAuthenticationCode(email, firstName, authenCode)
+		}()
 		wg.Wait()
-
 		//Send the user a welcome message and user authentication number to the provided email address
-		sendAuthenticationCode(email, firstName, generatedCode)
 		log.Println("A new account was created for:", email)
-		return NewAccount{Success: true, AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
+		return NewAccount{Success: true, AccessToken: (<-accessToken).ID, RefreshToken: (<-refreshToken).ID}, errorList
 	} else {
 		//Either email, firstName, lastName, or password is invalid
 		return NewAccount{Success: false, AccessToken: "", RefreshToken: ""}, errorList
@@ -103,8 +137,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 }
 
 //SaveNewUser : Save the user to database
-func saveNewUser(wg *sync.WaitGroup, database *mongo.Database, collectionName string, user *userAccount) {
-	defer wg.Done()
+func saveNewUser(database *mongo.Database, collectionName string, user *userAccount) {
 	//Connect to the users collection in the database
 	accountInfoCollection := helpers.ConnectToCollection(database, collectionName)
 	//Save the user into the database
@@ -117,8 +150,7 @@ func saveNewUser(wg *sync.WaitGroup, database *mongo.Database, collectionName st
 }
 
 //SaveAuthenCode : Save authentication code to the database
-func saveAuthenticationCode(wg *sync.WaitGroup, database *mongo.Database, collectionName string, newAuthenCode *userAuthentication) {
-	defer wg.Done()
+func saveAuthenticationCode(database *mongo.Database, collectionName string, newAuthenCode *userAuthentication) {
 	//Connect to the database collection
 	currCollection := helpers.ConnectToCollection(database, collectionName)
 	_, err := currCollection.InsertOne(nil, newAuthenCode)
