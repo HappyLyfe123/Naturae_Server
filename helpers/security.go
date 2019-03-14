@@ -49,17 +49,17 @@ func CheckRefreshToken(username, tokenID string) {
 }
 
 //GenerateAccessToken : Generate access token
-func GenerateAccessToken(email string) AccessToken {
+func GenerateAccessToken(email string) *AccessToken {
 	//Create an access token that have a life span of 12 hours
-	return AccessToken{Email: email, ID: GenerateTokenID(),
+	return &AccessToken{Email: email, ID: GenerateTokenID(),
 		Admin: false, ExpiredTime: time.Now().Add(time.Hour * 12)}
 
 }
 
 //GenerateRefreshToken : Generate refresh token
-func GenerateRefreshToken(email string) RefreshToken {
+func GenerateRefreshToken(email string) *RefreshToken {
 	//Refresh token have a life span of 200 years
-	return RefreshToken{Email: email, ID: GenerateTokenID(), ExpiredTime: time.Now().AddDate(200, 0, 0)}
+	return &RefreshToken{Email: email, ID: GenerateTokenID(), ExpiredTime: time.Now().AddDate(200, 0, 0)}
 }
 
 //GenerateTokenID : Generate an id for a token
@@ -130,28 +130,28 @@ func IsTokenValid(currDatabase *mongo.Database, collectionName, tokenID string) 
 	}
 }
 
-func GetAccessToken(currDatabase *mongo.Database, email string) (AccessToken, error) {
+func GetAccessToken(currDatabase *mongo.Database, email string) (*AccessToken, error) {
 	var result AccessToken
 	filter := bson.D{{Key: "Email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
 	err := tokenCollection.FindOne(nil, filter).Decode(&result)
 	//There no token id match token id
 	if err != nil {
-		return result, err
+		return &result, err
 	}
 	//There already exist a token ID in the database
-	return result, nil
+	return &result, nil
 }
 
-func GetRefreshToken(currDatabase *mongo.Database, email string) (RefreshToken, error) {
+func GetRefreshToken(currDatabase *mongo.Database, email string) (*RefreshToken, error) {
 	var result RefreshToken
 	filter := bson.D{{Key: "Email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetRefreshTokenCollection())
 	err := tokenCollection.FindOne(nil, filter).Decode(&result)
 	//There no token id match token id
 	if err != nil {
-		return result, err
+		return &result, err
 	}
 	//There already exist a token ID in the database
-	return result, nil
+	return &result, nil
 }
