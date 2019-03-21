@@ -7,7 +7,7 @@ import (
 
 func main() {
 	//Close the connection to the database when the server is turn off
-	//defer cleanUpServer()
+	defer cleanUpServer()
 	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
 	//email := "visalhok123@gmail.com"
@@ -21,7 +21,7 @@ func main() {
 func init() {
 	//Initialize global variable in the helper package
 	//helpers.ConnectToGmailAccount()
-	//helpers.ConnectToDBAccount()
+	helpers.ConnectToDBAccount()
 	//Create listener for server
 	//createServer()
 }
