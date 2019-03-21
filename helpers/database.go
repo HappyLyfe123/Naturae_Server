@@ -43,7 +43,7 @@ func GetCurrentDBConnection() *mongo.Client {
 
 //DropCollection : drop the collection that is currently connect it to
 func DropCollection(currCollection *mongo.Collection) {
-	err := currCollection.Drop(context.TODO())
+	err := currCollection.Drop(context.Background())
 	if err != nil {
 		log.Println("Dropping collection failed error: ", err)
 	}
@@ -51,7 +51,7 @@ func DropCollection(currCollection *mongo.Collection) {
 
 //DropDatabase : drop the database that is currently connected to
 func DropDatabase(currDB *mongo.Database) error {
-	err := currDB.Drop(nil)
+	err := currDB.Drop(context.Background())
 	if err != nil {
 		log.Println("Dropping database failed error: ", err)
 	}
@@ -61,7 +61,7 @@ func DropDatabase(currDB *mongo.Database) error {
 //CloseConnectionToDatabaseAccount : close the current collection to the database
 func CloseConnectionToDatabaseAccount() error {
 	//Disconnect from the database account
-	err := dbAccount.Disconnect(context.TODO())
+	err := dbAccount.Disconnect(context.Background())
 	if err != nil {
 		return err
 	}

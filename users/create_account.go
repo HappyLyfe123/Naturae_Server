@@ -35,14 +35,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 	//It will wait for all of the thread process to finish before moving on
 	var wg sync.WaitGroup
 
-	wg.Add(5)
-	//Check if the provided information meet the app requirement
-	var isEmailValid bool
-	go func(err helpers.AppError) {
-		defer wg.Done()
-		isEmailValid, err = helpers.IsEmailValid(email)
-		errorList = append(errorList, err)
-	}(err)
+	wg.Add(4)
 
 	var isEmailExist bool
 	go func(err helpers.AppError) {
@@ -75,14 +68,11 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 	wg.Wait()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
-	if isEmailValid && !isEmailExist && isFirstNameValid && isLastNameValid && isPasswordValid {
+	if !isEmailExist && isFirstNameValid && isLastNameValid && isPasswordValid {
 		//Create channels
-		accessToken := make(chan *helpers.AccessToken)
-		refreshToken := make(chan *helpers.RefreshToken)
-
+		var accessToken *helpers.AccessToken
+		var refreshToken *helpers.RefreshToken
 		//Close all of the channel when the method is done
-		defer close(accessToken)
-		defer close(refreshToken)
 
 		wg.Add(4)
 		go func() {
@@ -103,8 +93,8 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		//Generate access token
 		go func() {
 			defer wg.Done()
-			accessToken <- helpers.GenerateAccessToken(email)
-			saveAccessToken(connectedDB, <-accessToken)
+			accessToken = helpers.GenerateAccessToken(email)
+			saveAccessToken(connectedDB, accessToken)
 
 		}()
 
@@ -112,8 +102,8 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 
 		go func() {
 			defer wg.Done()
-			refreshToken <- helpers.GenerateRefreshToken(email)
-			saveRefreshToken(connectedDB, <-refreshToken)
+			refreshToken = helpers.GenerateRefreshToken(email)
+			saveRefreshToken(connectedDB, refreshToken)
 		}()
 
 		//Generate authentication Code
@@ -128,7 +118,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", email)
-		return NewAccount{Success: true, AccessToken: (<-accessToken).ID, RefreshToken: (<-refreshToken).ID}, errorList
+		return NewAccount{Success: true, AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
 	} else {
 		//Either email, firstName, lastName, or password is invalid
 		return NewAccount{Success: false, AccessToken: "", RefreshToken: ""}, errorList

@@ -5,6 +5,7 @@ import (
 	"crypto/sha512"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"golang.org/x/net/context"
 	"log"
 	"math/big"
 	"strings"
@@ -147,7 +148,7 @@ func GetRefreshToken(currDatabase *mongo.Database, email string) (*RefreshToken,
 	var result RefreshToken
 	filter := bson.D{{Key: "Email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetRefreshTokenCollection())
-	err := tokenCollection.FindOne(nil, filter).Decode(&result)
+	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
 	if err != nil {
 		return &result, err
