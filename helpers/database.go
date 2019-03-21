@@ -61,7 +61,7 @@ func DropDatabase(currDB *mongo.Database) error {
 //CloseConnectionToDatabaseAccount : close the current collection to the database
 func CloseConnectionToDatabaseAccount() error {
 	//Disconnect from the database account
-	err := dbAccount.Disconnect(context.Background())
+	err := dbAccount.Disconnect(nil)
 	if err != nil {
 		return err
 	}
