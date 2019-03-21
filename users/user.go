@@ -3,6 +3,7 @@ package users
 import (
 	"Naturae_Server/helpers"
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -94,6 +95,10 @@ func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 
 	}
 
+}
+
+func PrintTest() {
+	fmt.Println("Hello")
 }
 
 //Update the user first name in the database
