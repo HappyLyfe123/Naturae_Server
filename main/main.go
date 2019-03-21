@@ -7,7 +7,7 @@ import (
 
 func main() {
 	//Close the connection to the database when the server is turn off
-	defer cleanUpServer()
+	//defer cleanUpServer()
 	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
 	//email := "visalhok123@gmail.com"
@@ -20,8 +20,8 @@ func main() {
 //Initialize all of the variable to be uses
 func init() {
 	//Initialize global variable in the helper package
-	helpers.ConnectToGmailAccount()
-	helpers.ConnectToDBAccount()
+	//helpers.ConnectToGmailAccount()
+	//helpers.ConnectToDBAccount()
 	//Create listener for server
 	//createServer()
 }
@@ -36,9 +36,10 @@ func cleanUpServer() {
 
 //Initialize and start the server
 func createServer() {
-	//listener, err := net.Listen("tcp", ":8080")
-	//if err != nil {
-	//	log.Fatalf("Unable to listen prot 8080: %v", err)
+	//list, err := net.Listen("tcp", "3000")
+	//if err != nil{
+	//	log.Fatalf("failed to listen: %v", err)
 	//}
+	//s := grpc.NewServer();
 
 }
