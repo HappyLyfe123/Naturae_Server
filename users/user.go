@@ -73,7 +73,7 @@ func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
 			//Generate a new token ID
 			token.ID = helpers.GenerateTokenID()
 		} else {
-			log.Println("Save", token, "access token to access token database")
+			log.Println("Save", token.Email, "access token to access token database")
 			saveSuccessful = true
 		}
 	}

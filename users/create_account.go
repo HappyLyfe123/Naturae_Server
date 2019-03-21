@@ -74,7 +74,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		var refreshToken *helpers.RefreshToken
 		//Close all of the channel when the method is done
 
-		wg.Add(4)
+		wg.Add(3)
 		go func() {
 			defer wg.Done()
 			//Generate random bytes of data to be use as salt for the password
@@ -108,13 +108,13 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 
 		//Generate authentication Code
 
-		go func() {
-			defer wg.Done()
-			authenCode, expiredTime := helpers.GenerateAuthenCode()
-			newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
-			saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
-			sendAuthenticationCode(email, firstName, authenCode)
-		}()
+		//go func() {
+		//	defer wg.Done()
+		//	authenCode, expiredTime := helpers.GenerateAuthenCode()
+		//	newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
+		//	saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+		//	sendAuthenticationCode(email, firstName, authenCode)
+		//}()
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", email)

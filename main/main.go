@@ -9,7 +9,7 @@ import (
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	users.Login("visalhok123@gmail.com", "ABab1234!@#")
+	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
 	email := "visalhok123@gmail.com"
 	firstName := "Visal"
