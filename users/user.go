@@ -2,9 +2,9 @@ package users
 
 import (
 	"Naturae_Server/helpers"
+	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"golang.org/x/net/context"
 	"log"
 )
 
