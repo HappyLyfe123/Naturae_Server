@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //create authentication structure for user
