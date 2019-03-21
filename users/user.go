@@ -2,11 +2,11 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"github.com/mongodb/mongo-go-driver/bson"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"sync"
 
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //create a struct for storing user info in database
