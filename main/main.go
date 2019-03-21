@@ -2,30 +2,12 @@ package main
 
 import (
 	"Naturae_Server/helpers"
-	"fmt"
 	"log"
-	"sync"
 )
 
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	test := make(chan bool, 3)
-	go func() {
-		test <- true
-	}()
-	go func() {
-		test <- true
-	}()
-	go func() {
-		test <- false
-	}()
-
-	if <-test && <-test && <-test {
-		fmt.Println("Not work")
-	} else {
-		fmt.Println("Work")
-	}
 	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
 	//email := "visalhok123@gmail.com"
@@ -38,17 +20,8 @@ func main() {
 //Initialize all of the variable to be uses
 func init() {
 	//Initialize global variable in the helper package
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		helpers.ConnectToGmailAccount()
-	}()
-	go func() {
-		defer wg.Done()
-		go helpers.ConnectToDBAccount()
-	}()
-	wg.Wait()
+	helpers.ConnectToGmailAccount()
+	helpers.ConnectToDBAccount()
 	//Create listener for server
 	//createServer()
 

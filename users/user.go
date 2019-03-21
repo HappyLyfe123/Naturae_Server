@@ -2,9 +2,11 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"sync"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //create a struct for storing user info in database
@@ -63,7 +65,8 @@ func getAuthenCode(database *mongo.Database, email string) (*userAuthentication,
 }
 
 //Save access token to database
-func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
+func saveAccessToken(wg *sync.WaitGroup, database *mongo.Database, token *helpers.AccessToken) {
+	defer wg.Done()
 	for saveSuccessful := false; saveSuccessful == false; {
 		connectedCollection := helpers.ConnectToCollection(database, helpers.GetAccessTokenCollection())
 		_, err := connectedCollection.InsertOne(nil, token)
@@ -79,7 +82,8 @@ func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
 
 }
 
-func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
+func saveRefreshToken(wg *sync.WaitGroup, database *mongo.Database, token *helpers.RefreshToken) {
+	defer wg.Done()
 
 	for saveSuccessful := false; saveSuccessful == false; {
 		connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
