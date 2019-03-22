@@ -38,9 +38,5 @@ func cleanUpServer() {
 
 //Initialize and start the server
 func createServer() {
-	//listener, err := net.Listen("tcp", ":8080")
-	//if err != nil {
-	//	log.Fatalf("Unable to listen prot 8080: %v", err)
-	//}
 
 }
