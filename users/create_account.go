@@ -74,7 +74,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		var refreshToken *helpers.RefreshToken
 		//Close all of the channel when the method is done
 
-		wg.Add(3)
+		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			//Generate random bytes of data to be use as salt for the password
@@ -90,21 +90,21 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 			saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
 		}()
 
-		//Generate access token
-		go func() {
-			defer wg.Done()
-			accessToken = helpers.GenerateAccessToken(email)
-			saveAccessToken(connectedDB, accessToken)
-
-		}()
-
-		//Generate refresh token code
-
-		go func() {
-			defer wg.Done()
-			refreshToken = helpers.GenerateRefreshToken(email)
-			saveRefreshToken(connectedDB, refreshToken)
-		}()
+		////Generate access token
+		//go func() {
+		//	defer wg.Done()
+		//	accessToken = helpers.GenerateAccessToken(email)
+		//	saveAccessToken(connectedDB, accessToken)
+		//
+		//}()
+		//
+		////Generate refresh token code
+		//
+		//go func() {
+		//	defer wg.Done()
+		//	refreshToken = helpers.GenerateRefreshToken(email)
+		//	saveRefreshToken(connectedDB, refreshToken)
+		//}()
 
 		//Generate authentication Code
 
