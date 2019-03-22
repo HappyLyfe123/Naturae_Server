@@ -28,7 +28,7 @@ type NewAccount struct {
 func CreateAccount(email, firstName, lastName, password string) (NewAccount, []helpers.AppError) {
 
 	//Connect to the users database
-	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+	//connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	var errorList []helpers.AppError
 	var err helpers.AppError
 	//Set a wait group for multi-threading
@@ -40,7 +40,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 	var isEmailExist bool
 	go func(err helpers.AppError) {
 		defer wg.Done()
-		isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
+		//isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
 		errorList = append(errorList, err)
 	}(err)
 
