@@ -2,9 +2,11 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
+	"os"
 )
 
 //Current db account connected to
@@ -15,8 +17,8 @@ var dbAccount *mongo.Client
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://HappyLyfe:kePmTHH8wyrSEIxL"+
-		"@naturae-server-hxywc.gcp.mongodb.net/test"))
+	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://%s:%s"+
+		"@naturae-server-hxywc.gcp.mongodb.net/test", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"))))
 	dbAccount.Connect(nil)
 
 	if err != nil {
@@ -61,7 +63,7 @@ func DropDatabase(currDB *mongo.Database) error {
 //CloseConnectionToDatabaseAccount : close the current collection to the database
 func CloseConnectionToDatabaseAccount() error {
 	//Disconnect from the database account
-	err := dbAccount.Disconnect(context.Background())
+	err := dbAccount.Disconnect(nil)
 	if err != nil {
 		return err
 	}
