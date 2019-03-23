@@ -2,7 +2,6 @@ package users
 
 import (
 	"Naturae_Server/helpers"
-	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,7 +27,7 @@ func getUserAccountInfo(database *mongo.Database, email string) (*userAccount, e
 	//Connect to the collection database
 	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
 	//Make a request to the database
-	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
+	err := userCollection.FindOne(nil, filter).Decode(&result)
 	if err != nil {
 		return &result, err
 	}
@@ -42,7 +41,7 @@ func getLoginInfo(database *mongo.Database, email string) (*loginInfo, error) {
 	//Connect to the collection database
 	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
 	//Make a request to the database
-	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
+	err := userCollection.FindOne(nil, filter).Decode(&result)
 	if err != nil {
 		return &loginInfo{}, err
 	}
@@ -56,7 +55,7 @@ func getAuthenCode(database *mongo.Database, email string) (*userAuthentication,
 	//Connect to the collection database
 	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountAuthentication())
 	//Make a request to the database
-	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
+	err := userCollection.FindOne(nil, filter).Decode(&result)
 	if err != nil {
 		return &userAuthentication{}, err
 	}
@@ -68,7 +67,7 @@ func getAuthenCode(database *mongo.Database, email string) (*userAuthentication,
 func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
 	for saveSuccessful := false; saveSuccessful == false; {
 		connectedCollection := helpers.ConnectToCollection(database, helpers.GetAccessTokenCollection())
-		_, err := connectedCollection.InsertOne(context.Background(), token)
+		_, err := connectedCollection.InsertOne(nil, token)
 		//If there an duplicate ID generate a new a new ID and try to save again
 		if err != nil {
 			//Generate a new token ID
@@ -84,7 +83,7 @@ func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
 func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 	for saveSuccessful := false; saveSuccessful == false; {
 		connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
-		_, err := connectedCollection.InsertOne(context.Background(), token)
+		_, err := connectedCollection.InsertOne(nil, token)
 		if err != nil {
 			//Generate a new token ID
 			token.ID = helpers.GenerateTokenID()

@@ -15,7 +15,7 @@ var dbAccount *mongo.Client
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://HappyLyfe:kePmTHH8wyrSEIxL"+
+	dbAccount, err = mongo.Connect(nil, options.Client().ApplyURI("mongodb+srv://HappyLyfe:kePmTHH8wyrSEIxL"+
 		"@naturae-server-hxywc.gcp.mongodb.net/test"))
 	dbAccount.Connect(context.Background())
 
@@ -43,7 +43,7 @@ func GetCurrentDBConnection() *mongo.Client {
 
 //DropCollection : drop the collection that is currently connect it to
 func DropCollection(currCollection *mongo.Collection) {
-	err := currCollection.Drop(context.Background())
+	err := currCollection.Drop(nil)
 	if err != nil {
 		log.Println("Dropping collection failed error: ", err)
 	}
@@ -51,7 +51,7 @@ func DropCollection(currCollection *mongo.Collection) {
 
 //DropDatabase : drop the database that is currently connected to
 func DropDatabase(currDB *mongo.Database) error {
-	err := currDB.Drop(context.Background())
+	err := currDB.Drop(nil)
 	if err != nil {
 		log.Println("Dropping database failed error: ", err)
 	}
