@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -17,7 +16,7 @@ func ConnectToDBAccount() {
 	//Connect to the mongo database server
 	dbAccount, err = mongo.Connect(nil, options.Client().ApplyURI("mongodb+srv://HappyLyfe:kePmTHH8wyrSEIxL"+
 		"@naturae-server-hxywc.gcp.mongodb.net/test"))
-	dbAccount.Connect(context.Background())
+	dbAccount.Connect(nil)
 
 	if err != nil {
 		//Print out the error message
