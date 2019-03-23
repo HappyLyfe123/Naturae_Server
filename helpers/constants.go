@@ -36,7 +36,7 @@ const (
 	gmailEmailAddress      = "naturae.outdoor@gmail.com"
 	appName                = "Naturae"
 	databaseName           = "Naturae-Server"
-	userDatabase           = "Users"
+	userDatabase           = "users"
 	accountInfoCollection  = "Account_Information"
 	accessTokenCollection  = "Access_Token"
 	refreshTokenCollection = "Refresh_Token"
