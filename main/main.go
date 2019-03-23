@@ -2,27 +2,30 @@ package main
 
 import (
 	"Naturae_Server/helpers"
-	"Naturae_Server/users"
+	//"Naturae_Server/users"
 	"log"
+	"fmt"
+	"os"
 )
 
 func main() {
 	//Close the connection to the database when the server is turn off
-	defer cleanUpServer()
+	//defer cleanUpServer()
 	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
-	email := "visalhok123@gmail.com"
-	firstName := "Visal"
-	lastName := "Hok"
-	password := "ABab1234!@#"
-	users.CreateAccount(email, firstName, lastName, password)
+	//email := "visalhok123@gmail.com"
+	//firstName := "Visal"
+	//lastName := "Hok"
+	//password := "ABab1234!@#"
+	//users.CreateAccount(email, firstName, lastName, password)
+	fmt.Println(os.Getenv("DATABASE_PASSWORD"))
 }
 
 //Initialize all of the variable to be uses
 func init() {
 	//Initialize global variable in the helper package
-	helpers.ConnectToGmailAccount()
-	helpers.ConnectToDBAccount()
+	//helpers.ConnectToGmailAccount()
+	//helpers.ConnectToDBAccount()
 	//Create listener for server
 	//createServer()
 
