@@ -2,12 +2,9 @@ package helpers
 
 import (
 	"context"
-	"fmt"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"os"
-
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //Current db account connected to
@@ -18,8 +15,8 @@ var dbAccount *mongo.Client
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.NewClient(options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://HappyLyfe:%s"+
-		"@naturae-server-hxywc.gcp.mongodb.net/test", os.Getenv("DATABASE_PASSWORD"))))
+	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://HappyLyfe:kePmTHH8wyrSEIxL"+
+		"@naturae-server-hxywc.gcp.mongodb.net/test"))
 	dbAccount.Connect(context.Background())
 
 	if err != nil {
