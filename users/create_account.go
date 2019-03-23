@@ -2,6 +2,7 @@ package users
 
 import (
 	"Naturae_Server/helpers"
+	"context"
 	"fmt"
 	"log"
 	"sync"
@@ -130,7 +131,7 @@ func saveNewUser(database *mongo.Database, collectionName string, user *userAcco
 	//Connect to the users collection in the database
 	accountInfoCollection := helpers.ConnectToCollection(database, collectionName)
 	//Save the user into the database
-	_, err := accountInfoCollection.InsertOne(nil, user)
+	_, err := accountInfoCollection.InsertOne(context.Background(), user)
 	if err != nil {
 		log.Println("Save user to DB error: ", err)
 	} else {
@@ -142,7 +143,7 @@ func saveNewUser(database *mongo.Database, collectionName string, user *userAcco
 func saveAuthenticationCode(database *mongo.Database, collectionName string, newAuthenCode *userAuthentication) {
 	//Connect to the database collection
 	currCollection := helpers.ConnectToCollection(database, collectionName)
-	_, err := currCollection.InsertOne(nil, newAuthenCode)
+	_, err := currCollection.InsertOne(context.Background(), newAuthenCode)
 	if err != nil {
 		log.Println("Save authentication to DB error: ", err)
 	} else {
