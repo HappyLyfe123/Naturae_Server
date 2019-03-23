@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
@@ -17,8 +18,9 @@ var dbAccount *mongo.Client
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI("mongodb+srv://"+os.Getenv("DATABASE_USERNAME")+
-		":"+os.Getenv("DATABASE_PASSWORD")+"@naturae-server-hxywc.mongodb.net/test?retryWrites=true"))
+	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://HappyLyfe:%s"+
+		"@naturae-server-hxywc.mongodb.net/test", os.Getenv("DATABASE_PASSWORD"))))
+
 	if err != nil {
 		//Print out the error message
 		log.Fatalf("Connecting to Naturae database account error: %v", err)
