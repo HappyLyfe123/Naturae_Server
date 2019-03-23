@@ -28,7 +28,7 @@ type NewAccount struct {
 func CreateAccount(email, firstName, lastName, password string) (NewAccount, []helpers.AppError) {
 
 	//Connect to the users database
-	//connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	var errorList []helpers.AppError
 	var err helpers.AppError
 	//Set a wait group for multi-threading
@@ -40,7 +40,7 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 	var isEmailExist bool
 	go func(err helpers.AppError) {
 		defer wg.Done()
-		//isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
+		isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
 		errorList = append(errorList, err)
 	}(err)
 
@@ -74,27 +74,27 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		var refreshToken *helpers.RefreshToken
 		//Close all of the channel when the method is done
 
-		wg.Add(3)
-		//go func() {
-		//	defer wg.Done()
-		//	//Generate random bytes of data to be use as salt for the password
-		//	salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
-		//	//Generate a hash for the user password
-		//	hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
-		//
-		//	//Create a new user
-		//	newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
-		//		Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
-		//
-		//	//Save the user to the database
-		//	saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
-		//}()
+		wg.Add(4)
+		go func() {
+			defer wg.Done()
+			//Generate random bytes of data to be use as salt for the password
+			salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
+			//Generate a hash for the user password
+			hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
+
+			//Create a new user
+			newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
+				Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+
+			//Save the user to the database
+			saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
+		}()
 
 		//Generate access token
 		go func() {
 			defer wg.Done()
 			accessToken = helpers.GenerateAccessToken(email)
-			//saveAccessToken(connectedDB, accessToken)
+			saveAccessToken(connectedDB, accessToken)
 
 		}()
 
@@ -103,15 +103,15 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		go func() {
 			defer wg.Done()
 			refreshToken = helpers.GenerateRefreshToken(email)
-			//saveRefreshToken(connectedDB, refreshToken)
+			saveRefreshToken(connectedDB, refreshToken)
 		}()
 
 		//Generate authentication Code
 		go func() {
 			defer wg.Done()
-			authenCode, _ := helpers.GenerateAuthenCode()
-			//newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
-			//saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+			authenCode, expiredTime := helpers.GenerateAuthenCode()
+			newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
+			saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
 			sendAuthenticationCode(email, firstName, authenCode)
 		}()
 		wg.Wait()
