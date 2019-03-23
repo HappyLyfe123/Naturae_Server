@@ -18,8 +18,9 @@ var dbAccount *mongo.Client
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://HappyLyfe:%s"+
-		"@naturae-server-hxywc.mongodb.net/test", os.Getenv("DATABASE_PASSWORD"))))
+	dbAccount, err = mongo.NewClient(options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://HappyLyfe:%s"+
+		"@naturae-server-hxywc.mongodb.net/admin", os.Getenv("DATABASE_PASSWORD"))))
+	dbAccount.Connect(context.Background())
 
 	if err != nil {
 		//Print out the error message
