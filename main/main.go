@@ -3,6 +3,7 @@ package main
 import (
 	"Naturae_Server/helpers"
 	pb "Naturae_Server/proto"
+	"google.golang.org/grpc/reflection"
 
 	"context"
 	"google.golang.org/grpc"
@@ -44,7 +45,7 @@ func cleanUpServer() {
 
 //Initialize and start the server
 func createServer() {
-	listener, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":80")
 	if err != nil {
 		log.Fatalf("unable to listen on 8080 port: %v", err)
 	}
@@ -52,7 +53,11 @@ func createServer() {
 
 	srv := grpc.NewServer()
 	pb.RegisterServerRequestsServer(srv, &server{})
-	srv.Serve(listener)
+	reflection.Register(srv)
+	err = srv.Serve(listener)
+	if err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 
 }
 
