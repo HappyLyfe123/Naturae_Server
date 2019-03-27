@@ -2,7 +2,6 @@
 #
 # Refer to https://golang.github.io/dep/docs/Gopkg.toml.html
 # for detailed Gopkg.toml documentation.
-#
 # required = ["github.com/user/thing/cmd/thing"]
 # ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
 #
@@ -36,3 +35,8 @@
 [[constraint]]
   name = "go.mongodb.org/mongo-driver"
   version = "~1.0.0"
+
+[[constraint]]
+  name = "google.golang.org/grpc"
+  version = "1.19.1"
+

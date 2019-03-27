@@ -1,10 +1,20 @@
 package main
 
 import (
+	pb "../proto"
 	"Naturae_Server/helpers"
 	"Naturae_Server/users"
+	"context"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log"
+	"net"
+	"os"
 )
+
+type server struct {
+
+}
 
 func main() {
 	//Close the connection to the database when the server is turn off
@@ -36,7 +46,23 @@ func cleanUpServer() {
 	}
 }
 
+func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest, opts ...grpc.CallOption) (*pb.HelloReply, error){
+	host, err := os.Hostname()
+	if err != nil{
+		log.Fatal(err)
+	}
+	return &pb.HelloReply{Message: "Hello" + host}, nil
+}
+
 //Initialize and start the server
 func createServer() {
-
+	listener, err := net.Listen("tcp", "8080")
+	if err != nil{
+		log.Fatalf("failed to listen: %v", err)
+	}
+	s := grpc.NewServer()
+	pb.RegisterServerRequestsServer(s, &server{})
+	if err:= s.Serve(listener): err != nil{
+		log.Fatalf("failed to server: %v", err)
+	}
 }
