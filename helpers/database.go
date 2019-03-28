@@ -19,7 +19,7 @@ func ConnectToDBAccount() {
 	//Connect to the mongo database server
 	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://%s:%s"+
 		"@naturae-server-hxywc.gcp.mongodb.net/test", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"))))
-	dbAccount.Connect(nil)
+	dbAccount.Connect(context.Background())
 
 	if err != nil {
 		//Print out the error message
