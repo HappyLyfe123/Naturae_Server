@@ -13,7 +13,7 @@ const (
 	created             = 201
 	accepted            = 202
 	noError             = 203
-	invalidArguments    = 204
+	invalidInformation  = 204
 	denied              = 205
 	duplicateInfo       = 206
 	badRequest          = 400
@@ -163,9 +163,9 @@ func GetTokenLength() int {
 	return tokenLength
 }
 
-//GetInvalidArgument : return invalid argument
-func GetInvalidArgument() int16 {
-	return invalidArguments
+//GetInvalidInformation : return invalid argument
+func GetInvalidInformation() int16 {
+	return invalidInformation
 }
 
 //GetAuthCodeMaxNum : the max number
