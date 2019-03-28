@@ -4,7 +4,7 @@ syntax = "proto3";
 package proto;
 
 service ServerRequests{
-//    rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
+    rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
 //    rpc Login (LoginRequest) returns(LoginReply){}
 //    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
     rpc SayHello (HelloRequest) returns (HelloReply){};
@@ -18,22 +18,19 @@ message HelloReply{
     string message = 1;
 }
 
+message CreateAccountRequest{
+    string appKey = 1;
+    string email = 2;
+    string password = 3;
+    string firstName = 4;
+    string lastName = 5;
+}
 
-//
-//message CreateAccountRequest{
-//    string appKey = 1;
-//    string email = 2;
-//    string password = 3;
-//    string firstName = 4;
-//    string lastName = 5;
-//}
-//
-//message CreateAccountReply{
-//    bool success = 1;
-//    string accessToken = 2;
-//    string refreshToken = 3;
-//    repeated AppError errorList = 4;
-//}
+message CreateAccountReply{
+    string accessToken = 1;
+    string refreshToken = 2;
+    repeated string errorList = 3;
+}
 //
 //message LoginRequest{
 //    string appKey = 1;
@@ -56,10 +53,4 @@ message HelloReply{
 //
 //message AccountAuthenReply{
 //    bool success = 1;
-//}
-//
-//message AppError{
-//    int64 Code = 1;
-//	string Type = 2;
-//	string Description = 3;
 //}

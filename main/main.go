@@ -3,6 +3,8 @@ package main
 import (
 	"Naturae_Server/helpers"
 	pb "Naturae_Server/proto"
+	"Naturae_Server/users"
+	"errors"
 	"google.golang.org/grpc/reflection"
 
 	"context"
@@ -18,11 +20,6 @@ func main() {
 	defer cleanUpServer()
 	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
 	//Connect to all of the services that is needed to run the server
-	//email := "visalhok123@gmail.com"
-	//firstName := "Visal"
-	//lastName := "Hok"
-	//password := "ABab1234!@#"
-	//users.CreateAccount(email, firstName, lastName, password)
 }
 
 //Initialize all of the variable to be uses
@@ -66,4 +63,16 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	return &pb.HelloReply{
 		Message: "Hello Sam",
 	}, nil
+}
+
+//Create user account
+func (s *server) CreateAccount(ctx context.Context, in *pb.CreateAccountRequest) (response *pb.CreateAccountReply, err error) {
+	result, errorList := users.CreateAccount(in.Email, in.Password, in.FirstName, in.LastName)
+	if errorList != nil {
+		return &pb.CreateAccountReply{AccessToken: result.AccessToken, RefreshToken: result.RefreshToken, ErrorList: errorList},
+			errors.New(helpers.ErrorFormat(helpers.GetInvalidInformation(), "invalid information", "the information"+
+				" provided contains invalid format"))
+	}
+	return &pb.CreateAccountReply{AccessToken: result.AccessToken, RefreshToken: result.RefreshToken,
+		ErrorList: errorList}, nil
 }

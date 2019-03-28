@@ -100,24 +100,162 @@ func (m *HelloReply) GetMessage() string {
 	return ""
 }
 
+type CreateAccountRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Password             string   `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	FirstName            string   `protobuf:"bytes,4,opt,name=firstName,proto3" json:"firstName,omitempty"`
+	LastName             string   `protobuf:"bytes,5,opt,name=lastName,proto3" json:"lastName,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateAccountRequest) Reset()         { *m = CreateAccountRequest{} }
+func (m *CreateAccountRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAccountRequest) ProtoMessage()    {}
+func (*CreateAccountRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9ab36af35458894f, []int{2}
+}
+
+func (m *CreateAccountRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAccountRequest.Unmarshal(m, b)
+}
+func (m *CreateAccountRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAccountRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateAccountRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAccountRequest.Merge(m, src)
+}
+func (m *CreateAccountRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateAccountRequest.Size(m)
+}
+func (m *CreateAccountRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAccountRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAccountRequest proto.InternalMessageInfo
+
+func (m *CreateAccountRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *CreateAccountRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *CreateAccountRequest) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+func (m *CreateAccountRequest) GetFirstName() string {
+	if m != nil {
+		return m.FirstName
+	}
+	return ""
+}
+
+func (m *CreateAccountRequest) GetLastName() string {
+	if m != nil {
+		return m.LastName
+	}
+	return ""
+}
+
+type CreateAccountReply struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	ErrorList            []string `protobuf:"bytes,3,rep,name=errorList,proto3" json:"errorList,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateAccountReply) Reset()         { *m = CreateAccountReply{} }
+func (m *CreateAccountReply) String() string { return proto.CompactTextString(m) }
+func (*CreateAccountReply) ProtoMessage()    {}
+func (*CreateAccountReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_9ab36af35458894f, []int{3}
+}
+
+func (m *CreateAccountReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAccountReply.Unmarshal(m, b)
+}
+func (m *CreateAccountReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAccountReply.Marshal(b, m, deterministic)
+}
+func (m *CreateAccountReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAccountReply.Merge(m, src)
+}
+func (m *CreateAccountReply) XXX_Size() int {
+	return xxx_messageInfo_CreateAccountReply.Size(m)
+}
+func (m *CreateAccountReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAccountReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAccountReply proto.InternalMessageInfo
+
+func (m *CreateAccountReply) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *CreateAccountReply) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
+
+func (m *CreateAccountReply) GetErrorList() []string {
+	if m != nil {
+		return m.ErrorList
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*HelloRequest)(nil), "proto.HelloRequest")
 	proto.RegisterType((*HelloReply)(nil), "proto.HelloReply")
+	proto.RegisterType((*CreateAccountRequest)(nil), "proto.CreateAccountRequest")
+	proto.RegisterType((*CreateAccountReply)(nil), "proto.CreateAccountReply")
 }
 
 func init() { proto.RegisterFile("proto/GoPb.proto", fileDescriptor_9ab36af35458894f) }
 
 var fileDescriptor_9ab36af35458894f = []byte{
-	// 141 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x28, 0x28, 0xca, 0x2f,
-	0xc9, 0xd7, 0x77, 0xcf, 0x0f, 0x48, 0xd2, 0x03, 0x33, 0x85, 0x58, 0xc1, 0x94, 0x92, 0x12, 0x17,
-	0x8f, 0x47, 0x6a, 0x4e, 0x4e, 0x7e, 0x50, 0x6a, 0x61, 0x69, 0x6a, 0x71, 0x89, 0x90, 0x10, 0x17,
-	0x4b, 0x5e, 0x62, 0x6e, 0xaa, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x67, 0x10, 0x98, 0xad, 0xa4, 0xc6,
-	0xc5, 0x05, 0x55, 0x53, 0x90, 0x53, 0x29, 0x24, 0xc1, 0xc5, 0x9e, 0x9b, 0x5a, 0x5c, 0x9c, 0x98,
-	0x0e, 0x53, 0x04, 0xe3, 0x1a, 0xb9, 0x71, 0xf1, 0x05, 0xa7, 0x16, 0x95, 0xa5, 0x16, 0x41, 0x0d,
-	0x2b, 0x16, 0x32, 0xe1, 0xe2, 0x08, 0x4e, 0xac, 0x04, 0x6b, 0x16, 0x12, 0x86, 0x58, 0xac, 0x87,
-	0x6c, 0x9d, 0x94, 0x20, 0xaa, 0x60, 0x41, 0x4e, 0xa5, 0x12, 0x43, 0x12, 0x1b, 0x58, 0xcc, 0x18,
-	0x10, 0x00, 0x00, 0xff, 0xff, 0xd3, 0x56, 0x25, 0x39, 0xb5, 0x00, 0x00, 0x00,
+	// 301 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x51, 0x4b, 0x4e, 0xc3, 0x30,
+	0x10, 0x25, 0xf4, 0x43, 0x3b, 0x14, 0x04, 0x43, 0x85, 0x42, 0x60, 0x11, 0x79, 0x81, 0x58, 0x15,
+	0x09, 0xb8, 0x00, 0x62, 0x01, 0x08, 0x84, 0x50, 0xcb, 0x05, 0xdc, 0x30, 0x85, 0x08, 0x27, 0x36,
+	0xb6, 0x0b, 0xe4, 0x18, 0x6c, 0x39, 0x2d, 0x8a, 0xe3, 0x94, 0x06, 0x75, 0x95, 0x79, 0xbf, 0xe8,
+	0x79, 0x06, 0x76, 0x94, 0x96, 0x56, 0x9e, 0x5e, 0xcb, 0xc7, 0xe9, 0xc8, 0x8d, 0xd8, 0x71, 0x1f,
+	0xc6, 0x60, 0x70, 0x43, 0x42, 0xc8, 0x31, 0xbd, 0xcf, 0xc9, 0x58, 0x44, 0x68, 0xe7, 0x3c, 0xa3,
+	0x30, 0x88, 0x83, 0x93, 0xfe, 0xd8, 0xcd, 0xec, 0x18, 0xc0, 0x7b, 0x94, 0x28, 0x30, 0x84, 0x8d,
+	0x8c, 0x8c, 0xe1, 0x2f, 0xb5, 0xa9, 0x86, 0xec, 0x27, 0x80, 0xe1, 0x95, 0x26, 0x6e, 0xe9, 0x32,
+	0x49, 0xe4, 0x3c, 0xb7, 0xf5, 0x4f, 0xf7, 0xa1, 0xcb, 0x95, 0xba, 0xa3, 0xc2, 0x27, 0x3c, 0xc2,
+	0x21, 0x74, 0x28, 0xe3, 0xa9, 0x08, 0xd7, 0x1d, 0x5d, 0x01, 0x8c, 0xa0, 0xa7, 0xb8, 0x31, 0x9f,
+	0x52, 0x3f, 0x87, 0x2d, 0x27, 0x2c, 0x30, 0x1e, 0x41, 0x7f, 0x96, 0x6a, 0x63, 0x1f, 0xca, 0x8e,
+	0x6d, 0x27, 0xfe, 0x11, 0x65, 0x52, 0x70, 0x2f, 0x76, 0xaa, 0x64, 0x8d, 0xd9, 0x17, 0xe0, 0xbf,
+	0x6e, 0xe5, 0x63, 0x62, 0xd8, 0xe4, 0x49, 0x42, 0xc6, 0x3c, 0xc9, 0x37, 0xca, 0x7d, 0xbd, 0x65,
+	0x0a, 0x19, 0x0c, 0x34, 0xcd, 0x34, 0x99, 0xd7, 0xca, 0x52, 0x55, 0x6d, 0x70, 0x65, 0x2b, 0xd2,
+	0x5a, 0xea, 0xfb, 0xd4, 0xd8, 0xb0, 0x15, 0xb7, 0xca, 0x56, 0x0b, 0xe2, 0xec, 0x3b, 0x80, 0xed,
+	0x09, 0xe9, 0x0f, 0xd2, 0x7e, 0x1f, 0x06, 0x6f, 0x61, 0xab, 0x51, 0x06, 0x0f, 0xab, 0xab, 0x8c,
+	0x56, 0xad, 0x2f, 0x3a, 0x58, 0x2d, 0x2a, 0x51, 0xb0, 0x35, 0xbc, 0x80, 0xde, 0x84, 0x17, 0xee,
+	0x3e, 0xb8, 0xe7, 0x8d, 0xcb, 0x17, 0x8d, 0x76, 0x9b, 0xa4, 0x4b, 0x4d, 0xbb, 0x8e, 0x3b, 0xff,
+	0x0d, 0x00, 0x00, 0xff, 0xff, 0xf5, 0x77, 0x51, 0x55, 0x18, 0x02, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -132,7 +270,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ServerRequestsClient interface {
-	//    rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
+	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error)
 	//    rpc Login (LoginRequest) returns(LoginReply){}
 	//    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
@@ -146,6 +284,15 @@ func NewServerRequestsClient(cc *grpc.ClientConn) ServerRequestsClient {
 	return &serverRequestsClient{cc}
 }
 
+func (c *serverRequestsClient) CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error) {
+	out := new(CreateAccountReply)
+	err := c.cc.Invoke(ctx, "/proto.ServerRequests/CreateAccount", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serverRequestsClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
 	out := new(HelloReply)
 	err := c.cc.Invoke(ctx, "/proto.ServerRequests/SayHello", in, out, opts...)
@@ -157,7 +304,7 @@ func (c *serverRequestsClient) SayHello(ctx context.Context, in *HelloRequest, o
 
 // ServerRequestsServer is the server API for ServerRequests service.
 type ServerRequestsServer interface {
-	//    rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
+	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
 	//    rpc Login (LoginRequest) returns(LoginReply){}
 	//    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
@@ -165,6 +312,24 @@ type ServerRequestsServer interface {
 
 func RegisterServerRequestsServer(s *grpc.Server, srv ServerRequestsServer) {
 	s.RegisterService(&_ServerRequests_serviceDesc, srv)
+}
+
+func _ServerRequests_CreateAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).CreateAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.ServerRequests/CreateAccount",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ServerRequests_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -189,6 +354,10 @@ var _ServerRequests_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.ServerRequests",
 	HandlerType: (*ServerRequestsServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateAccount",
+			Handler:    _ServerRequests_CreateAccount_Handler,
+		},
 		{
 			MethodName: "SayHello",
 			Handler:    _ServerRequests_SayHello_Handler,

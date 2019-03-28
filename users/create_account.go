@@ -20,50 +20,55 @@ type userAuthentication struct {
 
 //NewAccount : create new account structure
 type NewAccount struct {
-	Success      bool
 	AccessToken  string
 	RefreshToken string
 }
 
 //CreateAccount : User want to create an account
-func CreateAccount(email, firstName, lastName, password string) (NewAccount, []helpers.AppError) {
+func CreateAccount(email, password, firstName, lastName string) (NewAccount, []string) {
 
 	//Connect to the users database
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-	var errorList []helpers.AppError
-	var err helpers.AppError
+	var errorList []string
+	var err error
 	//Set a wait group for multi-threading
 	//It will wait for all of the thread process to finish before moving on
 	var wg sync.WaitGroup
-
 	wg.Add(4)
-
 	var isEmailExist bool
-	go func(err helpers.AppError) {
+	go func(err error) {
 		defer wg.Done()
 		isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
-		errorList = append(errorList, err)
+		if err != nil {
+			errorList = append(errorList, err.Error())
+		}
 	}(err)
 
 	var isFirstNameValid bool
-	go func(err helpers.AppError) {
+	go func(err error) {
 		defer wg.Done()
 		isFirstNameValid, err = helpers.IsNameValid(firstName)
-		errorList = append(errorList, err)
+		if err != nil {
+			errorList = append(errorList, err.Error())
+		}
 	}(err)
 
 	var isLastNameValid bool
-	go func(err helpers.AppError) {
+	go func(err error) {
 		defer wg.Done()
 		isLastNameValid, err = helpers.IsNameValid(lastName)
-		errorList = append(errorList, err)
+		if err != nil {
+			errorList = append(errorList, err.Error())
+		}
 	}(err)
 
 	var isPasswordValid bool
-	go func(err helpers.AppError) {
+	go func(err error) {
 		defer wg.Done()
 		isPasswordValid, err = helpers.IsPasswordValid(password)
-		errorList = append(errorList, err)
+		if err != nil {
+			errorList = append(errorList, err.Error())
+		}
 	}(err)
 
 	wg.Wait()
@@ -118,10 +123,10 @@ func CreateAccount(email, firstName, lastName, password string) (NewAccount, []h
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", email)
-		return NewAccount{Success: true, AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
+		return NewAccount{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return NewAccount{Success: false, AccessToken: "", RefreshToken: ""}, errorList
+		return NewAccount{AccessToken: "", RefreshToken: ""}, errorList
 	}
 
 }
