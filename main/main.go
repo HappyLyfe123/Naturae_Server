@@ -65,7 +65,7 @@ func createServer() {
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Println(in.Name)
 	return &pb.HelloReply{
-		Message: "Hello Sam",
+		Message: "Hello" + in.Name,
 	}, nil
 }
 
