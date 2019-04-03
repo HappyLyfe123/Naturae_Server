@@ -2,7 +2,7 @@ package main
 
 import (
 	"Naturae_Server/helpers"
-	pb "Naturae_Server/proto"
+	pb "Naturae_Server/naturaeproto"
 	"Naturae_Server/users"
 	"context"
 	"google.golang.org/grpc"
@@ -65,7 +65,7 @@ func createServer() {
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Println(in.Name)
 	return &pb.HelloReply{
-		Message: "Hello" + in.Name,
+		Message: "Hello " + in.Name,
 	}, nil
 }
 

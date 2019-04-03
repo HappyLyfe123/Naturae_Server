@@ -1,6 +1,9 @@
 syntax = "proto3";
 
-package proto;
+option java_package = "com.examples.naturaeproto";
+option go_package = "naturaeproto";
+
+package naturaeproto;
 
 service ServerRequests{
     rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
