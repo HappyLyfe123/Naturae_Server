@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	pb "Naturae_Server/naturaeproto"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -25,60 +26,41 @@ type NewAccount struct {
 }
 
 //CreateAccount : User want to create an account
-func CreateAccount(email, password, firstName, lastName string) (NewAccount, []string) {
+func CreateAccount(request *pb.CreateAccountRequest) (NewAccount, *pb.Status) {
 
 	//Connect to the users database
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-	var errorList []string
-	var err error
-	//Set a wait group for multi-threading
-	//It will wait for all of the thread process to finish before moving on
-	var wg sync.WaitGroup
-	wg.Add(4)
-	var isEmailExist bool
-	go func(err error) {
-		defer wg.Done()
-		isEmailExist, err = helpers.EmailExist(email, connectedDB, helpers.GetAccountInfoCollection())
-		if err != nil {
-			errorList = append(errorList, err.Error())
-		}
-	}(err)
 
-	var isFirstNameValid bool
-	go func(err error) {
-		defer wg.Done()
-		isFirstNameValid, err = helpers.IsNameValid(firstName)
-		if err != nil {
-			errorList = append(errorList, err.Error())
-		}
-	}(err)
+	checkStatusChannel := make(chan bool, 4)
+	wg := sync.WaitGroup{}
 
-	var isLastNameValid bool
-	go func(err error) {
-		defer wg.Done()
-		isLastNameValid, err = helpers.IsNameValid(lastName)
-		if err != nil {
-			errorList = append(errorList, err.Error())
-		}
-	}(err)
+	//Check if email is in a valid format
+	go func() {
+		checkStatusChannel <- helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection())
+	}()
 
-	var isPasswordValid bool
-	go func(err error) {
-		defer wg.Done()
-		isPasswordValid, err = helpers.IsPasswordValid(password)
-		if err != nil {
-			errorList = append(errorList, err.Error())
-		}
-	}(err)
+	//Check if first name is in a valid format
+	go func() {
+		checkStatusChannel <- helpers.IsNameValid(request.GetFirstName())
+	}()
 
-	wg.Wait()
+	//Check if last name is in a valid format
+	go func() {
+		checkStatusChannel <- helpers.IsNameValid(request.GetLastName())
+	}()
+
+	//Check if password is in a valid format
+	go func() {
+		checkStatusChannel <- helpers.IsPasswordValid(request.GetPassword())
+	}()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
-	if !isEmailExist && isFirstNameValid && isLastNameValid && isPasswordValid {
-		//Create channels
+	if <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel {
+		//Check checkStatusChannel
+		close(checkStatusChannel)
+
 		var accessToken *helpers.AccessToken
 		var refreshToken *helpers.RefreshToken
-		//Close all of the channel when the method is done
 
 		wg.Add(4)
 		go func() {
@@ -86,11 +68,11 @@ func CreateAccount(email, password, firstName, lastName string) (NewAccount, []s
 			//Generate random bytes of data to be use as salt for the password
 			salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
 			//Generate a hash for the user password
-			hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(password), salt)
+			hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
 
 			//Create a new user
-			newUser := userAccount{Email: email, FirstName: firstName, LastName: lastName, Salt: helpers.ConvertByteToStringBase64(salt),
-				Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+			newUser := userAccount{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
+				Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
 
 			//Save the user to the database
 			saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
@@ -99,16 +81,15 @@ func CreateAccount(email, password, firstName, lastName string) (NewAccount, []s
 		//Generate access token
 		go func() {
 			defer wg.Done()
-			accessToken = helpers.GenerateAccessToken(email)
+			accessToken = helpers.GenerateAccessToken(request.GetEmail())
 			saveAccessToken(connectedDB, accessToken)
 
 		}()
 
 		//Generate refresh token code
-
 		go func() {
 			defer wg.Done()
-			refreshToken = helpers.GenerateRefreshToken(email)
+			refreshToken = helpers.GenerateRefreshToken(request.GetEmail())
 			saveRefreshToken(connectedDB, refreshToken)
 		}()
 
@@ -116,17 +97,21 @@ func CreateAccount(email, password, firstName, lastName string) (NewAccount, []s
 		go func() {
 			defer wg.Done()
 			authenCode, expiredTime := helpers.GenerateAuthenCode()
-			newAuthenCode := userAuthentication{Email: email, Code: authenCode, ExpiredTime: expiredTime}
+			newAuthenCode := userAuthentication{Email: request.GetEmail(), Code: authenCode, ExpiredTime: expiredTime}
+			//Save the user authentication code to the database
 			saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
-			sendAuthenticationCode(email, firstName, authenCode)
+			//Send the user authentication code to the user's email
+			sendAuthenticationCode(request.GetEmail(), request.GetFirstName(), authenCode)
 		}()
 		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
-		log.Println("A new account was created for:", email)
-		return NewAccount{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, errorList
+		log.Println("A new account was created for:", request.GetEmail())
+		return NewAccount{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, &pb.Status{Code: int32(helpers.GetCreatedStatusCode()),
+			Message: "account created"}
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return NewAccount{AccessToken: "", RefreshToken: ""}, errorList
+		return NewAccount{AccessToken: "", RefreshToken: ""}, &pb.Status{Code: int32(helpers.GetInvalidInformation()),
+			Message: "information provided is invalid"}
 	}
 
 }

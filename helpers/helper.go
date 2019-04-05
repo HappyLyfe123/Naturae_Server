@@ -5,17 +5,15 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"net/smtp"
 	"os"
 	"regexp"
 	"time"
 	"unicode"
-
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //Declare local global variable
@@ -26,6 +24,11 @@ type Email struct {
 	Receiver string
 	Subject  string
 	Body     string
+}
+
+type Status struct {
+	Code    int32
+	Message string
 }
 
 //ConnectToGmailAccount : Connect to the Gmail email client
@@ -77,7 +80,7 @@ func SendEmail(sendEmail *Email) error {
 }
 
 //IsEmailValid : Check if the email match the guideline and if there an existing account with that email address
-func IsEmailValid(email string) (bool, error) {
+func IsEmailValid(email string) bool {
 	//Generate an Regexp to check user email address
 	emailRegexp := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9]" +
 		"(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
@@ -85,14 +88,13 @@ func IsEmailValid(email string) (bool, error) {
 	if !emailRegexp.MatchString(email) {
 		log.Println("Invalid email format")
 		//Return false if the email exist in the database
-		return false, errors.New(ErrorFormat(GetInvalidEmailCode(), "invalid email",
-			"the email provided is not in a valid format"))
+		return false
 	}
-	return true, nil
+	return true
 }
 
 //EmailExist : check in the database if there already an account with that email address
-func EmailExist(email string, database *mongo.Database, collectionName string) (bool, error) {
+func EmailExist(email string, database *mongo.Database, collectionName string) bool {
 	//Create a struct to get the result
 	var result struct {
 		email string
@@ -107,14 +109,13 @@ func EmailExist(email string, database *mongo.Database, collectionName string) (
 
 	//If there an error or no email found it will return false
 	if err != nil {
-		return false, nil
+		return false
 	}
-	return true, errors.New(ErrorFormat(GetEmailExistCode(), "invalid email", "account already"+
-		" existed with this email"))
+	return true
 }
 
 //IsPasswordValid : check if the password matches the guideline
-func IsPasswordValid(password string) (bool, error) {
+func IsPasswordValid(password string) bool {
 	//Initialize all the local variables
 	var number, upper, lower, special bool
 	character := 0
@@ -130,35 +131,32 @@ func IsPasswordValid(password string) (bool, error) {
 		case unicode.IsLower(c):
 			lower = true
 			character++
-		case regexp.MustCompile("[!@#$%&^]").MatchString(string(c)):
+		case regexp.MustCompile("[!@#$%^&+]").MatchString(string(c)):
 			special = true
 			character++
 		default:
-			return false, errors.New(ErrorFormat(GetInvalidPasswordCode(), "invalid password", "there are "+
-				"invalid characters in password"))
+			return false
 		}
 	}
 	//Check if the password is at least 8 characters long
 	eightOrMore := character >= 8
 	//The password meet all of the guideline
 	if number && upper && lower && special && eightOrMore {
-		return true, nil
+		return true
 	}
-	return false, errors.New(ErrorFormat(GetInvalidPasswordCode(), "invalid password", "password is "+
-		"less than 8 characters"))
+	return false
 }
 
 //IsNameValid : Check if the name contain any of not valid characters
-func IsNameValid(name string) (bool, error) {
+func IsNameValid(name string) bool {
 	for _, c := range name {
 		//If the name doesn't match the guide it will return false
 		if !regexp.MustCompile(`[a-zA-Z_ '-]`).MatchString(string(c)) {
-			return false, errors.New(ErrorFormat(GetInvalidNameCode(), "invalid name", "invalid"+
-				" character in name"))
+			return false
 		}
 	}
 	//Return that the name is valid
-	return true, nil
+	return true
 }
 
 //Check if the time is valid
@@ -168,11 +166,6 @@ func IsTimeValid(expiredTime time.Time) bool {
 	} else {
 		return true
 	}
-}
-
-//Create an error with this format
-func ErrorFormat(errorCode int16, errorType, errorDescription string) string {
-	return fmt.Sprintf(`{"Code": %d, "Type": "%s", "Description": "%s"}`, errorCode, errorType, errorDescription)
 }
 
 //ConvertStringToJSON : Convert string into json format
