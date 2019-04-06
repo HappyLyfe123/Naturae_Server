@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"sync"
 	"time"
 
 	pb "Naturae_Server/naturaeproto"
@@ -19,25 +18,21 @@ type userAuthentication struct {
 	ExpiredTime time.Time
 }
 
-//NewAccount : create new account structure
-type NewAccount struct {
-	AccessToken  string
-	RefreshToken string
-}
-
 //CreateAccount : User want to create an account
-func CreateAccount(request *pb.CreateAccountRequest) (NewAccount, *pb.Status) {
+func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 
 	//Connect to the users database
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 
-	checkStatusChannel := make(chan bool, 4)
-	wg := sync.WaitGroup{}
+	//Create a channel for storing the validity result from checking user input
+	checkStatusChannel := make(chan bool, 3)
+	//Close the channel
+	defer close(checkStatusChannel)
 
-	//Check if email is in a valid format
-	go func() {
-		checkStatusChannel <- helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection())
-	}()
+	if !helpers.IsEmailValid(request.GetEmail()) && helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection()) {
+		return &pb.CreateAccountReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{Code: int32(helpers.GetEmailExistCode()),
+			Message: "email already taken"}}
+	}
 
 	//Check if first name is in a valid format
 	go func() {
@@ -55,63 +50,45 @@ func CreateAccount(request *pb.CreateAccountRequest) (NewAccount, *pb.Status) {
 	}()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
-	if <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel {
-		//Check checkStatusChannel
-		close(checkStatusChannel)
+	if <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel {
 
-		var accessToken *helpers.AccessToken
-		var refreshToken *helpers.RefreshToken
+		//Generate random bytes of data to be use as salt for the password
+		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
+		//Generate a hash for the user password
+		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
+		//Create a new user
+		newUser := userAccount{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
+			Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+		//Save the user to the database
+		saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
 
-		wg.Add(4)
-		go func() {
-			defer wg.Done()
-			//Generate random bytes of data to be use as salt for the password
-			salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
-			//Generate a hash for the user password
-			hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
+		//Create access token
+		accessToken := helpers.GenerateAccessToken(request.GetEmail())
+		//Save access token to database
+		saveAccessToken(connectedDB, accessToken)
 
-			//Create a new user
-			newUser := userAccount{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
-				Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
+		//Create refresh token
+		refreshToken := helpers.GenerateRefreshToken(request.GetEmail())
+		//Save refresh token to database
+		saveRefreshToken(connectedDB, refreshToken)
 
-			//Save the user to the database
-			saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
-		}()
+		//Generate authentication code and expired time
+		authenCode, expiredTime := helpers.GenerateAuthenCode()
+		//Create a struct for user's authentication
+		newAuthenCode := userAuthentication{Email: request.GetEmail(), Code: authenCode, ExpiredTime: expiredTime}
+		//Save the user authentication code to the database
+		saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+		//Send the user authentication code to the user's email
+		sendAuthenticationCode(request.GetEmail(), request.GetFirstName(), authenCode)
 
-		//Generate access token
-		go func() {
-			defer wg.Done()
-			accessToken = helpers.GenerateAccessToken(request.GetEmail())
-			saveAccessToken(connectedDB, accessToken)
-
-		}()
-
-		//Generate refresh token code
-		go func() {
-			defer wg.Done()
-			refreshToken = helpers.GenerateRefreshToken(request.GetEmail())
-			saveRefreshToken(connectedDB, refreshToken)
-		}()
-
-		//Generate authentication Code
-		go func() {
-			defer wg.Done()
-			authenCode, expiredTime := helpers.GenerateAuthenCode()
-			newAuthenCode := userAuthentication{Email: request.GetEmail(), Code: authenCode, ExpiredTime: expiredTime}
-			//Save the user authentication code to the database
-			saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
-			//Send the user authentication code to the user's email
-			sendAuthenticationCode(request.GetEmail(), request.GetFirstName(), authenCode)
-		}()
-		wg.Wait()
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", request.GetEmail())
-		return NewAccount{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID}, &pb.Status{Code: int32(helpers.GetCreatedStatusCode()),
-			Message: "account created"}
+		return &pb.CreateAccountReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID,
+			Status: &pb.Status{Code: int32(helpers.GetCreatedStatusCode()), Message: "account created"}}
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return NewAccount{AccessToken: "", RefreshToken: ""}, &pb.Status{Code: int32(helpers.GetInvalidInformation()),
-			Message: "information provided is invalid"}
+		return &pb.CreateAccountReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{Code: int32(helpers.GetInvalidInformation()),
+			Message: "information provided are invalid"}}
 	}
 
 }
@@ -123,10 +100,11 @@ func saveNewUser(database *mongo.Database, collectionName string, user *userAcco
 	//Save the user into the database
 	_, err := accountInfoCollection.InsertOne(context.Background(), user)
 	if err != nil {
-		log.Println("Save user to DB error: ", err)
+		log.Fatalln("Save user to DB error: ", err)
 	} else {
 		log.Println("Save", user.Email, "to the account information collection")
 	}
+	return
 }
 
 //SaveAuthenCode : Save authentication code to the database
@@ -135,7 +113,7 @@ func saveAuthenticationCode(database *mongo.Database, collectionName string, new
 	currCollection := helpers.ConnectToCollection(database, collectionName)
 	_, err := currCollection.InsertOne(context.Background(), newAuthenCode)
 	if err != nil {
-		log.Println("Save authentication to DB error: ", err)
+		log.Fatalln("Save authentication to DB error: ", err)
 	} else {
 		log.Println("Save", newAuthenCode.Email, "to authentication code to DB")
 		//Break out of the for loop
@@ -154,7 +132,7 @@ func sendAuthenticationCode(userEmail, firstName string, authenCode string) {
 	err := helpers.SendEmail(&newMail)
 	//If there no error
 	if err != nil {
-		log.Println("Send email error: ", err)
+		log.Fatalln("Send email error: ", err)
 	}
 	log.Println("Email", userEmail, "authentication code")
 
