@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -166,11 +165,4 @@ func IsTimeValid(expiredTime time.Time) bool {
 	} else {
 		return true
 	}
-}
-
-//ConvertStringToJSON : Convert string into json format
-func ConvertStringToJSON(data *string, format interface{}) interface{} {
-	result := format
-	json.Unmarshal([]byte(*data), &result)
-	return result
 }

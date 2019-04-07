@@ -29,7 +29,7 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 	//Close the channel
 	defer close(checkStatusChannel)
 
-	if !helpers.IsEmailValid(request.GetEmail()) && helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection()) {
+	if !helpers.IsEmailValid(request.GetEmail()) || helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection()) {
 		return &pb.CreateAccountReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{Code: int32(helpers.GetEmailExistCode()),
 			Message: "email already taken"}}
 	}
@@ -100,7 +100,7 @@ func saveNewUser(database *mongo.Database, collectionName string, user *userAcco
 	//Save the user into the database
 	_, err := accountInfoCollection.InsertOne(context.Background(), user)
 	if err != nil {
-		log.Fatalln("Save user to DB error: ", err)
+		log.Println("Save user to DB error: ", err)
 	} else {
 		log.Println("Save", user.Email, "to the account information collection")
 	}
@@ -113,7 +113,7 @@ func saveAuthenticationCode(database *mongo.Database, collectionName string, new
 	currCollection := helpers.ConnectToCollection(database, collectionName)
 	_, err := currCollection.InsertOne(context.Background(), newAuthenCode)
 	if err != nil {
-		log.Fatalln("Save authentication to DB error: ", err)
+		log.Println("Save authentication to DB error: ", err)
 	} else {
 		log.Println("Save", newAuthenCode.Email, "to authentication code to DB")
 		//Break out of the for loop
