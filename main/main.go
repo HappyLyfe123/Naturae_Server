@@ -1,7 +1,6 @@
 package main
 
 import (
-	"Naturae_Server/asyncq"
 	"Naturae_Server/helpers"
 	pb "Naturae_Server/naturaeproto"
 	"Naturae_Server/users"
@@ -33,9 +32,9 @@ func init() {
 	//Initialize global variable in the helper package
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
-	asyncq.StartTaskDispatcher(10)
+	//asyncq.StartTaskDispatcher(10)
 	//Create listener for server
-	//createServer()
+	createServer()
 
 }
 

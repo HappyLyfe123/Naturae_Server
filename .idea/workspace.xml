@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdf9c54f-18fc-4e36-a9c4-3800abb51626" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/asyncq/queue.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/asyncq/task.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpers/helper.go" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/helper.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asyncq/queue.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/asyncq/task.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/create_account.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/create_account.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/login.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/login.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,65 +18,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-549">
-              <caret line="30" column="43" lean-forward="true" selection-start-line="30" selection-start-column="43" selection-end-line="30" selection-end-column="43" />
+            <state relative-caret-position="284">
+              <caret line="67" column="8" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/asyncq/queue.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-169">
-              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/asyncq/task.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="3" column="9" selection-start-line="3" selection-start-column="9" selection-end-line="3" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users/create_account.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="400">
-              <caret line="29" column="35" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
+            <state relative-caret-position="448">
+              <caret line="81" column="28" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
               <folding>
                 <element signature="e#15#156#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/helpers/constants.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="24" column="23" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/helpers/helper.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1680">
-              <caret line="98" column="11" selection-start-line="98" selection-start-column="11" selection-end-line="98" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/users/login.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="12" selection-start-line="12" selection-end-line="12" />
             </state>
           </provider>
         </entry>
@@ -138,17 +89,17 @@
         <option value="$PROJECT_DIR$/users/user.go" />
         <option value="$PROJECT_DIR$/users/login.go" />
         <option value="$PROJECT_DIR$/helpers/helper.go" />
-        <option value="$PROJECT_DIR$/users/create_account.go" />
         <option value="$PROJECT_DIR$/asyncq/task.go" />
-        <option value="$PROJECT_DIR$/main/main.go" />
         <option value="$PROJECT_DIR$/asyncq/queue.go" />
+        <option value="$PROJECT_DIR$/main/main.go" />
+        <option value="$PROJECT_DIR$/users/create_account.go" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-118" />
-    <option name="y" value="-22" />
-    <option name="width" value="1680" />
+    <option name="x" value="840" />
+    <option name="y" value="23" />
+    <option name="width" value="840" />
     <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -159,7 +110,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -170,12 +120,7 @@
             <path>
               <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="asyncq" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="helpers" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
@@ -186,6 +131,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -250,15 +196,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1369936" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17216118" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4993895" visible="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4993895" visible="true" weight="0.32834226" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -365,23 +311,11 @@
     <entry file="file://$PROJECT_DIR$/helpers/helper_test.go" />
     <entry file="file://$PROJECT_DIR$/naturae_server.proto" />
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.proto" />
-    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/single_result.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/single_result.go" />
     <entry file="file:///usr/local/go/src/net/smtp/auth.go" />
     <entry file="file:///usr/local/go/src/fmt/print.go" />
     <entry file="file:///usr/local/go/src/log/log.go" />
-    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/collection.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="927">
-          <caret line="211" column="58" lean-forward="true" selection-start-line="211" selection-start-column="58" selection-end-line="211" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/collection.go" />
     <entry file="file://$PROJECT_DIR$/proto/GoPb.pb.go" />
     <entry file="file:///usr/local/go/src/builtin/builtin.go" />
     <entry file="file://$PROJECT_DIR$/proto/GoPb.proto" />
@@ -392,13 +326,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/client.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="165" selection-start-line="165" selection-end-line="165" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../github.com/mongodb/mongo-go-driver/mongo/client.go" />
     <entry file="file://$PROJECT_DIR$/users/account_authentication.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="618">
@@ -428,16 +356,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="531">
           <caret line="67" column="87" selection-start-line="67" selection-start-column="87" selection-end-line="67" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/users/create_account.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="29" column="35" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
-          <folding>
-            <element signature="e#15#156#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -471,67 +389,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-549">
-          <caret line="30" column="43" lean-forward="true" selection-start-line="30" selection-start-column="43" selection-end-line="30" selection-end-column="43" />
+        <state relative-caret-position="284">
+          <caret line="67" column="8" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/middleware/panicrecovery.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/validationkit/checkusername_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/endpoints/createpost.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/models/user.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
-          <folding>
-            <element signature="e#16#120#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/handlers/login.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1689">
-          <caret line="20" column="45" lean-forward="true" selection-start-line="20" selection-start-column="45" selection-end-line="20" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/tasks/imagetask.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="22" column="56" lean-forward="true" selection-start-line="22" selection-start-column="56" selection-end-line="22" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/gopherface.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-249">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/middleware/panicrecovery.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/validationkit/checkusername_test.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/endpoints/createpost.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/models/user.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/handlers/login.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/tasks/imagetask.go" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/Temp1_9781788392761_Code.zip/section7/gopherfaceq/gopherface.go" />
     <entry file="file://$PROJECT_DIR$/asyncq/queue.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-169">
           <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/create_account.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="81" column="28" lean-forward="true" selection-start-line="81" selection-start-column="28" selection-end-line="81" selection-end-column="28" />
+          <folding>
+            <element signature="e#15#156#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
