@@ -13,8 +13,6 @@ import (
 
 type server struct{}
 
-var result = make(chan int)
-
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
@@ -53,7 +51,6 @@ func createServer() {
 		log.Fatalf("unable to listen on 8080 port: %v", err)
 	}
 	log.Println("listening on port 8080")
-
 	srv := grpc.NewServer()
 	pb.RegisterServerRequestsServer(srv, &server{})
 	reflection.Register(srv)
