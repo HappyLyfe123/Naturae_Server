@@ -77,7 +77,7 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 		//Create a struct for user's authentication
 		newAuthenCode := userAuthentication{Email: request.GetEmail(), Code: authenCode, ExpiredTime: expiredTime}
 		//Save the user authentication code to the database
-		saveAuthenticationCode(connectedDB, helpers.GetAccountAuthentication(), &newAuthenCode)
+		saveAuthenticationCode(connectedDB, helpers.GetAccountAuthenticationCollection(), &newAuthenCode)
 		//Send the user authentication code to the user's email
 		sendAuthenticationCode(request.GetEmail(), request.GetFirstName(), authenCode)
 

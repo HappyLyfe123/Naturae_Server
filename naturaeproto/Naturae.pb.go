@@ -226,6 +226,226 @@ func (m *CreateAccountReply) GetStatus() *Status {
 	return nil
 }
 
+type LoginRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Password             string   `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
+func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
+func (*LoginRequest) ProtoMessage()    {}
+func (*LoginRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{4}
+}
+
+func (m *LoginRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoginRequest.Unmarshal(m, b)
+}
+func (m *LoginRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoginRequest.Marshal(b, m, deterministic)
+}
+func (m *LoginRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginRequest.Merge(m, src)
+}
+func (m *LoginRequest) XXX_Size() int {
+	return xxx_messageInfo_LoginRequest.Size(m)
+}
+func (m *LoginRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoginRequest proto.InternalMessageInfo
+
+func (m *LoginRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *LoginRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *LoginRequest) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+type LoginReply struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	Status               *Status  `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LoginReply) Reset()         { *m = LoginReply{} }
+func (m *LoginReply) String() string { return proto.CompactTextString(m) }
+func (*LoginReply) ProtoMessage()    {}
+func (*LoginReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{5}
+}
+
+func (m *LoginReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LoginReply.Unmarshal(m, b)
+}
+func (m *LoginReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LoginReply.Marshal(b, m, deterministic)
+}
+func (m *LoginReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginReply.Merge(m, src)
+}
+func (m *LoginReply) XXX_Size() int {
+	return xxx_messageInfo_LoginReply.Size(m)
+}
+func (m *LoginReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoginReply proto.InternalMessageInfo
+
+func (m *LoginReply) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *LoginReply) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
+
+func (m *LoginReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+type AccountAuthenRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	FirstName            string   `protobuf:"bytes,2,opt,name=firstName,proto3" json:"firstName,omitempty"`
+	Email                string   `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	AuthenCode           string   `protobuf:"bytes,4,opt,name=AuthenCode,proto3" json:"AuthenCode,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AccountAuthenRequest) Reset()         { *m = AccountAuthenRequest{} }
+func (m *AccountAuthenRequest) String() string { return proto.CompactTextString(m) }
+func (*AccountAuthenRequest) ProtoMessage()    {}
+func (*AccountAuthenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{6}
+}
+
+func (m *AccountAuthenRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AccountAuthenRequest.Unmarshal(m, b)
+}
+func (m *AccountAuthenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AccountAuthenRequest.Marshal(b, m, deterministic)
+}
+func (m *AccountAuthenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccountAuthenRequest.Merge(m, src)
+}
+func (m *AccountAuthenRequest) XXX_Size() int {
+	return xxx_messageInfo_AccountAuthenRequest.Size(m)
+}
+func (m *AccountAuthenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccountAuthenRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccountAuthenRequest proto.InternalMessageInfo
+
+func (m *AccountAuthenRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *AccountAuthenRequest) GetFirstName() string {
+	if m != nil {
+		return m.FirstName
+	}
+	return ""
+}
+
+func (m *AccountAuthenRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *AccountAuthenRequest) GetAuthenCode() string {
+	if m != nil {
+		return m.AuthenCode
+	}
+	return ""
+}
+
+type AccountAuthenReply struct {
+	Result               bool     `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Status               *Status  `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AccountAuthenReply) Reset()         { *m = AccountAuthenReply{} }
+func (m *AccountAuthenReply) String() string { return proto.CompactTextString(m) }
+func (*AccountAuthenReply) ProtoMessage()    {}
+func (*AccountAuthenReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{7}
+}
+
+func (m *AccountAuthenReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AccountAuthenReply.Unmarshal(m, b)
+}
+func (m *AccountAuthenReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AccountAuthenReply.Marshal(b, m, deterministic)
+}
+func (m *AccountAuthenReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AccountAuthenReply.Merge(m, src)
+}
+func (m *AccountAuthenReply) XXX_Size() int {
+	return xxx_messageInfo_AccountAuthenReply.Size(m)
+}
+func (m *AccountAuthenReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_AccountAuthenReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AccountAuthenReply proto.InternalMessageInfo
+
+func (m *AccountAuthenReply) GetResult() bool {
+	if m != nil {
+		return m.Result
+	}
+	return false
+}
+
+func (m *AccountAuthenReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
 type Status struct {
 	Code                 int32    `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
 	Message              string   `protobuf:"bytes,2,opt,name=Message,proto3" json:"Message,omitempty"`
@@ -238,7 +458,7 @@ func (m *Status) Reset()         { *m = Status{} }
 func (m *Status) String() string { return proto.CompactTextString(m) }
 func (*Status) ProtoMessage()    {}
 func (*Status) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{4}
+	return fileDescriptor_bdd2b78300d408eb, []int{8}
 }
 
 func (m *Status) XXX_Unmarshal(b []byte) error {
@@ -278,36 +498,48 @@ func init() {
 	proto.RegisterType((*HelloReply)(nil), "naturaeproto.HelloReply")
 	proto.RegisterType((*CreateAccountRequest)(nil), "naturaeproto.CreateAccountRequest")
 	proto.RegisterType((*CreateAccountReply)(nil), "naturaeproto.CreateAccountReply")
+	proto.RegisterType((*LoginRequest)(nil), "naturaeproto.LoginRequest")
+	proto.RegisterType((*LoginReply)(nil), "naturaeproto.LoginReply")
+	proto.RegisterType((*AccountAuthenRequest)(nil), "naturaeproto.AccountAuthenRequest")
+	proto.RegisterType((*AccountAuthenReply)(nil), "naturaeproto.AccountAuthenReply")
 	proto.RegisterType((*Status)(nil), "naturaeproto.Status")
 }
 
 func init() { proto.RegisterFile("naturaeproto/Naturae.proto", fileDescriptor_bdd2b78300d408eb) }
 
 var fileDescriptor_bdd2b78300d408eb = []byte{
-	// 357 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x52, 0x4f, 0x4b, 0xfb, 0x30,
-	0x18, 0xfe, 0xf5, 0xe7, 0x56, 0xb7, 0x77, 0xd3, 0x43, 0x18, 0x52, 0x8b, 0x87, 0x91, 0x83, 0x28,
-	0x48, 0x85, 0x09, 0xde, 0xdd, 0x2e, 0x82, 0xb8, 0x43, 0x27, 0x08, 0xde, 0x62, 0xf7, 0x4e, 0x87,
-	0x6d, 0x13, 0x93, 0x54, 0xed, 0x37, 0xf0, 0x33, 0xf8, 0x1d, 0xfc, 0x8e, 0xd2, 0x24, 0xd5, 0x56,
-	0x86, 0xa7, 0xf6, 0xf9, 0xf3, 0x26, 0x4f, 0x9e, 0x04, 0xc2, 0x9c, 0xe9, 0x42, 0x32, 0x14, 0x92,
-	0x6b, 0x7e, 0x3a, 0xb7, 0x20, 0x32, 0x88, 0x0c, 0x9b, 0x1a, 0xa5, 0x30, 0xbc, 0xc4, 0x34, 0xe5,
-	0x31, 0x3e, 0x17, 0xa8, 0x34, 0x21, 0xd0, 0xc9, 0x59, 0x86, 0x81, 0x37, 0xf6, 0x8e, 0xfa, 0xb1,
-	0xf9, 0xa7, 0x87, 0x00, 0xce, 0x23, 0xd2, 0x92, 0x04, 0xb0, 0x9d, 0xa1, 0x52, 0xec, 0xa1, 0x36,
-	0xd5, 0x90, 0x7e, 0x78, 0x30, 0x9a, 0x49, 0x64, 0x1a, 0x2f, 0x92, 0x84, 0x17, 0xb9, 0xae, 0x17,
-	0xdd, 0x03, 0x9f, 0x09, 0x71, 0x85, 0xa5, 0x9b, 0x70, 0x88, 0x8c, 0xa0, 0x8b, 0x19, 0x5b, 0xa7,
-	0xc1, 0x7f, 0x43, 0x5b, 0x40, 0x42, 0xe8, 0x09, 0xa6, 0xd4, 0x2b, 0x97, 0xcb, 0x60, 0xcb, 0x08,
-	0xdf, 0x98, 0x1c, 0x40, 0x7f, 0xb5, 0x96, 0x4a, 0xcf, 0xab, 0x8c, 0x1d, 0x23, 0xfe, 0x10, 0xd5,
-	0x64, 0xca, 0x9c, 0xd8, 0xb5, 0x93, 0x35, 0xa6, 0xef, 0x1e, 0x90, 0x5f, 0xe1, 0xaa, 0xd3, 0x8c,
-	0x61, 0xc0, 0x92, 0x04, 0x95, 0xba, 0xe1, 0x4f, 0x98, 0xbb, 0x7c, 0x4d, 0x8a, 0x50, 0x18, 0x4a,
-	0x5c, 0x49, 0x54, 0x8f, 0xd6, 0x62, 0xb3, 0xb6, 0x38, 0x72, 0x02, 0xbe, 0xd2, 0x4c, 0x17, 0xca,
-	0x04, 0x1e, 0x4c, 0x46, 0x51, 0xb3, 0xe4, 0x68, 0x61, 0xb4, 0xd8, 0x79, 0xe8, 0x39, 0xf8, 0x96,
-	0xa9, 0xda, 0x9e, 0xf1, 0xa5, 0x2d, 0xb2, 0x1b, 0x9b, 0xff, 0xaa, 0xdf, 0x6b, 0xd7, 0xaf, 0xdd,
-	0xaa, 0x86, 0x93, 0x4f, 0x0f, 0x76, 0x17, 0x28, 0x5f, 0x50, 0xba, 0x62, 0x15, 0xb9, 0x85, 0x9d,
-	0xd6, 0xa1, 0x08, 0x6d, 0xef, 0xbc, 0xe9, 0x3a, 0xc2, 0xf1, 0x9f, 0x1e, 0x91, 0x96, 0xf4, 0x1f,
-	0x99, 0x42, 0x6f, 0xc1, 0x4a, 0x73, 0xed, 0x24, 0x6c, 0xfb, 0x9b, 0xef, 0x25, 0x0c, 0x36, 0x6a,
-	0x66, 0x8d, 0xe9, 0x31, 0xec, 0x27, 0x3c, 0x8b, 0xf0, 0x8d, 0x65, 0x22, 0x45, 0xd5, 0x72, 0xde,
-	0xb5, 0x9e, 0xe1, 0xbd, 0x6f, 0x3e, 0x67, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xd8, 0xd2, 0x3b,
-	0xc1, 0xb9, 0x02, 0x00, 0x00,
+	// 482 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x54, 0xc1, 0x6e, 0xd4, 0x30,
+	0x10, 0xdd, 0x6c, 0xbb, 0x61, 0x3b, 0x5d, 0x38, 0x8c, 0x96, 0x2a, 0x44, 0x08, 0xad, 0x7c, 0x40,
+	0x20, 0xa1, 0x45, 0x2a, 0x12, 0x57, 0xd4, 0xf6, 0x82, 0x04, 0xf4, 0x90, 0x45, 0x02, 0xf5, 0x82,
+	0x4c, 0x3a, 0x6d, 0x23, 0x92, 0x38, 0xd8, 0x0e, 0xb0, 0x37, 0xc4, 0x89, 0x6f, 0xe0, 0xa7, 0xf8,
+	0x25, 0x14, 0xdb, 0x69, 0xed, 0xb0, 0x02, 0x0e, 0x48, 0x3d, 0x25, 0x6f, 0x66, 0x3c, 0x7e, 0xf3,
+	0x3c, 0x33, 0x90, 0xd6, 0x5c, 0xb7, 0x92, 0x53, 0x23, 0x85, 0x16, 0x8f, 0x8f, 0x2d, 0x58, 0x1a,
+	0x84, 0x33, 0xdf, 0xc7, 0x18, 0xcc, 0x9e, 0x53, 0x59, 0x8a, 0x8c, 0x3e, 0xb6, 0xa4, 0x34, 0x22,
+	0x6c, 0xd7, 0xbc, 0xa2, 0x24, 0x5a, 0x44, 0x0f, 0x76, 0x32, 0xf3, 0xcf, 0xee, 0x03, 0xb8, 0x98,
+	0xa6, 0x5c, 0x63, 0x02, 0x37, 0x2a, 0x52, 0x8a, 0x9f, 0xf7, 0x41, 0x3d, 0x64, 0x3f, 0x22, 0x98,
+	0x1f, 0x49, 0xe2, 0x9a, 0x0e, 0xf2, 0x5c, 0xb4, 0xb5, 0xee, 0x93, 0xee, 0x41, 0xcc, 0x9b, 0xe6,
+	0x05, 0xad, 0xdd, 0x09, 0x87, 0x70, 0x0e, 0x13, 0xaa, 0x78, 0x51, 0x26, 0x63, 0x63, 0xb6, 0x00,
+	0x53, 0x98, 0x36, 0x5c, 0xa9, 0xcf, 0x42, 0x9e, 0x26, 0x5b, 0xc6, 0x71, 0x89, 0xf1, 0x2e, 0xec,
+	0x9c, 0x15, 0x52, 0xe9, 0xe3, 0x8e, 0xe3, 0xb6, 0x71, 0x5e, 0x19, 0xba, 0x93, 0x25, 0x77, 0xce,
+	0x89, 0x3d, 0xd9, 0x63, 0xf6, 0x3d, 0x02, 0x1c, 0x90, 0xeb, 0xaa, 0x59, 0xc0, 0x2e, 0xcf, 0x73,
+	0x52, 0xea, 0xb5, 0xf8, 0x40, 0xb5, 0xe3, 0xe7, 0x9b, 0x90, 0xc1, 0x4c, 0xd2, 0x99, 0x24, 0x75,
+	0x61, 0x43, 0x2c, 0xd7, 0xc0, 0x86, 0x8f, 0x20, 0x56, 0x9a, 0xeb, 0x56, 0x19, 0xc2, 0xbb, 0xfb,
+	0xf3, 0xa5, 0x2f, 0xf2, 0x72, 0x65, 0x7c, 0x99, 0x8b, 0x61, 0x6f, 0x61, 0xf6, 0x52, 0x9c, 0x17,
+	0xf5, 0x7f, 0x97, 0x87, 0x7d, 0x8d, 0x00, 0x5c, 0xea, 0xeb, 0x2a, 0xee, 0x5b, 0x04, 0x73, 0xa7,
+	0xf0, 0x41, 0xab, 0x2f, 0xe8, 0xaf, 0x55, 0x06, 0x4f, 0x3a, 0x1e, 0x3e, 0xe9, 0xa5, 0x06, 0x5b,
+	0xbe, 0x06, 0xf7, 0x00, 0x6c, 0xf2, 0x23, 0x71, 0xda, 0xf7, 0x81, 0x67, 0x61, 0x27, 0x80, 0x03,
+	0x0e, 0x9d, 0x1c, 0x7b, 0x10, 0x4b, 0x52, 0x6d, 0xa9, 0x0d, 0x83, 0x69, 0xe6, 0x90, 0x57, 0xe0,
+	0xf8, 0x1f, 0x0a, 0x7c, 0x0a, 0xb1, 0xb5, 0x74, 0xb3, 0x62, 0xee, 0xef, 0xb2, 0x4d, 0x32, 0xf3,
+	0xdf, 0x4d, 0xc7, 0x2b, 0x37, 0x1d, 0xb6, 0x96, 0x1e, 0xee, 0xff, 0x1c, 0xc3, 0xad, 0x15, 0xc9,
+	0x4f, 0x24, 0x9d, 0x22, 0x0a, 0xdf, 0xc0, 0xcd, 0xa0, 0x25, 0x91, 0x85, 0x37, 0x6f, 0x1a, 0xa6,
+	0x74, 0xf1, 0xc7, 0x98, 0xa6, 0x5c, 0xb3, 0x11, 0x3e, 0x83, 0x89, 0x69, 0x03, 0x4c, 0xc3, 0x60,
+	0xbf, 0xed, 0xd2, 0x64, 0xa3, 0xcf, 0x26, 0x78, 0x07, 0xb7, 0x03, 0x01, 0x75, 0x91, 0x73, 0x5d,
+	0x88, 0x7a, 0xc8, 0x70, 0xd3, 0x4b, 0x0f, 0x19, 0xfe, 0xfe, 0x12, 0x6c, 0x84, 0x87, 0x30, 0x5d,
+	0xf1, 0xb5, 0x59, 0x2b, 0x43, 0x92, 0xfe, 0x3e, 0x1a, 0x92, 0xbc, 0xda, 0x43, 0x6c, 0x74, 0xf8,
+	0x10, 0xee, 0xe4, 0xa2, 0x5a, 0xd2, 0x17, 0x5e, 0x35, 0x25, 0xa9, 0x20, 0xf2, 0x24, 0x58, 0x73,
+	0xef, 0x63, 0xf3, 0x79, 0xf2, 0x2b, 0x00, 0x00, 0xff, 0xff, 0x09, 0xea, 0x70, 0x7b, 0x19, 0x05,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -323,8 +555,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ServerRequestsClient interface {
 	CreateAccount(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*CreateAccountReply, error)
-	//    rpc Login (LoginRequest) returns(LoginReply){}
-	//    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	AccountAuthentication(ctx context.Context, in *AccountAuthenRequest, opts ...grpc.CallOption) (*AccountAuthenReply, error)
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
 }
 
@@ -345,6 +577,24 @@ func (c *serverRequestsClient) CreateAccount(ctx context.Context, in *CreateAcco
 	return out, nil
 }
 
+func (c *serverRequestsClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/Login", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverRequestsClient) AccountAuthentication(ctx context.Context, in *AccountAuthenRequest, opts ...grpc.CallOption) (*AccountAuthenReply, error) {
+	out := new(AccountAuthenReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/AccountAuthentication", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serverRequestsClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
 	out := new(HelloReply)
 	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/SayHello", in, out, opts...)
@@ -357,8 +607,8 @@ func (c *serverRequestsClient) SayHello(ctx context.Context, in *HelloRequest, o
 // ServerRequestsServer is the server API for ServerRequests service.
 type ServerRequestsServer interface {
 	CreateAccount(context.Context, *CreateAccountRequest) (*CreateAccountReply, error)
-	//    rpc Login (LoginRequest) returns(LoginReply){}
-	//    rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
+	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	AccountAuthentication(context.Context, *AccountAuthenRequest) (*AccountAuthenReply, error)
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 }
 
@@ -380,6 +630,42 @@ func _ServerRequests_CreateAccount_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerRequestsServer).CreateAccount(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/Login",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_AccountAuthentication_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountAuthenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).AccountAuthentication(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/AccountAuthentication",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).AccountAuthentication(ctx, req.(*AccountAuthenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -409,6 +695,14 @@ var _ServerRequests_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAccount",
 			Handler:    _ServerRequests_CreateAccount_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _ServerRequests_Login_Handler,
+		},
+		{
+			MethodName: "AccountAuthentication",
+			Handler:    _ServerRequests_AccountAuthentication_Handler,
 		},
 		{
 			MethodName: "SayHello",
