@@ -68,6 +68,13 @@ func GenerateTokenID() string {
 	return ConvertByteToStringBase64(GenerateHash(GenerateRandomBytes(GetTokenLength()), nil))
 }
 
+func IsTokenExpired(expireTime time.Time) bool {
+	if time.Now().Before(expireTime) || time.Now().Equal(expireTime) {
+		return false
+	}
+	return true
+}
+
 //GenerateAuthenCode : generate an authentication to verify the user
 func GenerateAuthenCode() (string, time.Time) {
 	//The time that the authentication code is created

@@ -6,8 +6,12 @@ const (
 	invalidPassword        = 102
 	invalidLoginCredential = 103
 	invalidToken           = 104
+	invalidAuthenCode      = 105
 	accountNotVerify       = 106
 	emailExist             = 150
+	expiredAuthenCode      = 151
+	expiredAccessToken     = 152
+	expiredRefreshToken    = 153
 
 	ok                  = 200
 	created             = 201
@@ -31,125 +35,140 @@ const (
 	authCodeMaxNum     = 900000
 	authCodeMinNum     = 100000
 
-	gmailSMTPServer        = "smtp.gmail.com:587"
-	gmailSMTPHost          = "smtp.gmail.com"
-	gmailEmailAddress      = "naturae.outdoor@gmail.com"
-	appName                = "Naturae"
-	databaseName           = "Naturae-Server"
-	userDatabase           = "users"
-	accountInfoCollection  = "Account_Information"
-	accessTokenCollection  = "Access_Token"
-	refreshTokenCollection = "Refresh_Token"
-	accountAuthentication  = "Account_Authentication"
+	gmailSMTPServer                 = "smtp.gmail.com:587"
+	gmailSMTPHost                   = "smtp.gmail.com"
+	gmailEmailAddress               = "naturae.outdoor@gmail.com"
+	appName                         = "Naturae"
+	databaseName                    = "Naturae-Server"
+	userDatabase                    = "users"
+	accountInfoCollection           = "Account_Information"
+	accessTokenCollection           = "Access_Token"
+	refreshTokenCollection          = "Refresh_Token"
+	accountAuthenticationCollection = "Account_Authentication"
 )
 
 //GetInvalidNameCode : Return invalid name error code
-func GetInvalidNameCode() int16 {
+func GetInvalidNameCode() int32 {
 	return invalidName
 }
 
 //GetInvalidEmailCode : Return invalid email error code
-func GetInvalidEmailCode() int16 {
+func GetInvalidEmailCode() int32 {
 	return invalidEmail
 }
 
 //GetInvalidPasswordCode : Return invalid password error code
-func GetInvalidPasswordCode() int16 {
+func GetInvalidPasswordCode() int32 {
 	return invalidPassword
 }
 
 //GetInvalidLoginCredential : Return invalid login credential error code
-func GetInvalidLoginCredentialCode() int16 {
+func GetInvalidLoginCredentialCode() int32 {
 	return invalidLoginCredential
 }
 
 //GetInvalidTokenCode : Return invalid token error code
-func GetInvalidTokenCode() int16 {
+func GetInvalidTokenCode() int32 {
 	return invalidToken
 }
 
+//GetInvalidAuthenCode : Return invalid authentication code
+func GetInvalidAuthenCode() int32 {
+	return invalidAuthenCode
+}
+
 //GetAccountNotVerifyCode : Return account not verify code
-func GetAccountNotVerifyCode() int16 {
+func GetAccountNotVerifyCode() int32 {
 	return accountNotVerify
 }
 
 //GetEmailExistCode : Return email exist error code
-func GetEmailExistCode() int16 {
+func GetEmailExistCode() int32 {
 	return emailExist
 }
 
+//GetExpiredAccessTokenCode : Return expired access token code
+func GetExpiredAccessTokenCode() int32 {
+	return expiredAccessToken
+}
+
+//GetExpiredRefreshTokenCode : Return expired refresh token code
+func GetExpiredRefreshTokenCode() int32 {
+	return expiredRefreshToken
+}
+
 //GetOkStatusCode : Return ok status code
-func GetOkStatusCode() int16 {
+func GetOkStatusCode() int32 {
 	return ok
 }
 
 //GetCreatedStatusCode : Return created status code
-func GetCreatedStatusCode() int16 {
+func GetCreatedStatusCode() int32 {
 	return created
 }
 
 //GetAcceptedStatusCode : Return accepted status code
-func GetAcceptedStatusCode() int16 {
+func GetAcceptedStatusCode() int32 {
 	return accepted
 }
 
 //GetBadRequestStatusCode : Return bad request status code
-func GetBadRequestStatusCode() int16 {
+func GetBadRequestStatusCode() int32 {
 	return badRequest
 }
 
 //GetUnauthorizedStatusCode : Return unauthorized status code
-func GetUnauthorizedStatusCode() int16 {
+func GetUnauthorizedStatusCode() int32 {
 	return unauthorized
 }
 
 //GetForbiddenStatusCode : Return forbidden status code
-func GetForbiddenStatusCode() int16 {
+func GetForbiddenStatusCode() int32 {
 	return forbidden
 }
 
 //GetNotFoundStatusCode : Return not found status code
-func GetNotFoundStatusCode() int16 {
+func GetNotFoundStatusCode() int32 {
 	return notFound
 }
 
 //GetNotAcceptableStatusCode : Return not acceptable status code
-func GetNotAcceptableStatusCode() int16 {
+func GetNotAcceptableStatusCode() int32 {
 	return notAcceptable
 }
 
 //GetRequestTimeoutStatusCode : Return request timeout status code
-func GetRequestTimeoutStatusCode() int16 {
+func GetRequestTimeoutStatusCode() int32 {
 	return requestTimeout
 }
 
 //GetInternalServerErrorStatusCode : Return internal server error status code
-func GetInternalServerErrorStatusCode() int16 {
+func GetInternalServerErrorStatusCode() int32 {
 	return internalServerError
 }
 
 //GetBadGatewayStatusCode : Return bad gateway status code
-func GetBadGatewayStatusCode() int16 {
+func GetBadGatewayStatusCode() int32 {
 	return badGateway
 }
 
 //GetServiceUnavailableStatusCode : Return service unavailable status code
-func GetServiceUnavailableStatusCode() int16 {
+func GetServiceUnavailableStatusCode() int32 {
 	return serviceUnavailable
 }
 
 //GetDeniedStatusCode : Return denied status code
-func GetDeniedStatusCode() int16 {
+func GetDeniedStatusCode() int32 {
 	return denied
 }
 
 //GetDuplicateInfoCode : Return duplicate information code
-func GetDuplicateInfoCode() int16 {
+func GetDuplicateInfoCode() int32 {
 	return duplicateInfo
 }
 
 //GetNoErrorCode : Return no error code
-func GetNoErrorCode() int16 {
+func GetNoErrorCode() int32 {
 	return noError
 }
 
@@ -164,7 +183,7 @@ func GetTokenLength() int {
 }
 
 //GetInvalidInformation : return invalid argument
-func GetInvalidInformation() int16 {
+func GetInvalidInformation() int32 {
 	return invalidInformation
 }
 
@@ -219,8 +238,8 @@ func GetRefreshTokenCollection() string {
 }
 
 //GetAccountVerification : get the name for account veritication collection
-func GetAccountAuthentication() string {
-	return accountAuthentication
+func GetAccountAuthenticationCollection() string {
+	return accountAuthenticationCollection
 }
 
 //GetUserDatabase : get the user database name

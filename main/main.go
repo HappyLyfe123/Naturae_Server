@@ -72,8 +72,17 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 //Create user account
-func (s *server) CreateAccount(ctx context.Context, request *pb.CreateAccountRequest) (response *pb.CreateAccountReply, err error) {
+func (s *server) CreateAccount(ctx context.Context, request *pb.CreateAccountRequest) (*pb.CreateAccountReply, error) {
 	result := users.CreateAccount(request)
 	return result, nil
+}
 
+//Login user
+func (s *server) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginReply, error) {
+	return users.Login(request), nil
+}
+
+//Account authentication
+func (s *server) AccountAuthentication(ctx context.Context, request *pb.AccountAuthenRequest) (*pb.AccountAuthenReply, error) {
+	return users.AuthenticateAccount(request), nil
 }

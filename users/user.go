@@ -3,7 +3,6 @@ package users
 import (
 	"Naturae_Server/helpers"
 	"context"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -54,7 +53,7 @@ func getAuthenCode(database *mongo.Database, email string) (*userAuthentication,
 	var result userAuthentication
 	filter := bson.D{{Key: "email", Value: email}}
 	//Connect to the collection database
-	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountAuthentication())
+	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountAuthenticationCollection())
 	//Make a request to the database
 	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
@@ -94,19 +93,5 @@ func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 		}
 
 	}
-
-}
-
-func PrintTest() {
-	fmt.Println("Hello")
-}
-
-//Update the user first name in the database
-func upDateUserFirstName(name string) {
-
-}
-
-//Update the user last name in the database
-func upDateUserLastName(name string) {
 
 }
