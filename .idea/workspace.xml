@@ -26,8 +26,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="376">
-              <caret line="82" column="1" lean-forward="true" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
+            <state relative-caret-position="1241">
+              <caret line="82" column="1" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
               <folding>
                 <element signature="e#14#196#0" expanded="true" />
               </folding>
@@ -38,7 +38,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users/create_account.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-268">
+            <state relative-caret-position="1190">
               <caret line="79" column="86" selection-start-line="79" selection-start-column="86" selection-end-line="79" selection-end-column="86" />
               <folding>
                 <element signature="e#15#156#0" expanded="true" />
@@ -50,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/helpers/constants.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
+            <state relative-caret-position="4080">
               <caret line="240" column="39" selection-start-line="240" selection-start-column="5" selection-end-line="240" selection-end-column="39" />
             </state>
           </provider>
@@ -59,7 +59,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users/user.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
+            <state relative-caret-position="833">
               <caret line="55" column="73" selection-start-line="55" selection-start-column="73" selection-end-line="55" selection-end-column="73" />
             </state>
           </provider>
@@ -68,11 +68,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/users/account_authentication.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="23" column="49" lean-forward="true" selection-start-line="23" selection-start-column="49" selection-end-line="23" selection-end-column="49" />
-              <folding>
-                <element signature="e#15#62#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="482">
+              <caret line="42" column="59" lean-forward="true" selection-start-line="42" selection-start-column="59" selection-end-line="42" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -224,15 +221,6 @@
     </option>
   </component>
   <component name="RunManager">
-    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="Naturae_Server" />
-      <working_directory value="$PROJECT_DIR$/" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/main/main.go" />
-      <package value="Naturae_Server" />
-      <directory value="$PROJECT_DIR$/" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build main.go" />
@@ -266,7 +254,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4993895" weight="0.2513369" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32941177" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4993895" visible="true" weight="0.32941177" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50061053" side_tool="true" weight="0.2513369" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -432,15 +420,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/users/user.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
+        <state relative-caret-position="833">
           <caret line="55" column="73" selection-start-line="55" selection-start-column="73" selection-end-line="55" selection-end-column="73" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="376">
-          <caret line="82" column="1" lean-forward="true" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
+        <state relative-caret-position="1241">
+          <caret line="82" column="1" selection-start-line="82" selection-start-column="1" selection-end-line="82" selection-end-column="1" />
           <folding>
             <element signature="e#14#196#0" expanded="true" />
           </folding>
@@ -449,7 +437,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/users/create_account.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-268">
+        <state relative-caret-position="1190">
           <caret line="79" column="86" selection-start-line="79" selection-start-column="86" selection-end-line="79" selection-end-column="86" />
           <folding>
             <element signature="e#15#156#0" expanded="true" />
@@ -459,18 +447,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/helpers/constants.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
+        <state relative-caret-position="4080">
           <caret line="240" column="39" selection-start-line="240" selection-start-column="5" selection-end-line="240" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/users/account_authentication.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="23" column="49" lean-forward="true" selection-start-line="23" selection-start-column="49" selection-end-line="23" selection-end-column="49" />
-          <folding>
-            <element signature="e#15#62#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="482">
+          <caret line="42" column="59" lean-forward="true" selection-start-line="42" selection-start-column="59" selection-end-line="42" selection-end-column="59" />
         </state>
       </provider>
     </entry>
