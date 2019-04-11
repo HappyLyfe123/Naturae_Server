@@ -36,7 +36,6 @@ func getUserAccountInfo(database *mongo.Database, email string) (*userAccount, e
 
 func getLoginInfo(database *mongo.Database, email string) (*loginInfo, error) {
 	var result loginInfo
-
 	filter := bson.D{{Key: "email", Value: email}}
 	//Connect to the collection database
 	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())

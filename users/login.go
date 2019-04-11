@@ -5,6 +5,7 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"bytes"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"sync"
 )
 
@@ -47,15 +48,16 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 func getUserToken(connectedDB *mongo.Database, email string) (string, string, *pb.Status) {
 	var wg sync.WaitGroup
 	errorOccurred := false
-	accessTokenChanID := make(chan string)
-	refreshTokenChanID := make(chan string)
+	var accessTokenChanID string
+	var refreshTokenChanID string
 
 	wg.Add(2)
-	go func(wg sync.WaitGroup, errorOccurred bool) {
+	go func(errorOccurred bool) {
 		defer wg.Done()
 		accessToken, err := helpers.GetAccessToken(connectedDB, email)
 		if err != nil {
-			accessTokenChanID <- ""
+			log.Printf("Login get access token error: %s\n", err)
+			accessTokenChanID = ""
 			errorOccurred = true
 		} else {
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
@@ -65,15 +67,16 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				saveAccessToken(connectedDB, accessToken)
 			}
 			//Save the new token id to the access token id channel
-			accessTokenChanID <- accessToken.ID
+			accessTokenChanID = accessToken.ID
 		}
-	}(wg, errorOccurred)
+	}(errorOccurred)
 
-	go func(wg sync.WaitGroup, errorOccurred bool) {
+	go func(errorOccurred bool) {
 		defer wg.Done()
 		refreshToken, err := helpers.GetRefreshToken(connectedDB, email)
 		if err != nil {
-			refreshTokenChanID <- ""
+			log.Printf("Login get refresh token error: %s\n", err)
+			refreshTokenChanID = ""
 			errorOccurred = true
 		} else {
 			//Check if the refresh token had expired already
@@ -88,18 +91,19 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				saveRefreshToken(connectedDB, refreshToken)
 			}
 			//Save the new token id to the refresh token id channel
-			refreshTokenChanID <- refreshToken.ID
+			refreshTokenChanID = refreshToken.ID
 		}
-	}(wg, errorOccurred)
+	}(errorOccurred)
+
 	wg.Wait()
 
 	//There an error occurred
 	if errorOccurred {
-		return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
+		return accessTokenChanID, refreshTokenChanID, &pb.Status{
 			Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error",
 		}
 	}
-	return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
+	return accessTokenChanID, refreshTokenChanID, &pb.Status{
 		Code: helpers.GetOkStatusCode(), Message: "Login Successful",
 	}
 

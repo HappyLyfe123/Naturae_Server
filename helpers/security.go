@@ -140,7 +140,7 @@ func IsTokenValid(currDatabase *mongo.Database, collectionName, tokenID string) 
 
 func GetAccessToken(currDatabase *mongo.Database, email string) (*AccessToken, error) {
 	var result AccessToken
-	filter := bson.D{{Key: "Email", Value: email}}
+	filter := bson.D{{Key: "email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
@@ -153,7 +153,7 @@ func GetAccessToken(currDatabase *mongo.Database, email string) (*AccessToken, e
 
 func GetRefreshToken(currDatabase *mongo.Database, email string) (*RefreshToken, error) {
 	var result RefreshToken
-	filter := bson.D{{Key: "Email", Value: email}}
+	filter := bson.D{{Key: "email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetRefreshTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
