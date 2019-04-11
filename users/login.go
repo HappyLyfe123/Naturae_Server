@@ -31,7 +31,7 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 	checkHashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()),
 		helpers.ConvertStringToByte(databaseResult.Salt))
 
-	if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkHashPassword) == 1 {
+	if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkHashPassword) == 0 {
 		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
 			Code: helpers.GetInvalidLoginCredentialCode(), Message: "Invalid email or password",
 		}}
@@ -46,16 +46,17 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 
 func getUserToken(connectedDB *mongo.Database, email string) (string, string, *pb.Status) {
 	var wg sync.WaitGroup
+	errorOccurred := false
 	accessTokenChanID := make(chan string)
 	refreshTokenChanID := make(chan string)
-	errorChan := make(chan error, 2)
+
 	wg.Add(2)
-	go func(wg sync.WaitGroup) {
+	go func(wg sync.WaitGroup, errorOccurred bool) {
 		defer wg.Done()
 		accessToken, err := helpers.GetAccessToken(connectedDB, email)
 		if err != nil {
 			accessTokenChanID <- ""
-			errorChan <- err
+			errorOccurred = true
 		} else {
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				//Create a new access token
@@ -65,16 +66,15 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 			}
 			//Save the new token id to the access token id channel
 			accessTokenChanID <- accessToken.ID
-
 		}
-	}(wg)
+	}(wg, errorOccurred)
 
-	go func(wg sync.WaitGroup) {
+	go func(wg sync.WaitGroup, errorOccurred bool) {
 		defer wg.Done()
 		refreshToken, err := helpers.GetRefreshToken(connectedDB, email)
 		if err != nil {
 			refreshTokenChanID <- ""
-			errorChan <- err
+			errorOccurred = true
 		} else {
 			//Check if the refresh token had expired already
 			//If the current time is before or equal to the expired time,
@@ -90,12 +90,11 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 			//Save the new token id to the refresh token id channel
 			refreshTokenChanID <- refreshToken.ID
 		}
-	}(wg)
-
+	}(wg, errorOccurred)
 	wg.Wait()
 
 	//There an error occurred
-	if len(errorChan) != 0 {
+	if errorOccurred {
 		return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
 			Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error",
 		}

@@ -53,7 +53,7 @@ func updateUserAuthenStatus(connectedDB *mongo.Database, email string) {
 	//Set the filter to find the user
 	filter := bson.D{{"email", email}}
 	//Update the IsAuthenticated field from false to true
-	update := bson.D{{"$set", bson.D{{"IsAuthenticated", true}}}}
+	update := bson.D{{"$set", bson.D{{"isauthenticated", true}}}}
 	//Connect to the database and update the information
 	_, err := helpers.ConnectToCollection(connectedDB, helpers.GetAccountInfoCollection()).UpdateOne(context.Background(), filter, update)
 	if err != nil {
