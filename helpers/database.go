@@ -19,28 +19,29 @@ func ConnectToDBAccount() {
 	//Connect to the mongo database server
 	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://%s:%s"+
 		"@naturae-server-hxywc.gcp.mongodb.net/test", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"))))
-	dbAccount.Connect(context.Background())
-
 	if err != nil {
 		//Print out the error message
-		log.Fatalf("Connecting to Naturae database account error: %v", err)
+		log.Fatalf("Creating connection to Naturae database account error: %v", err)
+		return
 	}
-	log.Println("Connected to Naturae database account")
+	//Check if the database is connected
+	err = dbAccount.Ping(context.Background(), nil)
+	if err != nil {
+		log.Fatalf("Conneting to Naturae database error: %v", err)
+	} else {
+		log.Println("Connected to Naturae database account")
+	}
+
 }
 
-//ConnectToDB : connect to a database
+//ConnectToDB : connect to a the specific database
 func ConnectToDB(databaseName string) *mongo.Database {
 	return dbAccount.Database(databaseName)
 }
 
-//ConnectToCollection : connect to the database collection
+//ConnectToCollection : connect to the collection in the database
 func ConnectToCollection(currDB *mongo.Database, collectionName string) *mongo.Collection {
 	return currDB.Collection(collectionName)
-}
-
-//GetCurrentDBConnection : Get the database that the server is currently connected to
-func GetCurrentDBConnection() *mongo.Client {
-	return dbAccount
 }
 
 //DropCollection : drop the collection that is currently connect it to
@@ -49,15 +50,6 @@ func DropCollection(currCollection *mongo.Collection) {
 	if err != nil {
 		log.Println("Dropping collection failed error: ", err)
 	}
-}
-
-//DropDatabase : drop the database that is currently connected to
-func DropDatabase(currDB *mongo.Database) error {
-	err := currDB.Drop(context.Background())
-	if err != nil {
-		log.Println("Dropping database failed error: ", err)
-	}
-	return nil
 }
 
 //CloseConnectionToDatabaseAccount : close the current collection to the database

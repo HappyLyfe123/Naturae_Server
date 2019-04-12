@@ -80,6 +80,7 @@ func saveAccessToken(database *mongo.Database, token *helpers.AccessToken) {
 
 }
 
+//Save the refresh token to the database
 func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 	for saveSuccessful := false; saveSuccessful == false; {
 		connectedCollection := helpers.ConnectToCollection(database, helpers.GetRefreshTokenCollection())
