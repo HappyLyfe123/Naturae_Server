@@ -2,10 +2,12 @@ package users
 
 import (
 	"Naturae_Server/helpers"
+	pb "Naturae_Server/naturaeproto"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
+	"strings"
 )
 
 //create a struct for storing user info in database
@@ -92,5 +94,27 @@ func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 		}
 
 	}
+
+}
+
+//Generate a new access token for the user when their access token is expired
+func RefreshAccessToken(request pb.GetAccessTokenRequest){
+	var refreshTokenResult helpers.RefreshToken
+	currConnectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+	connectedCollection := currConnectedDB.Collection(helpers.GetRefreshTokenCollection())
+
+	filter := bson.D{{Key: "id", Value: request.GetRefreshToken()}}
+	err := connectedCollection.FindOne(context.Background(), filter).Decode(&refreshTokenResult)
+
+	if err != nil{
+
+	}else{
+		//Compare the refresh token id in the database to the one that the request provided. If the two string match
+		//then the server will generate a new access token for the user's. If not then the user will return an error
+		if strings.Compare(refreshTokenResult.ID, request.GetRefreshToken()) == 0{
+
+		}
+	}
+
 
 }
