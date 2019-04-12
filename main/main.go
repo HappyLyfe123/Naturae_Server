@@ -5,6 +5,7 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"Naturae_Server/users"
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -22,6 +23,12 @@ func main() {
 	//if result.Status != nil{
 	//	fmt.Println("Error")
 	//}
+	test := make(chan bool, 2)
+	test <- true
+	test <- true
+	if <-test || <-test {
+		fmt.Println("Work")
+	}
 
 }
 
@@ -32,7 +39,7 @@ func init() {
 	helpers.ConnectToDBAccount()
 	//asyncq.StartTaskDispatcher(10)
 	//Create listener for server
-	createServer()
+	//createServer()
 
 }
 
@@ -82,4 +89,8 @@ func (s *server) Login(ctx context.Context, request *pb.LoginRequest) (*pb.Login
 //Account authentication
 func (s *server) AccountAuthentication(ctx context.Context, request *pb.AccountAuthenRequest) (*pb.AccountAuthenReply, error) {
 	return users.AuthenticateAccount(request), nil
+}
+
+func (s *server) GetNewAccessToken(context.Context, *pb.GetAccessTokenRequest) (*pb.GetAccessTokenReply, error) {
+	panic("implement me")
 }

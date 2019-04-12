@@ -5,8 +5,6 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"bytes"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
-	"sync"
 )
 
 type loginInfo struct {
@@ -32,7 +30,7 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 	checkHashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()),
 		helpers.ConvertStringToByte(databaseResult.Salt))
 
-	if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkHashPassword) == 0 {
+	if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkHashPassword) == 1 {
 		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
 			Code: helpers.GetInvalidLoginCredentialCode(), Message: "Invalid email or password",
 		}}
@@ -45,20 +43,20 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 
 }
 
+//Get the user's refresh and access token from the database
 func getUserToken(connectedDB *mongo.Database, email string) (string, string, *pb.Status) {
-	var wg sync.WaitGroup
-	errorOccurred := false
-	var accessTokenChanID string
-	var refreshTokenChanID string
+	accessTokenChanID := make(chan string)
+	refreshTokenChanID := make(chan string)
+	errorChan := make(chan bool, 2)
+	defer close(accessTokenChanID)
+	defer close(refreshTokenChanID)
+	defer close(errorChan)
 
-	wg.Add(2)
-	go func(errorOccurred bool) {
-		defer wg.Done()
+	go func() {
 		accessToken, err := helpers.GetAccessToken(connectedDB, email)
 		if err != nil {
-			log.Printf("Login get access token error: %s\n", err)
-			accessTokenChanID = ""
-			errorOccurred = true
+			accessTokenChanID <- ""
+			errorChan <- true
 		} else {
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				//Create a new access token
@@ -66,18 +64,18 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				//Save access token to database
 				saveAccessToken(connectedDB, accessToken)
 			}
+			errorChan <- false
 			//Save the new token id to the access token id channel
-			accessTokenChanID = accessToken.ID
-		}
-	}(errorOccurred)
+			accessTokenChanID <- accessToken.ID
 
-	go func(errorOccurred bool) {
-		defer wg.Done()
+		}
+	}()
+
+	go func() {
 		refreshToken, err := helpers.GetRefreshToken(connectedDB, email)
 		if err != nil {
-			log.Printf("Login get refresh token error: %s\n", err)
-			refreshTokenChanID = ""
-			errorOccurred = true
+			refreshTokenChanID <- ""
+			errorChan <- true
 		} else {
 			//Check if the refresh token had expired already
 			//If the current time is before or equal to the expired time,
@@ -90,20 +88,19 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				//Save refresh token to database
 				saveRefreshToken(connectedDB, refreshToken)
 			}
+			errorChan <- false
 			//Save the new token id to the refresh token id channel
-			refreshTokenChanID = refreshToken.ID
+			refreshTokenChanID <- refreshToken.ID
 		}
-	}(errorOccurred)
+	}()
 
-	wg.Wait()
-
-	//There an error occurred
-	if errorOccurred {
-		return accessTokenChanID, refreshTokenChanID, &pb.Status{
+	//Check if there error occurred when trying to retrieve token from the database
+	if <-errorChan || <-errorChan {
+		return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
 			Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error",
 		}
 	}
-	return accessTokenChanID, refreshTokenChanID, &pb.Status{
+	return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
 		Code: helpers.GetOkStatusCode(), Message: "Login Successful",
 	}
 
