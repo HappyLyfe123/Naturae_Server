@@ -5,10 +5,11 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"Naturae_Server/users"
 	"context"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type server struct{}
@@ -82,4 +83,19 @@ func (s *server) Login(ctx context.Context, request *pb.LoginRequest) (*pb.Login
 //Account authentication
 func (s *server) AccountAuthentication(ctx context.Context, request *pb.AccountAuthenRequest) (*pb.AccountAuthenReply, error) {
 	return users.AuthenticateAccount(request), nil
+}
+
+//User/Friend Search
+func (s *server) SearchUsers(ctx context.Context, request *pb.UserSearchRequest) (*pb.UserListReply, error) {
+	return users.SearchUsers(request), nil
+}
+
+//Friend Adding
+func (s *server) AddFriend(ctx context.Context, request *pb.FriendRequest) (*pb.FriendReply, error) {
+	return users.AddFriend(request), nil
+}
+
+//Friend Removal
+func (s *server) RemoveFriend(ctx context.Context, request *pb.FriendRequest) (*pb.FriendReply, error) {
+	return users.RemoveFriend(request), nil
 }

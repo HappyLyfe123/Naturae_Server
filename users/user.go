@@ -2,10 +2,13 @@ package users
 
 import (
 	"Naturae_Server/helpers"
+	pb "Naturae_Server/naturaeproto"
 	"context"
+	"log"
+	"strings"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 )
 
 //create a struct for storing user info in database
@@ -15,6 +18,7 @@ type userAccount struct {
 	LastName        string
 	Salt            string
 	Password        string
+	Friends         []string
 	IsAuthenticated bool
 }
 
@@ -92,5 +96,58 @@ func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
 		}
 
 	}
+
+}
+
+/*
+*	Searches the database for matching users and returns the list
+* 	@UserSearchRequest - string user, string query
+* 	@UserListReply - repeated string users, Status status
+ */
+func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
+	var result userAccount
+	var searchResult []string
+
+	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
+	userEmail := request.GetUser()
+
+	//Set a filter for the database to search through()
+	if len(userEmail) > 0 {
+		//Get the user account to retrieve the friend's list from
+		userAccount, err := getUserAccountInfo(dbConnection, userEmail)
+		searchResult = userAccount.Friends
+	} else {
+		//Search via user query input instead, get all users with the email
+		queryEmail := request.GetQuery()
+		queryString := strings.Split(queryEmail, " ")
+		querySplice := make([]bson.M, len(queryString))
+		for i, queryEmail := range queryString {
+			querySplice[i] = bson.M{"email": bson.M{
+				"$regex": bson.RegEx{Pattern: ".*" + queryEmail + ".*", Options: "i"},
+			}}
+		}
+
+		//Connect to Account_Information collections
+		userCollection := helpers.ConnectToCollection(dbConnection, helpers.GetAccountInfoCollection())
+		//Make the search request
+		filter := bson.M{"$querySplice": querySplice}
+		//&filter?
+		err := userCollection.Find(nil, &filter).Limit(10).All(&searchResult)
+		if err != nil {
+
+		}
+
+		return &pb.UserListReply{User: searchResult,
+			Status: &pb.Status{Code: 200, Message: "Created"}}
+	}
+}
+
+//Adds a friend to a user's list of contacts
+func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
+
+}
+
+//Removes a friend from a user's list of contacts
+func RemoveFriend(request *pb.FriendRequest) *pb.FriendReply {
 
 }
