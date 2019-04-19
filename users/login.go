@@ -5,7 +5,6 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"bytes"
 	"go.mongodb.org/mongo-driver/mongo"
-	"sync"
 )
 
 type loginInfo struct {
@@ -44,18 +43,20 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 
 }
 
+//Get the user's refresh and access token from the database
 func getUserToken(connectedDB *mongo.Database, email string) (string, string, *pb.Status) {
-	var wg sync.WaitGroup
 	accessTokenChanID := make(chan string)
 	refreshTokenChanID := make(chan string)
-	errorChan := make(chan error, 2)
-	wg.Add(2)
-	go func(wg sync.WaitGroup) {
-		defer wg.Done()
+	errorChan := make(chan bool, 2)
+	defer close(accessTokenChanID)
+	defer close(refreshTokenChanID)
+	defer close(errorChan)
+
+	go func() {
 		accessToken, err := helpers.GetAccessToken(connectedDB, email)
 		if err != nil {
 			accessTokenChanID <- ""
-			errorChan <- err
+			errorChan <- true
 		} else {
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				//Create a new access token
@@ -63,18 +64,18 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				//Save access token to database
 				saveAccessToken(connectedDB, accessToken)
 			}
+			errorChan <- false
 			//Save the new token id to the access token id channel
 			accessTokenChanID <- accessToken.ID
 
 		}
-	}(wg)
+	}()
 
-	go func(wg sync.WaitGroup) {
-		defer wg.Done()
+	go func() {
 		refreshToken, err := helpers.GetRefreshToken(connectedDB, email)
 		if err != nil {
 			refreshTokenChanID <- ""
-			errorChan <- err
+			errorChan <- true
 		} else {
 			//Check if the refresh token had expired already
 			//If the current time is before or equal to the expired time,
@@ -87,15 +88,14 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 				//Save refresh token to database
 				saveRefreshToken(connectedDB, refreshToken)
 			}
+			errorChan <- false
 			//Save the new token id to the refresh token id channel
 			refreshTokenChanID <- refreshToken.ID
 		}
-	}(wg)
+	}()
 
-	wg.Wait()
-
-	//There an error occurred
-	if len(errorChan) != 0 {
+	//Check if there error occurred when trying to retrieve token from the database
+	if <-errorChan || <-errorChan {
 		return <-accessTokenChanID, <-refreshTokenChanID, &pb.Status{
 			Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error",
 		}

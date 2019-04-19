@@ -11,7 +11,11 @@ service ServerRequests{
     rpc CreateAccount (CreateAccountRequest) returns(CreateAccountReply){}
     rpc Login (LoginRequest) returns(LoginReply){}
     rpc AccountAuthentication(AccountAuthenRequest) returns(AccountAuthenReply){}
+    rpc GetNewAccessToken(GetAccessTokenRequest) returns (GetAccessTokenReply){}
     rpc SayHello (HelloRequest) returns (HelloReply){};
+    rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordReply){};
+    rpc CreatePost(CreatePostRequest) returns (CreatePostReply){};
+    rpc GetPostRequest(GetImageRequest) returns (GetPostReply){};
 }
 
 message HelloRequest{
@@ -31,8 +35,6 @@ message CreateAccountRequest{
 }
 
 message CreateAccountReply{
-    string accessToken = 1;
-    string refreshToken = 2;
     Status status = 3;
 }
 
@@ -52,12 +54,13 @@ message AccountAuthenRequest{
     string appKey = 1;
     string firstName = 2;
     string email = 3;
-    string AuthenCode = 4;
+    string authenCode = 4;
 }
 
 message AccountAuthenReply{
-    bool result = 1;
-    Status status = 2;
+    string accessToken = 2;
+    string refreshToken = 3;
+    Status status = 4;
 
 }
 
@@ -65,3 +68,70 @@ message Status{
     int32 Code = 1;
     string Message = 2;
 }
+
+message GetAccessTokenRequest{
+    string appKey = 1;
+    string refreshToken = 2;
+}
+
+message GetAccessTokenReply{
+    string accessToken = 1;
+    Status status = 2;
+}
+
+message ResetPasswordRequest{
+    string appKey = 1;
+    string email = 2;
+}
+
+message ResetPasswordReply{
+    Status status = 1;
+}
+
+message ChangePasswordRequest{
+    string appKey = 1;
+    string accessToken = 2;
+    string currentPassword = 3;
+    string newPassword = 4;
+}
+
+message ChangePasswordReply{
+    Status status = 1;
+}
+
+message CreatePostRequest {
+    string appKey = 1;
+    string accessToken = 2;
+    string title = 3;
+    string species = 4;
+    string description = 5;
+    float lat = 6;
+    float lng = 7;
+    string encodedImage = 8;
+}
+
+message CreatePostReply {
+    Status status = 1;
+}
+
+message GetImageRequest{
+    string appKey = 1;
+    string lat = 2;
+    string lng = 3;
+    int32 radius = 4;
+}
+
+message GetPostReply{
+    repeated GetPostReplyStruct reply = 1;
+}
+
+message GetPostReplyStruct{
+    string title = 3;
+    string species = 4;
+    string description = 5;
+    float lat = 6;
+    float lng = 7;
+    string encodedImage = 8;
+}
+
+

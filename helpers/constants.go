@@ -8,6 +8,7 @@ const (
 	invalidToken           = 104
 	invalidAuthenCode      = 105
 	accountNotVerify       = 106
+	invalidAppKey          = 107
 	emailExist             = 150
 	expiredAuthenCode      = 151
 	expiredAccessToken     = 152
@@ -41,10 +42,14 @@ const (
 	appName                         = "Naturae"
 	databaseName                    = "Naturae-Server"
 	userDatabase                    = "users"
+	postDatabase                    = "posts"
 	accountInfoCollection           = "Account_Information"
 	accessTokenCollection           = "Access_Token"
+	storeImageCollection            = "Images"
+	storePostDescription            = "Post_Description"
 	refreshTokenCollection          = "Refresh_Token"
 	accountAuthenticationCollection = "Account_Authentication"
+	appKey                          = "XjJzwDO6lBCQ5LbWlL1PCXIO&6jH@M&Mz8&BLq"
 )
 
 //GetInvalidNameCode : Return invalid name error code
@@ -75,6 +80,11 @@ func GetInvalidTokenCode() int32 {
 //GetInvalidAuthenCode : Return invalid authentication code
 func GetInvalidAuthenCode() int32 {
 	return invalidAuthenCode
+}
+
+//GetInvalidAppKey : Return invalid app key work
+func GetInvalidAppKey() int32 {
+	return invalidAppKey
 }
 
 //GetAccountNotVerifyCode : Return account not verify code
@@ -172,7 +182,7 @@ func GetNoErrorCode() int32 {
 	return noError
 }
 
-//GetSaltLength : return the salt length
+//GetSaltLength : Return the salt length
 func GetSaltLength() int {
 	return passwordSaltLength
 }
@@ -182,17 +192,17 @@ func GetTokenLength() int {
 	return tokenLength
 }
 
-//GetInvalidInformation : return invalid argument
+//GetInvalidInformation : Return invalid argument
 func GetInvalidInformation() int32 {
 	return invalidInformation
 }
 
-//GetAuthCodeMaxNum : the max number
+//GetAuthCodeMaxNum : Return the max number
 func GetAuthCodeMaxNum() int64 {
 	return authCodeMaxNum
 }
 
-//GetAuthCodeMinNum : the min
+//GetAuthCodeMinNum : Return the min authen number
 func GetAuthCodeMinNum() int64 {
 	return authCodeMinNum
 }
@@ -212,37 +222,57 @@ func GetAppEmailAddress() string {
 	return gmailEmailAddress
 }
 
-//GetDatabaseName : Get the name of the main database name
+//GetDatabaseName : Return get the name of the main database name
 func GetDatabaseName() string {
 	return databaseName
 }
 
-//GetAppName : return app name
+//GetAppName : Return app name
 func GetAppName() string {
 	return appName
 }
 
-//GetAccountInfoCollection : return the name of the account info collection
+//GetAccountInfoCollection : Return the name of the account info collection
 func GetAccountInfoCollection() string {
 	return accountInfoCollection
 }
 
-//GetAccessTokenCollection : get the name for access token collection
+//GetAccessTokenCollection : Return get the name for access token collection
 func GetAccessTokenCollection() string {
 	return accessTokenCollection
 }
 
-//GetRefreshTokenCollection : get the name for refresh token collection
+//GetRefreshTokenCollection : Return get the name for refresh token collection
 func GetRefreshTokenCollection() string {
 	return refreshTokenCollection
 }
 
-//GetAccountVerification : get the name for account veritication collection
+//GetStoreImageCollection : Return the name of store image collection
+func GetStoreImageCollection() string {
+	return storeImageCollection
+}
+
+//GetPostDescriptionCollection : Return the name of post description collection
+func GetStorePostDescriptionCollection() string {
+	return storePostDescription
+}
+
+//GetAccountVerification : Return get the name for account verification collection
 func GetAccountAuthenticationCollection() string {
 	return accountAuthenticationCollection
 }
 
-//GetUserDatabase : get the user database name
+//GetUserDatabase : Return get the user database name
 func GetUserDatabase() string {
 	return userDatabase
+}
+
+//GetPostDatabase : Return the name of post database
+func GetPostDatabase() string {
+	return postDatabase
+}
+
+//GetAppKey : Return get the application
+func GetAppKey() string {
+	return appKey
 }
