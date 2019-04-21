@@ -27,7 +27,7 @@ func SavePost(request *pb.CreatePostRequest, ownerEmail string) *pb.CreatePostRe
 
 	newPost := postDescription{PostID: postID, OwnerEmail: ownerEmail, Title: request.Title, Species: request.Species, Description: request.Description,
 		Latitude: request.GetLat(), Longitude: request.GetLng(), EncodedImage: request.GetEncodedImage(), Date: time.Now()}
-	postCollection := connectedDB.Collection(helpers.GetStorePostDescriptionCollection())
+	postCollection := connectedDB.Collection(helpers.GetStorePostsCollection())
 	_, err := postCollection.InsertOne(context.Background(), newPost)
 	if err != nil {
 		log.Printf("error while saving post: %v", err)

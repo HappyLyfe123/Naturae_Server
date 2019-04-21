@@ -45,8 +45,7 @@ const (
 	postDatabase                    = "posts"
 	accountInfoCollection           = "Account_Information"
 	accessTokenCollection           = "Access_Token"
-	storeImageCollection            = "Images"
-	storePostDescription            = "Post_Description"
+	storePosts                      = "Posts"
 	refreshTokenCollection          = "Refresh_Token"
 	accountAuthenticationCollection = "Account_Authentication"
 	appKey                          = "XjJzwDO6lBCQ5LbWlL1PCXIO&6jH@M&Mz8&BLq"
@@ -247,14 +246,9 @@ func GetRefreshTokenCollection() string {
 	return refreshTokenCollection
 }
 
-//GetStoreImageCollection : Return the name of store image collection
-func GetStoreImageCollection() string {
-	return storeImageCollection
-}
-
 //GetPostDescriptionCollection : Return the name of post description collection
-func GetStorePostDescriptionCollection() string {
-	return storePostDescription
+func GetStorePostsCollection() string {
+	return storePosts
 }
 
 //GetAccountVerification : Return get the name for account verification collection
