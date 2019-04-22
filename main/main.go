@@ -156,8 +156,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 		} else {
 			//Check if the access token is expired
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
-				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
-					"had expired"}}
+				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
 			} else {
 				fmt.Println("Post create by: ", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
