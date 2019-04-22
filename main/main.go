@@ -115,29 +115,29 @@ func (s *server) GetNewAccessToken(ctx context.Context, request *GetAccessTokenR
 	return result, nil
 }
 
-func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
-	var result *ChangePasswordReply
-
-	if helpers.CheckAppKey(request.GetAppKey()) {
-		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
-		//Check if there an error then the access token provided is not in the database
-		if err != nil {
-			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
-		} else {
-			//Check if the access token is expired
-			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
-				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
-					"had expired"}}
-			} else {
-
-			}
-
-		}
-	}
-
-	return result, nil
-}
+//func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
+//	var result *ChangePasswordReply
+//
+//	if helpers.CheckAppKey(request.GetAppKey()) {
+//		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+//		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+//		//Check if there an error then the access token provided is not in the database
+//		if err != nil {
+//			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
+//		} else {
+//			//Check if the access token is expired
+//			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
+//				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
+//					"had expired"}}
+//			} else {
+//
+//			}
+//
+//		}
+//	}
+//
+//	return result, nil
+//}
 
 func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*CreatePostReply, error) {
 	var result *CreatePostReply
@@ -160,4 +160,20 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	}
 
 	return result, nil
+}
+
+func (s *server) GetPosts(context.Context, *GetPostRequest) (*GetPostReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPasswordAuthenCode(context.Context, *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
+	panic("implement me")
 }
