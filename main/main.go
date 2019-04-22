@@ -6,6 +6,7 @@ import (
 	"Naturae_Server/post"
 	"Naturae_Server/users"
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -158,6 +159,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
 					"had expired"}}
 			} else {
+				fmt.Println("Post create by: ", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
 			}
 
