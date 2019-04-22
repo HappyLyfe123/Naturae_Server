@@ -13,19 +13,19 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2414">
-              <caret line="148" column="23" selection-start-line="148" selection-start-column="23" selection-end-line="148" selection-end-column="23" />
+            <state relative-caret-position="969">
+              <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/post/store_post.go">
+        <entry file="file://$PROJECT_DIR$/users/create_account.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="34" column="5" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
+            <state relative-caret-position="238">
+              <caret line="34" column="5" lean-forward="true" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
               <folding>
-                <element signature="e#14#127#0" expanded="true" />
+                <element signature="e#15#156#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,13 +84,13 @@
         <option value="$PROJECT_DIR$/users/user.go" />
         <option value="$PROJECT_DIR$/users/login.go" />
         <option value="$PROJECT_DIR$/helpers/helper.go" />
-        <option value="$PROJECT_DIR$/users/create_account.go" />
         <option value="$PROJECT_DIR$/asyncq/task.go" />
         <option value="$PROJECT_DIR$/asyncq/queue.go" />
         <option value="$PROJECT_DIR$/helpers/constants.go" />
         <option value="$PROJECT_DIR$/post/retrieve_post.go" />
         <option value="$PROJECT_DIR$/post/store_post.go" />
         <option value="$PROJECT_DIR$/main/main.go" />
+        <option value="$PROJECT_DIR$/users/create_account.go" />
       </list>
     </option>
   </component>
@@ -120,26 +120,6 @@
               <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
               <item name="helpers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="naturaeproto" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="post" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Naturae_Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Naturae_Server" type="462c0819:PsiDirectoryNode" />
-              <item name="users" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -211,6 +191,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10866911" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -313,7 +294,8 @@
     <MESSAGE value="Update store post" />
     <MESSAGE value="Update post" />
     <MESSAGE value="Create go file from proto" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create go file from proto" />
+    <MESSAGE value="Merge branch 'Visal' of https://github.com/HappyLyfe123/Naturae_Server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;main/main.go" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'Visal' of https://github.com/HappyLyfe123/Naturae_Server&#10;&#10;# Conflicts:&#10;#&#9;.idea/workspace.xml&#10;#&#9;main/main.go" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/quickstart.go" />
@@ -415,8 +397,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/users/create_account.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+        <state relative-caret-position="238">
+          <caret line="34" column="5" lean-forward="true" selection-start-line="34" selection-start-column="5" selection-end-line="34" selection-end-column="5" />
           <folding>
             <element signature="e#15#156#0" expanded="true" />
           </folding>
@@ -425,8 +407,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2414">
-          <caret line="148" column="23" selection-start-line="148" selection-start-column="23" selection-end-line="148" selection-end-column="23" />
+        <state relative-caret-position="969">
+          <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
         </state>
       </provider>
     </entry>
