@@ -155,7 +155,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 			result = &CreatePostReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
 		} else {
 			//Check if the access token is expired
-			if !helpers.IsTokenExpired(accessToken.ExpiredTime) {
+			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
 					"had expired"}}
 			} else {
