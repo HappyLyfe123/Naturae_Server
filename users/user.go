@@ -20,15 +20,15 @@ type userAccount struct {
 	IsAuthenticated bool
 }
 
-func getLoginInfo(database *mongo.Database, email string) (*loginInfo, error) {
-	var result loginInfo
+func getLoginInfo(database *mongo.Database, email string) (*userInfo, error) {
+	var result userInfo
 	filter := bson.D{{Key: "email", Value: email}}
 	//Connect to the collection database
 	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
 	//Make a request to the database
 	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
-		return &loginInfo{}, err
+		return &userInfo{}, err
 	}
 	return &result, nil
 

@@ -7,7 +7,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type loginInfo struct {
+type userInfo struct {
+	Email           string
+	FirstName       string
+	LastName        string
 	Salt            string
 	Password        string
 	IsAuthenticated bool
@@ -17,21 +20,25 @@ type loginInfo struct {
 func Login(request *pb.LoginRequest) *pb.LoginReply {
 	userInfo := helpers.ConnectToDB(helpers.GetUserDatabase())
 	databaseResult, err := getLoginInfo(userInfo, request.GetEmail())
+	//Database communication error
 	if err != nil {
 		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
 			Code: helpers.GetNotFoundStatusCode(), Message: "No account has been found",
 		}}
+		//User had not authenticated the account yet
 	} else if !databaseResult.IsAuthenticated {
-		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
+		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{
 			Code: helpers.GetAccountNotVerifyCode(), Message: "Account is not verify",
 		}}
 	}
 
+	//Hash the user password
 	checkHashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()),
 		helpers.ConvertStringToByte(databaseResult.Salt))
 
+	//Compare the hash stored in the database and the curr hash password
 	if bytes.Compare(helpers.ConvertStringToByte(databaseResult.Password), checkHashPassword) == 1 {
-		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
+		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{
 			Code: helpers.GetInvalidLoginCredentialCode(), Message: "Invalid email or password",
 		}}
 

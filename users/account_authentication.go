@@ -22,7 +22,8 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 	databaseResult, err := getAuthenCode(connectedDB, request.GetEmail())
 	//Check if there an error that had occurred when retrieving information for the database server
 	if err != nil {
-		return &pb.AccountAuthenReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error."}}
+		return &pb.AccountAuthenReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "",
+			Email: "", Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error."}}
 	}
 
 	//Check if the authentication code is still valid. If it's valid then the code will be check
@@ -31,12 +32,12 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 		//that the user's had authenticated their account
 		if strings.Compare(databaseResult.Code, request.GetAuthenCode()) == 0 {
 
+			//Set authenticated in user database from false to true
 			updateUserAuthenStatus(connectedDB, request.GetEmail())
 			//Remove the user authentication code from the database
 			go removeAuthenCode(connectedDB, request.GetEmail())
-
 			//Create access token
-			accessToken = helpers.GenerateAccessToken(request.GetEmail())
+			accessToken = helpers.GenerateAccessToken(request.GetEmail(), "", "")
 			//Save access token to database
 			saveAccessToken(connectedDB, accessToken)
 			//Create refresh token
@@ -48,20 +49,12 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 			authenMessage = "Account has been successfully authenticated"
 
 		} else {
-			statusCode = helpers.GetInvalidAuthenCode()
-			authenMessage = "Invalid authen code"
+			return &pb.AccountAuthenReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "",
+				Email: "", Status: &pb.Status{Code: helpers.GetInvalidAuthenCode(), Message: "Invalid authen code"}}
 		}
-	} else {
-		//Generate authentication code and expired time
-		authenCode, expiredTime := helpers.GenerateAuthenCode()
-		//Create a struct for user's authentication
-		newAuthenCode := userAuthentication{Email: request.GetEmail(), Code: authenCode, ExpiredTime: expiredTime}
-		//Save the user authentication code to the database
-		saveAuthenticationCode(connectedDB, helpers.GetAccountAuthenticationCollection(), &newAuthenCode)
-		//Send the user authentication code to the user's email
-		sendAuthenticationCode(request.GetEmail(), request.GetFirstName(), authenCode)
 	}
-	return &pb.AccountAuthenReply{Status: &pb.Status{Code: statusCode, Message: authenMessage}}
+	return &pb.AccountAuthenReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID, FirstName: accessToken.FirstName,
+		LastName: accessToken.LastName, Email: accessToken.Email, Status: &pb.Status{Code: statusCode, Message: authenMessage}}
 }
 
 //Change the user authentication status
