@@ -172,6 +172,8 @@ func (m *CreateAccountRequest) GetLastName() string {
 }
 
 type CreateAccountReply struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
 	Status               *Status  `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -202,6 +204,20 @@ func (m *CreateAccountReply) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_CreateAccountReply proto.InternalMessageInfo
+
+func (m *CreateAccountReply) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *CreateAccountReply) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
 
 func (m *CreateAccountReply) GetStatus() *Status {
 	if m != nil {
@@ -268,7 +284,10 @@ func (m *LoginRequest) GetPassword() string {
 type LoginReply struct {
 	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
 	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
-	Status               *Status  `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`
+	FirstName            string   `protobuf:"bytes,3,opt,name=firstName,proto3" json:"firstName,omitempty"`
+	LastName             string   `protobuf:"bytes,4,opt,name=lastName,proto3" json:"lastName,omitempty"`
+	Email                string   `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`
+	Status               *Status  `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -309,6 +328,27 @@ func (m *LoginReply) GetAccessToken() string {
 func (m *LoginReply) GetRefreshToken() string {
 	if m != nil {
 		return m.RefreshToken
+	}
+	return ""
+}
+
+func (m *LoginReply) GetFirstName() string {
+	if m != nil {
+		return m.FirstName
+	}
+	return ""
+}
+
+func (m *LoginReply) GetLastName() string {
+	if m != nil {
+		return m.LastName
+	}
+	return ""
+}
+
+func (m *LoginReply) GetEmail() string {
+	if m != nil {
+		return m.Email
 	}
 	return ""
 }
@@ -384,9 +424,8 @@ func (m *AccountAuthenRequest) GetAuthenCode() string {
 }
 
 type AccountAuthenReply struct {
-	AccessToken          string   `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	RefreshToken         string   `protobuf:"bytes,3,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
-	Status               *Status  `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
+	Result               bool     `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Status               *Status  `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -417,350 +456,14 @@ func (m *AccountAuthenReply) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_AccountAuthenReply proto.InternalMessageInfo
 
-func (m *AccountAuthenReply) GetAccessToken() string {
+func (m *AccountAuthenReply) GetResult() bool {
 	if m != nil {
-		return m.AccessToken
+		return m.Result
 	}
-	return ""
-}
-
-func (m *AccountAuthenReply) GetRefreshToken() string {
-	if m != nil {
-		return m.RefreshToken
-	}
-	return ""
+	return false
 }
 
 func (m *AccountAuthenReply) GetStatus() *Status {
-	if m != nil {
-		return m.Status
-	}
-	return nil
-}
-
-type Status struct {
-	Code                 int32    `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
-	Message              string   `protobuf:"bytes,2,opt,name=Message,proto3" json:"Message,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *Status) Reset()         { *m = Status{} }
-func (m *Status) String() string { return proto.CompactTextString(m) }
-func (*Status) ProtoMessage()    {}
-func (*Status) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{8}
-}
-
-func (m *Status) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Status.Unmarshal(m, b)
-}
-func (m *Status) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Status.Marshal(b, m, deterministic)
-}
-func (m *Status) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Status.Merge(m, src)
-}
-func (m *Status) XXX_Size() int {
-	return xxx_messageInfo_Status.Size(m)
-}
-func (m *Status) XXX_DiscardUnknown() {
-	xxx_messageInfo_Status.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Status proto.InternalMessageInfo
-
-func (m *Status) GetCode() int32 {
-	if m != nil {
-		return m.Code
-	}
-	return 0
-}
-
-func (m *Status) GetMessage() string {
-	if m != nil {
-		return m.Message
-	}
-	return ""
-}
-
-type GetAccessTokenRequest struct {
-	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
-	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetAccessTokenRequest) Reset()         { *m = GetAccessTokenRequest{} }
-func (m *GetAccessTokenRequest) String() string { return proto.CompactTextString(m) }
-func (*GetAccessTokenRequest) ProtoMessage()    {}
-func (*GetAccessTokenRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{9}
-}
-
-func (m *GetAccessTokenRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetAccessTokenRequest.Unmarshal(m, b)
-}
-func (m *GetAccessTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetAccessTokenRequest.Marshal(b, m, deterministic)
-}
-func (m *GetAccessTokenRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetAccessTokenRequest.Merge(m, src)
-}
-func (m *GetAccessTokenRequest) XXX_Size() int {
-	return xxx_messageInfo_GetAccessTokenRequest.Size(m)
-}
-func (m *GetAccessTokenRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetAccessTokenRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetAccessTokenRequest proto.InternalMessageInfo
-
-func (m *GetAccessTokenRequest) GetAppKey() string {
-	if m != nil {
-		return m.AppKey
-	}
-	return ""
-}
-
-func (m *GetAccessTokenRequest) GetRefreshToken() string {
-	if m != nil {
-		return m.RefreshToken
-	}
-	return ""
-}
-
-type GetAccessTokenReply struct {
-	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	Status               *Status  `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetAccessTokenReply) Reset()         { *m = GetAccessTokenReply{} }
-func (m *GetAccessTokenReply) String() string { return proto.CompactTextString(m) }
-func (*GetAccessTokenReply) ProtoMessage()    {}
-func (*GetAccessTokenReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{10}
-}
-
-func (m *GetAccessTokenReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetAccessTokenReply.Unmarshal(m, b)
-}
-func (m *GetAccessTokenReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetAccessTokenReply.Marshal(b, m, deterministic)
-}
-func (m *GetAccessTokenReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetAccessTokenReply.Merge(m, src)
-}
-func (m *GetAccessTokenReply) XXX_Size() int {
-	return xxx_messageInfo_GetAccessTokenReply.Size(m)
-}
-func (m *GetAccessTokenReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetAccessTokenReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetAccessTokenReply proto.InternalMessageInfo
-
-func (m *GetAccessTokenReply) GetAccessToken() string {
-	if m != nil {
-		return m.AccessToken
-	}
-	return ""
-}
-
-func (m *GetAccessTokenReply) GetStatus() *Status {
-	if m != nil {
-		return m.Status
-	}
-	return nil
-}
-
-type ResetPasswordRequest struct {
-	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
-	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ResetPasswordRequest) Reset()         { *m = ResetPasswordRequest{} }
-func (m *ResetPasswordRequest) String() string { return proto.CompactTextString(m) }
-func (*ResetPasswordRequest) ProtoMessage()    {}
-func (*ResetPasswordRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{11}
-}
-
-func (m *ResetPasswordRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ResetPasswordRequest.Unmarshal(m, b)
-}
-func (m *ResetPasswordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ResetPasswordRequest.Marshal(b, m, deterministic)
-}
-func (m *ResetPasswordRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ResetPasswordRequest.Merge(m, src)
-}
-func (m *ResetPasswordRequest) XXX_Size() int {
-	return xxx_messageInfo_ResetPasswordRequest.Size(m)
-}
-func (m *ResetPasswordRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ResetPasswordRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ResetPasswordRequest proto.InternalMessageInfo
-
-func (m *ResetPasswordRequest) GetAppKey() string {
-	if m != nil {
-		return m.AppKey
-	}
-	return ""
-}
-
-func (m *ResetPasswordRequest) GetEmail() string {
-	if m != nil {
-		return m.Email
-	}
-	return ""
-}
-
-type ResetPasswordReply struct {
-	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ResetPasswordReply) Reset()         { *m = ResetPasswordReply{} }
-func (m *ResetPasswordReply) String() string { return proto.CompactTextString(m) }
-func (*ResetPasswordReply) ProtoMessage()    {}
-func (*ResetPasswordReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{12}
-}
-
-func (m *ResetPasswordReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ResetPasswordReply.Unmarshal(m, b)
-}
-func (m *ResetPasswordReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ResetPasswordReply.Marshal(b, m, deterministic)
-}
-func (m *ResetPasswordReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ResetPasswordReply.Merge(m, src)
-}
-func (m *ResetPasswordReply) XXX_Size() int {
-	return xxx_messageInfo_ResetPasswordReply.Size(m)
-}
-func (m *ResetPasswordReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_ResetPasswordReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ResetPasswordReply proto.InternalMessageInfo
-
-func (m *ResetPasswordReply) GetStatus() *Status {
-	if m != nil {
-		return m.Status
-	}
-	return nil
-}
-
-type ChangePasswordRequest struct {
-	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
-	AccessToken          string   `protobuf:"bytes,2,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
-	CurrentPassword      string   `protobuf:"bytes,3,opt,name=currentPassword,proto3" json:"currentPassword,omitempty"`
-	NewPassword          string   `protobuf:"bytes,4,opt,name=newPassword,proto3" json:"newPassword,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ChangePasswordRequest) Reset()         { *m = ChangePasswordRequest{} }
-func (m *ChangePasswordRequest) String() string { return proto.CompactTextString(m) }
-func (*ChangePasswordRequest) ProtoMessage()    {}
-func (*ChangePasswordRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{13}
-}
-
-func (m *ChangePasswordRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ChangePasswordRequest.Unmarshal(m, b)
-}
-func (m *ChangePasswordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ChangePasswordRequest.Marshal(b, m, deterministic)
-}
-func (m *ChangePasswordRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ChangePasswordRequest.Merge(m, src)
-}
-func (m *ChangePasswordRequest) XXX_Size() int {
-	return xxx_messageInfo_ChangePasswordRequest.Size(m)
-}
-func (m *ChangePasswordRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_ChangePasswordRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ChangePasswordRequest proto.InternalMessageInfo
-
-func (m *ChangePasswordRequest) GetAppKey() string {
-	if m != nil {
-		return m.AppKey
-	}
-	return ""
-}
-
-func (m *ChangePasswordRequest) GetAccessToken() string {
-	if m != nil {
-		return m.AccessToken
-	}
-	return ""
-}
-
-func (m *ChangePasswordRequest) GetCurrentPassword() string {
-	if m != nil {
-		return m.CurrentPassword
-	}
-	return ""
-}
-
-func (m *ChangePasswordRequest) GetNewPassword() string {
-	if m != nil {
-		return m.NewPassword
-	}
-	return ""
-}
-
-type ChangePasswordReply struct {
-	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *ChangePasswordReply) Reset()         { *m = ChangePasswordReply{} }
-func (m *ChangePasswordReply) String() string { return proto.CompactTextString(m) }
-func (*ChangePasswordReply) ProtoMessage()    {}
-func (*ChangePasswordReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{14}
-}
-
-func (m *ChangePasswordReply) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ChangePasswordReply.Unmarshal(m, b)
-}
-func (m *ChangePasswordReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ChangePasswordReply.Marshal(b, m, deterministic)
-}
-func (m *ChangePasswordReply) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ChangePasswordReply.Merge(m, src)
-}
-func (m *ChangePasswordReply) XXX_Size() int {
-	return xxx_messageInfo_ChangePasswordReply.Size(m)
-}
-func (m *ChangePasswordReply) XXX_DiscardUnknown() {
-	xxx_messageInfo_ChangePasswordReply.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ChangePasswordReply proto.InternalMessageInfo
-
-func (m *ChangePasswordReply) GetStatus() *Status {
 	if m != nil {
 		return m.Status
 	}
@@ -785,7 +488,7 @@ func (m *CreatePostRequest) Reset()         { *m = CreatePostRequest{} }
 func (m *CreatePostRequest) String() string { return proto.CompactTextString(m) }
 func (*CreatePostRequest) ProtoMessage()    {}
 func (*CreatePostRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{15}
+	return fileDescriptor_bdd2b78300d408eb, []int{8}
 }
 
 func (m *CreatePostRequest) XXX_Unmarshal(b []byte) error {
@@ -873,7 +576,7 @@ func (m *CreatePostReply) Reset()         { *m = CreatePostReply{} }
 func (m *CreatePostReply) String() string { return proto.CompactTextString(m) }
 func (*CreatePostReply) ProtoMessage()    {}
 func (*CreatePostReply) Descriptor() ([]byte, []int) {
-	return fileDescriptor_bdd2b78300d408eb, []int{16}
+	return fileDescriptor_bdd2b78300d408eb, []int{9}
 }
 
 func (m *CreatePostReply) XXX_Unmarshal(b []byte) error {
@@ -901,6 +604,594 @@ func (m *CreatePostReply) GetStatus() *Status {
 	return nil
 }
 
+type GetPostRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	Lat                  float32  `protobuf:"fixed32,2,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lng                  float32  `protobuf:"fixed32,3,opt,name=lng,proto3" json:"lng,omitempty"`
+	Radius               int32    `protobuf:"varint,4,opt,name=radius,proto3" json:"radius,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetPostRequest) Reset()         { *m = GetPostRequest{} }
+func (m *GetPostRequest) String() string { return proto.CompactTextString(m) }
+func (*GetPostRequest) ProtoMessage()    {}
+func (*GetPostRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{10}
+}
+
+func (m *GetPostRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPostRequest.Unmarshal(m, b)
+}
+func (m *GetPostRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPostRequest.Marshal(b, m, deterministic)
+}
+func (m *GetPostRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPostRequest.Merge(m, src)
+}
+func (m *GetPostRequest) XXX_Size() int {
+	return xxx_messageInfo_GetPostRequest.Size(m)
+}
+func (m *GetPostRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPostRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPostRequest proto.InternalMessageInfo
+
+func (m *GetPostRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *GetPostRequest) GetLat() float32 {
+	if m != nil {
+		return m.Lat
+	}
+	return 0
+}
+
+func (m *GetPostRequest) GetLng() float32 {
+	if m != nil {
+		return m.Lng
+	}
+	return 0
+}
+
+func (m *GetPostRequest) GetRadius() int32 {
+	if m != nil {
+		return m.Radius
+	}
+	return 0
+}
+
+type GetPostReply struct {
+	Status               *Status               `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Reply                []*GetPostReplyStruct `protobuf:"bytes,2,rep,name=reply,proto3" json:"reply,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *GetPostReply) Reset()         { *m = GetPostReply{} }
+func (m *GetPostReply) String() string { return proto.CompactTextString(m) }
+func (*GetPostReply) ProtoMessage()    {}
+func (*GetPostReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{11}
+}
+
+func (m *GetPostReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPostReply.Unmarshal(m, b)
+}
+func (m *GetPostReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPostReply.Marshal(b, m, deterministic)
+}
+func (m *GetPostReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPostReply.Merge(m, src)
+}
+func (m *GetPostReply) XXX_Size() int {
+	return xxx_messageInfo_GetPostReply.Size(m)
+}
+func (m *GetPostReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPostReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPostReply proto.InternalMessageInfo
+
+func (m *GetPostReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+func (m *GetPostReply) GetReply() []*GetPostReplyStruct {
+	if m != nil {
+		return m.Reply
+	}
+	return nil
+}
+
+type GetPostReplyStruct struct {
+	Title                string   `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Species              string   `protobuf:"bytes,4,opt,name=species,proto3" json:"species,omitempty"`
+	Description          string   `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Lat                  float32  `protobuf:"fixed32,6,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lng                  float32  `protobuf:"fixed32,7,opt,name=lng,proto3" json:"lng,omitempty"`
+	EncodedImage         string   `protobuf:"bytes,8,opt,name=encodedImage,proto3" json:"encodedImage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetPostReplyStruct) Reset()         { *m = GetPostReplyStruct{} }
+func (m *GetPostReplyStruct) String() string { return proto.CompactTextString(m) }
+func (*GetPostReplyStruct) ProtoMessage()    {}
+func (*GetPostReplyStruct) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{12}
+}
+
+func (m *GetPostReplyStruct) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPostReplyStruct.Unmarshal(m, b)
+}
+func (m *GetPostReplyStruct) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPostReplyStruct.Marshal(b, m, deterministic)
+}
+func (m *GetPostReplyStruct) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPostReplyStruct.Merge(m, src)
+}
+func (m *GetPostReplyStruct) XXX_Size() int {
+	return xxx_messageInfo_GetPostReplyStruct.Size(m)
+}
+func (m *GetPostReplyStruct) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPostReplyStruct.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPostReplyStruct proto.InternalMessageInfo
+
+func (m *GetPostReplyStruct) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *GetPostReplyStruct) GetSpecies() string {
+	if m != nil {
+		return m.Species
+	}
+	return ""
+}
+
+func (m *GetPostReplyStruct) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *GetPostReplyStruct) GetLat() float32 {
+	if m != nil {
+		return m.Lat
+	}
+	return 0
+}
+
+func (m *GetPostReplyStruct) GetLng() float32 {
+	if m != nil {
+		return m.Lng
+	}
+	return 0
+}
+
+func (m *GetPostReplyStruct) GetEncodedImage() string {
+	if m != nil {
+		return m.EncodedImage
+	}
+	return ""
+}
+
+type Status struct {
+	Code                 int32    `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	Message              string   `protobuf:"bytes,2,opt,name=Message,proto3" json:"Message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Status) Reset()         { *m = Status{} }
+func (m *Status) String() string { return proto.CompactTextString(m) }
+func (*Status) ProtoMessage()    {}
+func (*Status) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{13}
+}
+
+func (m *Status) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Status.Unmarshal(m, b)
+}
+func (m *Status) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Status.Marshal(b, m, deterministic)
+}
+func (m *Status) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Status.Merge(m, src)
+}
+func (m *Status) XXX_Size() int {
+	return xxx_messageInfo_Status.Size(m)
+}
+func (m *Status) XXX_DiscardUnknown() {
+	xxx_messageInfo_Status.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Status proto.InternalMessageInfo
+
+func (m *Status) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *Status) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
+type GetAccessTokenRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=appKey,proto3" json:"appKey,omitempty"`
+	RefreshToken         string   `protobuf:"bytes,2,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAccessTokenRequest) Reset()         { *m = GetAccessTokenRequest{} }
+func (m *GetAccessTokenRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAccessTokenRequest) ProtoMessage()    {}
+func (*GetAccessTokenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{14}
+}
+
+func (m *GetAccessTokenRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAccessTokenRequest.Unmarshal(m, b)
+}
+func (m *GetAccessTokenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAccessTokenRequest.Marshal(b, m, deterministic)
+}
+func (m *GetAccessTokenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAccessTokenRequest.Merge(m, src)
+}
+func (m *GetAccessTokenRequest) XXX_Size() int {
+	return xxx_messageInfo_GetAccessTokenRequest.Size(m)
+}
+func (m *GetAccessTokenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAccessTokenRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAccessTokenRequest proto.InternalMessageInfo
+
+func (m *GetAccessTokenRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *GetAccessTokenRequest) GetRefreshToken() string {
+	if m != nil {
+		return m.RefreshToken
+	}
+	return ""
+}
+
+type GetAccessTokenReply struct {
+	AccessToken          string   `protobuf:"bytes,1,opt,name=accessToken,proto3" json:"accessToken,omitempty"`
+	Status               *Status  `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAccessTokenReply) Reset()         { *m = GetAccessTokenReply{} }
+func (m *GetAccessTokenReply) String() string { return proto.CompactTextString(m) }
+func (*GetAccessTokenReply) ProtoMessage()    {}
+func (*GetAccessTokenReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{15}
+}
+
+func (m *GetAccessTokenReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAccessTokenReply.Unmarshal(m, b)
+}
+func (m *GetAccessTokenReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAccessTokenReply.Marshal(b, m, deterministic)
+}
+func (m *GetAccessTokenReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAccessTokenReply.Merge(m, src)
+}
+func (m *GetAccessTokenReply) XXX_Size() int {
+	return xxx_messageInfo_GetAccessTokenReply.Size(m)
+}
+func (m *GetAccessTokenReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAccessTokenReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAccessTokenReply proto.InternalMessageInfo
+
+func (m *GetAccessTokenReply) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *GetAccessTokenReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+type ForgetPasswordRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=AppKey,proto3" json:"AppKey,omitempty"`
+	Email                string   `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordRequest) Reset()         { *m = ForgetPasswordRequest{} }
+func (m *ForgetPasswordRequest) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordRequest) ProtoMessage()    {}
+func (*ForgetPasswordRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{16}
+}
+
+func (m *ForgetPasswordRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordRequest.Unmarshal(m, b)
+}
+func (m *ForgetPasswordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordRequest.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordRequest.Merge(m, src)
+}
+func (m *ForgetPasswordRequest) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordRequest.Size(m)
+}
+func (m *ForgetPasswordRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordRequest proto.InternalMessageInfo
+
+func (m *ForgetPasswordRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *ForgetPasswordRequest) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+type ForgetPasswordReply struct {
+	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordReply) Reset()         { *m = ForgetPasswordReply{} }
+func (m *ForgetPasswordReply) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordReply) ProtoMessage()    {}
+func (*ForgetPasswordReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{17}
+}
+
+func (m *ForgetPasswordReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordReply.Unmarshal(m, b)
+}
+func (m *ForgetPasswordReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordReply.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordReply.Merge(m, src)
+}
+func (m *ForgetPasswordReply) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordReply.Size(m)
+}
+func (m *ForgetPasswordReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordReply proto.InternalMessageInfo
+
+func (m *ForgetPasswordReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+type ForgetPasswordAuthenRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=AppKey,proto3" json:"AppKey,omitempty"`
+	AuthenCode           int32    `protobuf:"varint,2,opt,name=AuthenCode,proto3" json:"AuthenCode,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordAuthenRequest) Reset()         { *m = ForgetPasswordAuthenRequest{} }
+func (m *ForgetPasswordAuthenRequest) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordAuthenRequest) ProtoMessage()    {}
+func (*ForgetPasswordAuthenRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{18}
+}
+
+func (m *ForgetPasswordAuthenRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordAuthenRequest.Unmarshal(m, b)
+}
+func (m *ForgetPasswordAuthenRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordAuthenRequest.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordAuthenRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordAuthenRequest.Merge(m, src)
+}
+func (m *ForgetPasswordAuthenRequest) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordAuthenRequest.Size(m)
+}
+func (m *ForgetPasswordAuthenRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordAuthenRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordAuthenRequest proto.InternalMessageInfo
+
+func (m *ForgetPasswordAuthenRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *ForgetPasswordAuthenRequest) GetAuthenCode() int32 {
+	if m != nil {
+		return m.AuthenCode
+	}
+	return 0
+}
+
+type ForgetPasswordAuthenReply struct {
+	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordAuthenReply) Reset()         { *m = ForgetPasswordAuthenReply{} }
+func (m *ForgetPasswordAuthenReply) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordAuthenReply) ProtoMessage()    {}
+func (*ForgetPasswordAuthenReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{19}
+}
+
+func (m *ForgetPasswordAuthenReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordAuthenReply.Unmarshal(m, b)
+}
+func (m *ForgetPasswordAuthenReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordAuthenReply.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordAuthenReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordAuthenReply.Merge(m, src)
+}
+func (m *ForgetPasswordAuthenReply) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordAuthenReply.Size(m)
+}
+func (m *ForgetPasswordAuthenReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordAuthenReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordAuthenReply proto.InternalMessageInfo
+
+func (m *ForgetPasswordAuthenReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+type ForgetPasswordNewPasswordRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=AppKey,proto3" json:"AppKey,omitempty"`
+	Password             string   `protobuf:"bytes,2,opt,name=Password,proto3" json:"Password,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordNewPasswordRequest) Reset()         { *m = ForgetPasswordNewPasswordRequest{} }
+func (m *ForgetPasswordNewPasswordRequest) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordNewPasswordRequest) ProtoMessage()    {}
+func (*ForgetPasswordNewPasswordRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{20}
+}
+
+func (m *ForgetPasswordNewPasswordRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordNewPasswordRequest.Unmarshal(m, b)
+}
+func (m *ForgetPasswordNewPasswordRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordNewPasswordRequest.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordNewPasswordRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordNewPasswordRequest.Merge(m, src)
+}
+func (m *ForgetPasswordNewPasswordRequest) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordNewPasswordRequest.Size(m)
+}
+func (m *ForgetPasswordNewPasswordRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordNewPasswordRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordNewPasswordRequest proto.InternalMessageInfo
+
+func (m *ForgetPasswordNewPasswordRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *ForgetPasswordNewPasswordRequest) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+type ForgetPasswordNewPasswordReply struct {
+	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *ForgetPasswordNewPasswordReply) Reset()         { *m = ForgetPasswordNewPasswordReply{} }
+func (m *ForgetPasswordNewPasswordReply) String() string { return proto.CompactTextString(m) }
+func (*ForgetPasswordNewPasswordReply) ProtoMessage()    {}
+func (*ForgetPasswordNewPasswordReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{21}
+}
+
+func (m *ForgetPasswordNewPasswordReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_ForgetPasswordNewPasswordReply.Unmarshal(m, b)
+}
+func (m *ForgetPasswordNewPasswordReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_ForgetPasswordNewPasswordReply.Marshal(b, m, deterministic)
+}
+func (m *ForgetPasswordNewPasswordReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_ForgetPasswordNewPasswordReply.Merge(m, src)
+}
+func (m *ForgetPasswordNewPasswordReply) XXX_Size() int {
+	return xxx_messageInfo_ForgetPasswordNewPasswordReply.Size(m)
+}
+func (m *ForgetPasswordNewPasswordReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_ForgetPasswordNewPasswordReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_ForgetPasswordNewPasswordReply proto.InternalMessageInfo
+
+func (m *ForgetPasswordNewPasswordReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*HelloRequest)(nil), "naturaeproto.HelloRequest")
 	proto.RegisterType((*HelloReply)(nil), "naturaeproto.HelloReply")
@@ -910,67 +1201,83 @@ func init() {
 	proto.RegisterType((*LoginReply)(nil), "naturaeproto.LoginReply")
 	proto.RegisterType((*AccountAuthenRequest)(nil), "naturaeproto.AccountAuthenRequest")
 	proto.RegisterType((*AccountAuthenReply)(nil), "naturaeproto.AccountAuthenReply")
+	proto.RegisterType((*CreatePostRequest)(nil), "naturaeproto.CreatePostRequest")
+	proto.RegisterType((*CreatePostReply)(nil), "naturaeproto.CreatePostReply")
+	proto.RegisterType((*GetPostRequest)(nil), "naturaeproto.GetPostRequest")
+	proto.RegisterType((*GetPostReply)(nil), "naturaeproto.GetPostReply")
+	proto.RegisterType((*GetPostReplyStruct)(nil), "naturaeproto.GetPostReplyStruct")
 	proto.RegisterType((*Status)(nil), "naturaeproto.Status")
 	proto.RegisterType((*GetAccessTokenRequest)(nil), "naturaeproto.GetAccessTokenRequest")
 	proto.RegisterType((*GetAccessTokenReply)(nil), "naturaeproto.GetAccessTokenReply")
-	proto.RegisterType((*ResetPasswordRequest)(nil), "naturaeproto.ResetPasswordRequest")
-	proto.RegisterType((*ResetPasswordReply)(nil), "naturaeproto.ResetPasswordReply")
-	proto.RegisterType((*ChangePasswordRequest)(nil), "naturaeproto.ChangePasswordRequest")
-	proto.RegisterType((*ChangePasswordReply)(nil), "naturaeproto.ChangePasswordReply")
-	proto.RegisterType((*CreatePostRequest)(nil), "naturaeproto.CreatePostRequest")
-	proto.RegisterType((*CreatePostReply)(nil), "naturaeproto.CreatePostReply")
+	proto.RegisterType((*ForgetPasswordRequest)(nil), "naturaeproto.ForgetPasswordRequest")
+	proto.RegisterType((*ForgetPasswordReply)(nil), "naturaeproto.ForgetPasswordReply")
+	proto.RegisterType((*ForgetPasswordAuthenRequest)(nil), "naturaeproto.ForgetPasswordAuthenRequest")
+	proto.RegisterType((*ForgetPasswordAuthenReply)(nil), "naturaeproto.ForgetPasswordAuthenReply")
+	proto.RegisterType((*ForgetPasswordNewPasswordRequest)(nil), "naturaeproto.ForgetPasswordNewPasswordRequest")
+	proto.RegisterType((*ForgetPasswordNewPasswordReply)(nil), "naturaeproto.ForgetPasswordNewPasswordReply")
 }
 
 func init() { proto.RegisterFile("naturaeproto/Naturae.proto", fileDescriptor_bdd2b78300d408eb) }
 
 var fileDescriptor_bdd2b78300d408eb = []byte{
-	// 724 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xed, 0x6a, 0x13, 0x4d,
-	0x14, 0xce, 0xe6, 0xab, 0xed, 0x69, 0xde, 0xf6, 0xed, 0x34, 0x95, 0xb8, 0xf8, 0x11, 0x47, 0x90,
-	0x0a, 0x12, 0xa1, 0x82, 0x7f, 0x4b, 0x1b, 0xa1, 0x8a, 0x1a, 0x4a, 0x22, 0x28, 0x05, 0x91, 0x71,
-	0x73, 0x9a, 0x2e, 0x6e, 0x76, 0xd7, 0x9d, 0x89, 0x35, 0xff, 0xc4, 0x5f, 0x5e, 0x83, 0xe0, 0x8d,
-	0x79, 0x03, 0xde, 0x86, 0xcc, 0xec, 0x6c, 0x32, 0x3b, 0xae, 0x4d, 0xaa, 0xfe, 0xca, 0x9e, 0x8f,
-	0x79, 0xf2, 0x9c, 0x67, 0xce, 0x39, 0xbb, 0xe0, 0x86, 0x4c, 0x4c, 0x12, 0x86, 0x71, 0x12, 0x89,
-	0xe8, 0x7e, 0x2f, 0x35, 0x3a, 0xca, 0x22, 0x0d, 0x33, 0x46, 0x29, 0x34, 0x1e, 0x63, 0x10, 0x44,
-	0x7d, 0x7c, 0x3f, 0x41, 0x2e, 0x08, 0x81, 0x6a, 0xc8, 0xc6, 0xd8, 0x72, 0xda, 0xce, 0xee, 0x5a,
-	0x5f, 0x3d, 0xd3, 0x3b, 0x00, 0x3a, 0x27, 0x0e, 0xa6, 0xa4, 0x05, 0x2b, 0x63, 0xe4, 0x9c, 0x8d,
-	0xb2, 0xa4, 0xcc, 0xa4, 0x5f, 0x1d, 0x68, 0x76, 0x13, 0x64, 0x02, 0x0f, 0x3c, 0x2f, 0x9a, 0x84,
-	0x22, 0x03, 0xbd, 0x02, 0x75, 0x16, 0xc7, 0x4f, 0x71, 0xaa, 0x4f, 0x68, 0x8b, 0x34, 0xa1, 0x86,
-	0x63, 0xe6, 0x07, 0xad, 0xb2, 0x72, 0xa7, 0x06, 0x71, 0x61, 0x35, 0x66, 0x9c, 0x9f, 0x47, 0xc9,
-	0xb0, 0x55, 0x51, 0x81, 0x99, 0x4d, 0xae, 0xc1, 0xda, 0xa9, 0x9f, 0x70, 0xd1, 0x93, 0x1c, 0xab,
-	0x2a, 0x38, 0x77, 0xc8, 0x93, 0x01, 0xd3, 0xc1, 0x5a, 0x7a, 0x32, 0xb3, 0xe9, 0x21, 0x10, 0x8b,
-	0x9b, 0x2c, 0xe6, 0x1e, 0xd4, 0xb9, 0x60, 0x62, 0xc2, 0xd5, 0x3f, 0xad, 0xef, 0x35, 0x3b, 0xa6,
-	0x3a, 0x9d, 0x81, 0x8a, 0xf5, 0x75, 0x0e, 0x7d, 0x05, 0x8d, 0x67, 0xd1, 0xc8, 0x0f, 0xff, 0x79,
-	0x5d, 0xf4, 0x93, 0x03, 0xa0, 0xa1, 0x25, 0xad, 0x36, 0xac, 0x33, 0xcf, 0x43, 0xce, 0x5f, 0x44,
-	0xef, 0x30, 0xd4, 0xe8, 0xa6, 0x8b, 0x50, 0x68, 0x24, 0x78, 0x9a, 0x20, 0x3f, 0x4b, 0x53, 0xd2,
-	0x7f, 0xca, 0xf9, 0x2e, 0x59, 0xdc, 0x67, 0x07, 0x9a, 0x5a, 0x9b, 0x83, 0x89, 0x38, 0xc3, 0x85,
-	0x55, 0xe6, 0xee, 0xa2, 0x6c, 0xdf, 0xc5, 0x4c, 0x83, 0x8a, 0xa9, 0xc1, 0x0d, 0x00, 0xa6, 0xc0,
-	0xbb, 0xd1, 0x30, 0xbb, 0x40, 0xc3, 0x43, 0xbf, 0x38, 0x40, 0x2c, 0x12, 0x05, 0x7a, 0x94, 0x17,
-	0xeb, 0x51, 0xb9, 0x50, 0x8f, 0xea, 0x12, 0x7a, 0x3c, 0x84, 0x7a, 0xea, 0x91, 0x33, 0xa1, 0xe8,
-	0xca, 0xf2, 0x6b, 0x7d, 0xf5, 0x2c, 0xa7, 0xe0, 0xb9, 0x9e, 0x82, 0x94, 0x4d, 0x66, 0xd2, 0x01,
-	0xec, 0x1c, 0xa1, 0x38, 0x98, 0x73, 0x5b, 0xa4, 0xe3, 0x12, 0x57, 0x49, 0x11, 0xb6, 0x6d, 0xd0,
-	0xe5, 0xfa, 0x64, 0x5e, 0x73, 0x79, 0x89, 0x9a, 0x1f, 0x41, 0xb3, 0x8f, 0x1c, 0xc5, 0xb1, 0xee,
-	0xcb, 0x3f, 0x6a, 0x74, 0x39, 0x6a, 0x16, 0x4a, 0x7e, 0xd4, 0x9c, 0x25, 0x98, 0x7c, 0x73, 0x60,
-	0xa7, 0x7b, 0xc6, 0xc2, 0x11, 0x2e, 0xcb, 0x65, 0x71, 0x8f, 0xec, 0xc2, 0xa6, 0x37, 0x49, 0x12,
-	0x0c, 0x67, 0xcc, 0x74, 0x9b, 0xd8, 0x6e, 0x89, 0x15, 0xe2, 0xf9, 0x2c, 0x2b, 0xed, 0x53, 0xd3,
-	0x45, 0xbb, 0xb0, 0x6d, 0xd3, 0xbb, 0x7c, 0x91, 0x3f, 0x1c, 0xd8, 0x4a, 0x97, 0xd2, 0x71, 0xc4,
-	0xc5, 0xdf, 0x17, 0xd8, 0x84, 0x9a, 0xf0, 0x45, 0x80, 0xd9, 0xcc, 0x29, 0x43, 0xb6, 0x2a, 0x8f,
-	0xd1, 0xf3, 0x91, 0xeb, 0x42, 0x32, 0x53, 0x22, 0x0e, 0x91, 0x7b, 0x89, 0x1f, 0x0b, 0x3f, 0x0a,
-	0xf5, 0xca, 0x34, 0x5d, 0xe4, 0x7f, 0xa8, 0x04, 0x4c, 0xb4, 0xea, 0x6d, 0x67, 0xb7, 0xdc, 0x97,
-	0x8f, 0xca, 0x13, 0x8e, 0x5a, 0x2b, 0xda, 0x13, 0x8e, 0x64, 0xff, 0x62, 0xe8, 0x45, 0x43, 0x1c,
-	0x3e, 0x19, 0xcb, 0x79, 0x58, 0x4d, 0xfb, 0xd7, 0xf4, 0xd1, 0x7d, 0xd8, 0x34, 0x0b, 0xbd, 0xb4,
-	0x54, 0x7b, 0xdf, 0xab, 0xb0, 0x31, 0xc0, 0xe4, 0x03, 0x26, 0x5a, 0x26, 0x4e, 0x5e, 0xc2, 0x7f,
-	0xb9, 0x8d, 0x4e, 0x68, 0x1e, 0xa1, 0xe8, 0x55, 0xe4, 0xb6, 0x2f, 0xcc, 0x89, 0x83, 0x29, 0x2d,
-	0x91, 0x7d, 0xa8, 0xa9, 0x5d, 0x4c, 0xdc, 0x7c, 0xb2, 0xb9, 0xfb, 0xdd, 0x56, 0x61, 0x2c, 0x05,
-	0x78, 0x03, 0x3b, 0xb9, 0x25, 0x26, 0x7c, 0x8f, 0x29, 0x39, 0x2d, 0x86, 0x45, 0xeb, 0xd6, 0x66,
-	0xf8, 0xeb, 0x36, 0xa4, 0x25, 0xf2, 0x1a, 0xb6, 0x8e, 0x50, 0xf4, 0xf0, 0xdc, 0xd8, 0x08, 0xe4,
-	0x76, 0xfe, 0x60, 0xe1, 0x12, 0x72, 0x6f, 0x5d, 0x9c, 0x94, 0xc2, 0x1f, 0xc2, 0xea, 0x80, 0x4d,
-	0xd5, 0x3b, 0xdf, 0xd6, 0xc0, 0xfc, 0x58, 0xb0, 0x35, 0x98, 0x7f, 0x24, 0xd0, 0x12, 0x39, 0x81,
-	0x8d, 0xfc, 0x80, 0xd8, 0xfc, 0x0a, 0xa7, 0xdb, 0xe6, 0x57, 0x30, 0x63, 0xb4, 0x44, 0x7a, 0x00,
-	0xf3, 0x6e, 0x22, 0x37, 0x8b, 0xae, 0xd4, 0x18, 0x28, 0xf7, 0xfa, 0xef, 0x13, 0x14, 0xde, 0xe1,
-	0x5d, 0xb8, 0xea, 0x45, 0xe3, 0x0e, 0x7e, 0x64, 0xe3, 0x38, 0x40, 0x9e, 0x4b, 0x3f, 0xc9, 0x7d,
-	0x2f, 0xbd, 0xad, 0xab, 0x9f, 0x07, 0x3f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x04, 0xff, 0xaf, 0xfc,
-	0x62, 0x09, 0x00, 0x00,
+	// 898 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x57, 0x5f, 0x8f, 0xdb, 0x44,
+	0x10, 0x8f, 0x93, 0x4b, 0x2e, 0x9d, 0x0b, 0x07, 0xdd, 0xe6, 0xaa, 0xd4, 0x94, 0x23, 0x2c, 0x12,
+	0xb4, 0x52, 0x15, 0xa4, 0x43, 0xea, 0x6b, 0x95, 0x9e, 0xe8, 0x51, 0x01, 0x51, 0xe5, 0xf0, 0x4f,
+	0x27, 0x21, 0xb4, 0x38, 0xd3, 0xd4, 0xc2, 0xb1, 0x8d, 0x77, 0xcd, 0x71, 0x0f, 0xbc, 0xf0, 0xc4,
+	0x3b, 0x6f, 0x7c, 0x08, 0x3e, 0x0b, 0xdf, 0x82, 0xaf, 0x81, 0xbc, 0xbb, 0x3e, 0xef, 0xda, 0xbe,
+	0x9c, 0x23, 0xf5, 0xa1, 0x4f, 0x97, 0x99, 0x9d, 0xfd, 0xf9, 0x37, 0xbf, 0xd9, 0x99, 0xdd, 0x03,
+	0x37, 0x62, 0x22, 0x4b, 0x19, 0x26, 0x69, 0x2c, 0xe2, 0x4f, 0x16, 0xca, 0x98, 0x49, 0x8b, 0x8c,
+	0xcc, 0x35, 0x4a, 0x61, 0xf4, 0x39, 0x86, 0x61, 0xec, 0xe1, 0x2f, 0x19, 0x72, 0x41, 0x08, 0xec,
+	0x45, 0x6c, 0x83, 0x13, 0x67, 0xea, 0x3c, 0xb8, 0xe5, 0xc9, 0xdf, 0xf4, 0x23, 0x00, 0x1d, 0x93,
+	0x84, 0x97, 0x64, 0x02, 0xfb, 0x1b, 0xe4, 0x9c, 0xad, 0x8b, 0xa0, 0xc2, 0xa4, 0x7f, 0x3b, 0x30,
+	0x3e, 0x4d, 0x91, 0x09, 0x9c, 0xfb, 0x7e, 0x9c, 0x45, 0xa2, 0x00, 0xbd, 0x0b, 0x03, 0x96, 0x24,
+	0x5f, 0xe0, 0xa5, 0xde, 0xa1, 0x2d, 0x32, 0x86, 0x3e, 0x6e, 0x58, 0x10, 0x4e, 0xba, 0xd2, 0xad,
+	0x0c, 0xe2, 0xc2, 0x30, 0x61, 0x9c, 0x5f, 0xc4, 0xe9, 0x6a, 0xd2, 0x93, 0x0b, 0x57, 0x36, 0xb9,
+	0x0f, 0xb7, 0x5e, 0x06, 0x29, 0x17, 0x8b, 0x9c, 0xe3, 0x9e, 0x5c, 0x2c, 0x1d, 0xf9, 0xce, 0x90,
+	0xe9, 0xc5, 0xbe, 0xda, 0x59, 0xd8, 0xf4, 0x4f, 0x07, 0x48, 0x85, 0x5c, 0x9e, 0xcd, 0x14, 0x0e,
+	0x98, 0xef, 0x23, 0xe7, 0x5f, 0xc7, 0x3f, 0x63, 0xa4, 0xf9, 0x99, 0x2e, 0x42, 0x61, 0x94, 0xe2,
+	0xcb, 0x14, 0xf9, 0x2b, 0x15, 0xa2, 0xb8, 0x5a, 0x3e, 0xf2, 0x08, 0x06, 0x5c, 0x30, 0x91, 0x71,
+	0x49, 0xf8, 0xe0, 0x64, 0x3c, 0x33, 0x45, 0x9e, 0x2d, 0xe5, 0x9a, 0xa7, 0x63, 0xe8, 0xf7, 0x30,
+	0xfa, 0x32, 0x5e, 0x07, 0xd1, 0x6b, 0x97, 0x87, 0xfe, 0xeb, 0x00, 0x68, 0xe8, 0xd7, 0x97, 0x9c,
+	0xa5, 0x79, 0x6f, 0x9b, 0xe6, 0x7b, 0xb6, 0xe6, 0x65, 0x02, 0x7d, 0x33, 0x81, 0x52, 0xac, 0x41,
+	0x0b, 0xb1, 0xfe, 0x70, 0x60, 0xac, 0x2b, 0x36, 0xcf, 0xc4, 0x2b, 0xbc, 0x51, 0x35, 0x8b, 0x6e,
+	0xb7, 0x4a, 0xf7, 0x8a, 0x52, 0xcf, 0xa4, 0x74, 0x0c, 0xc0, 0x24, 0xf8, 0x69, 0xbc, 0x2a, 0xd2,
+	0x30, 0x3c, 0xf4, 0x1c, 0x48, 0x85, 0x43, 0x2e, 0xef, 0x5d, 0x18, 0xa4, 0xc8, 0xb3, 0x50, 0x48,
+	0x06, 0x43, 0x4f, 0x5b, 0x46, 0x82, 0xdd, 0x16, 0x09, 0xfe, 0xe7, 0xc0, 0x6d, 0x75, 0x30, 0x5f,
+	0xc4, 0xfc, 0xc6, 0x96, 0xa9, 0x94, 0xb4, 0x5b, 0x2f, 0xe9, 0x18, 0xfa, 0x22, 0x10, 0x61, 0x51,
+	0x2a, 0x65, 0xe4, 0x5d, 0xcb, 0x13, 0xf4, 0x03, 0xe4, 0x3a, 0xbd, 0xc2, 0xcc, 0x11, 0x57, 0xc8,
+	0xfd, 0x34, 0x48, 0x44, 0x10, 0x47, 0xba, 0x54, 0xa6, 0x8b, 0xbc, 0x03, 0xbd, 0x90, 0x09, 0x59,
+	0xad, 0xae, 0x97, 0xff, 0x94, 0x9e, 0x68, 0x3d, 0xd9, 0xd7, 0x9e, 0x68, 0x9d, 0x1f, 0x24, 0x8c,
+	0xfc, 0x78, 0x85, 0xab, 0xe7, 0x9b, 0x7c, 0x34, 0x0c, 0xd5, 0x41, 0x32, 0x7d, 0xf4, 0x09, 0xbc,
+	0x6d, 0x26, 0x9a, 0x4b, 0x58, 0x4a, 0xe5, 0xb4, 0x90, 0x6a, 0x05, 0x87, 0x67, 0x28, 0xda, 0xc8,
+	0xa4, 0x29, 0x77, 0x6b, 0x94, 0x7b, 0x25, 0xe5, 0xbc, 0x7c, 0x6c, 0x15, 0x64, 0x4a, 0x91, 0xbe,
+	0xa7, 0x2d, 0x2a, 0x60, 0x74, 0xf5, 0x95, 0x9d, 0x39, 0x92, 0xc7, 0xd0, 0x4f, 0xf3, 0x6d, 0x93,
+	0xee, 0xb4, 0xf7, 0xe0, 0xe0, 0x64, 0x6a, 0x07, 0x9b, 0xc0, 0x4b, 0x91, 0x66, 0xbe, 0xf0, 0x54,
+	0x38, 0xfd, 0xc7, 0x01, 0x52, 0x5f, 0x7d, 0x83, 0xab, 0xf9, 0x18, 0x06, 0x2a, 0xf5, 0xfc, 0xce,
+	0x90, 0x7d, 0xe3, 0x48, 0x19, 0xe5, 0xef, 0x9c, 0xe1, 0x57, 0xfa, 0x96, 0x50, 0x67, 0xb4, 0x30,
+	0xe9, 0x12, 0x8e, 0xce, 0x50, 0xcc, 0xcb, 0x13, 0x7b, 0x53, 0x2d, 0x5b, 0xcc, 0x28, 0x8a, 0x70,
+	0xa7, 0x0a, 0xda, 0x6e, 0x00, 0xee, 0xd6, 0xab, 0x9f, 0xc1, 0xd1, 0xb3, 0x38, 0x5d, 0xa3, 0x78,
+	0xa1, 0x27, 0xae, 0xc1, 0x7d, 0x6e, 0x71, 0x9f, 0x6f, 0x19, 0xe1, 0xf4, 0x14, 0xee, 0x54, 0x61,
+	0x76, 0x6f, 0x86, 0x6f, 0xe0, 0x5d, 0x1b, 0xa4, 0x36, 0x1e, 0x1b, 0x19, 0x1d, 0x03, 0xcc, 0xcb,
+	0x51, 0xd7, 0x95, 0x25, 0x33, 0x3c, 0xf4, 0x39, 0xdc, 0x6b, 0x86, 0xdd, 0x9d, 0xe1, 0xb7, 0x30,
+	0xb5, 0xa1, 0x16, 0x78, 0xd1, 0x56, 0x38, 0x17, 0x86, 0x45, 0xa8, 0xd6, 0xee, 0xca, 0xa6, 0x0b,
+	0x38, 0xde, 0x82, 0xbb, 0x33, 0xcf, 0x93, 0xbf, 0xf6, 0xe1, 0x70, 0x89, 0xe9, 0xaf, 0x98, 0x6a,
+	0x56, 0x9c, 0x7c, 0x07, 0x6f, 0x59, 0x8f, 0x05, 0x42, 0x6d, 0x84, 0xa6, 0x67, 0x8e, 0x3b, 0xdd,
+	0x1a, 0x93, 0x37, 0x79, 0x87, 0x3c, 0x81, 0xbe, 0xbc, 0xa0, 0x89, 0x6b, 0x07, 0x9b, 0x0f, 0x02,
+	0x77, 0xd2, 0xb8, 0xa6, 0x00, 0x7e, 0x84, 0x23, 0xeb, 0x2a, 0x12, 0x81, 0xcf, 0x64, 0x5f, 0x57,
+	0x18, 0x36, 0xdd, 0x99, 0x55, 0x86, 0xf5, 0x3b, 0x8d, 0x76, 0xc8, 0x0f, 0x70, 0xfb, 0x0c, 0xc5,
+	0x02, 0x2f, 0x8c, 0x6e, 0x22, 0x1f, 0xd6, 0xc6, 0x58, 0xbd, 0x81, 0xdd, 0x0f, 0xb6, 0x07, 0x29,
+	0xf8, 0xa7, 0x30, 0x5c, 0xb2, 0x4b, 0xf9, 0x9e, 0xac, 0x6a, 0x60, 0x3e, 0x44, 0xab, 0x1a, 0x94,
+	0x0f, 0x50, 0xda, 0x21, 0x0b, 0x80, 0xf2, 0x22, 0x21, 0xef, 0x37, 0xc9, 0x6e, 0x5c, 0x12, 0xee,
+	0x7b, 0xd7, 0x07, 0x28, 0xbc, 0x67, 0x30, 0xd4, 0xa3, 0x97, 0x93, 0xfb, 0xd7, 0x0c, 0x6c, 0x05,
+	0xe5, 0x5e, 0x3f, 0xce, 0x69, 0x87, 0x9c, 0xc3, 0xa1, 0x7d, 0x30, 0xab, 0xba, 0x35, 0x0e, 0x8f,
+	0xaa, 0x6e, 0x0d, 0xa3, 0x81, 0x76, 0x48, 0x02, 0x93, 0xa6, 0xbe, 0x94, 0xc3, 0xf6, 0xe1, 0x36,
+	0x00, 0xfb, 0x04, 0x7c, 0xdc, 0x26, 0x54, 0x7d, 0xf1, 0xf7, 0xea, 0x80, 0xf1, 0x90, 0x1b, 0xa9,
+	0xcd, 0xb6, 0x21, 0xd5, 0x3b, 0xdd, 0x7d, 0xd4, 0x3a, 0x5e, 0x7e, 0xfe, 0xe9, 0x43, 0xb8, 0xe7,
+	0xc7, 0x9b, 0x19, 0xfe, 0xc6, 0x36, 0x49, 0x88, 0xdc, 0xda, 0x7d, 0x6e, 0xfd, 0x13, 0xf3, 0xd3,
+	0x40, 0xfe, 0xf9, 0xf4, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0x74, 0x7c, 0x25, 0x0d, 0xf7, 0x0c,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -990,8 +1297,11 @@ type ServerRequestsClient interface {
 	AccountAuthentication(ctx context.Context, in *AccountAuthenRequest, opts ...grpc.CallOption) (*AccountAuthenReply, error)
 	GetNewAccessToken(ctx context.Context, in *GetAccessTokenRequest, opts ...grpc.CallOption) (*GetAccessTokenReply, error)
 	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
-	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordReply, error)
 	CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostReply, error)
+	GetPosts(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostReply, error)
+	ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordReply, error)
+	ForgetPasswordAuthenCode(ctx context.Context, in *ForgetPasswordAuthenRequest, opts ...grpc.CallOption) (*ForgetPasswordAuthenReply, error)
+	ForgetPasswordResetPassword(ctx context.Context, in *ForgetPasswordNewPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordNewPasswordReply, error)
 }
 
 type serverRequestsClient struct {
@@ -1047,18 +1357,45 @@ func (c *serverRequestsClient) SayHello(ctx context.Context, in *HelloRequest, o
 	return out, nil
 }
 
-func (c *serverRequestsClient) ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordReply, error) {
-	out := new(ChangePasswordReply)
-	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/ChangePassword", in, out, opts...)
+func (c *serverRequestsClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostReply, error) {
+	out := new(CreatePostReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/CreatePost", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serverRequestsClient) CreatePost(ctx context.Context, in *CreatePostRequest, opts ...grpc.CallOption) (*CreatePostReply, error) {
-	out := new(CreatePostReply)
-	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/CreatePost", in, out, opts...)
+func (c *serverRequestsClient) GetPosts(ctx context.Context, in *GetPostRequest, opts ...grpc.CallOption) (*GetPostReply, error) {
+	out := new(GetPostReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/GetPosts", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverRequestsClient) ForgetPassword(ctx context.Context, in *ForgetPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordReply, error) {
+	out := new(ForgetPasswordReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/ForgetPassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverRequestsClient) ForgetPasswordAuthenCode(ctx context.Context, in *ForgetPasswordAuthenRequest, opts ...grpc.CallOption) (*ForgetPasswordAuthenReply, error) {
+	out := new(ForgetPasswordAuthenReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/ForgetPasswordAuthenCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverRequestsClient) ForgetPasswordResetPassword(ctx context.Context, in *ForgetPasswordNewPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordNewPasswordReply, error) {
+	out := new(ForgetPasswordNewPasswordReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/ForgetPasswordResetPassword", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1072,8 +1409,11 @@ type ServerRequestsServer interface {
 	AccountAuthentication(context.Context, *AccountAuthenRequest) (*AccountAuthenReply, error)
 	GetNewAccessToken(context.Context, *GetAccessTokenRequest) (*GetAccessTokenReply, error)
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordReply, error)
 	CreatePost(context.Context, *CreatePostRequest) (*CreatePostReply, error)
+	GetPosts(context.Context, *GetPostRequest) (*GetPostReply, error)
+	ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordReply, error)
+	ForgetPasswordAuthenCode(context.Context, *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error)
+	ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error)
 }
 
 func RegisterServerRequestsServer(s *grpc.Server, srv ServerRequestsServer) {
@@ -1170,24 +1510,6 @@ func _ServerRequests_SayHello_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ServerRequests_ChangePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ChangePasswordRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServerRequestsServer).ChangePassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/naturaeproto.ServerRequests/ChangePassword",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServerRequestsServer).ChangePassword(ctx, req.(*ChangePasswordRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ServerRequests_CreatePost_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreatePostRequest)
 	if err := dec(in); err != nil {
@@ -1202,6 +1524,78 @@ func _ServerRequests_CreatePost_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServerRequestsServer).CreatePost(ctx, req.(*CreatePostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_GetPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPostRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).GetPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/GetPosts",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).GetPosts(ctx, req.(*GetPostRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_ForgetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForgetPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).ForgetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/ForgetPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).ForgetPassword(ctx, req.(*ForgetPasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_ForgetPasswordAuthenCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForgetPasswordAuthenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).ForgetPasswordAuthenCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/ForgetPasswordAuthenCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).ForgetPasswordAuthenCode(ctx, req.(*ForgetPasswordAuthenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_ForgetPasswordResetPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ForgetPasswordNewPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).ForgetPasswordResetPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/ForgetPasswordResetPassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).ForgetPasswordResetPassword(ctx, req.(*ForgetPasswordNewPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1231,12 +1625,24 @@ var _ServerRequests_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ServerRequests_SayHello_Handler,
 		},
 		{
-			MethodName: "ChangePassword",
-			Handler:    _ServerRequests_ChangePassword_Handler,
-		},
-		{
 			MethodName: "CreatePost",
 			Handler:    _ServerRequests_CreatePost_Handler,
+		},
+		{
+			MethodName: "GetPosts",
+			Handler:    _ServerRequests_GetPosts_Handler,
+		},
+		{
+			MethodName: "ForgetPassword",
+			Handler:    _ServerRequests_ForgetPassword_Handler,
+		},
+		{
+			MethodName: "ForgetPasswordAuthenCode",
+			Handler:    _ServerRequests_ForgetPasswordAuthenCode_Handler,
+		},
+		{
+			MethodName: "ForgetPasswordResetPassword",
+			Handler:    _ServerRequests_ForgetPasswordResetPassword_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

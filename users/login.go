@@ -37,16 +37,17 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 
 	} else {
 		//Get the user access and refresh token id
-		accessTokenID, refreshTokenID, status := getUserToken(userInfo, request.GetEmail())
-		return &pb.LoginReply{AccessToken: accessTokenID, RefreshToken: refreshTokenID, Status: status}
+		accessToken, refreshToken, status := getUserToken(userInfo, request.GetEmail())
+		return &pb.LoginReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID, FirstName: accessToken.FirstName,
+			LastName: accessToken.LastName, Email: request.GetEmail(), Status: status}
 	}
 
 }
 
 //Get the user's refresh and access token from the database
-func getUserToken(connectedDB *mongo.Database, email string) (string, string, *pb.Status) {
-	accessTokenChanID := make(chan string)
-	refreshTokenChanID := make(chan string)
+func getUserToken(connectedDB *mongo.Database, email string) (*helpers.AccessToken, *helpers.RefreshToken, *pb.Status) {
+	accessTokenChanID := make(chan *helpers.AccessToken)
+	refreshTokenChanID := make(chan *helpers.RefreshToken)
 	errorChan := make(chan bool, 2)
 	defer close(accessTokenChanID)
 	defer close(refreshTokenChanID)
@@ -55,18 +56,18 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 	go func() {
 		accessToken, err := helpers.GetAccessToken(connectedDB, email)
 		if err != nil {
-			accessTokenChanID <- ""
+			accessTokenChanID <- nil
 			errorChan <- true
 		} else {
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				//Create a new access token
-				accessToken = helpers.GenerateAccessToken(email)
+				accessToken = helpers.GenerateAccessToken(accessToken.Email, accessToken.FirstName, accessToken.LastName)
 				//Save access token to database
 				saveAccessToken(connectedDB, accessToken)
 			}
 			errorChan <- false
 			//Save the new token id to the access token id channel
-			accessTokenChanID <- accessToken.ID
+			accessTokenChanID <- accessToken
 
 		}
 	}()
@@ -74,7 +75,7 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 	go func() {
 		refreshToken, err := helpers.GetRefreshToken(connectedDB, email)
 		if err != nil {
-			refreshTokenChanID <- ""
+			refreshTokenChanID <- nil
 			errorChan <- true
 		} else {
 			//Check if the refresh token had expired already
@@ -90,7 +91,7 @@ func getUserToken(connectedDB *mongo.Database, email string) (string, string, *p
 			}
 			errorChan <- false
 			//Save the new token id to the refresh token id channel
-			refreshTokenChanID <- refreshToken.ID
+			refreshTokenChanID <- refreshToken
 		}
 	}()
 

@@ -18,12 +18,6 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
-	//Connect to all of the services that is needed to run the server
-	//result := users.CreateAccount(&pb.CreateAccountRequest{FirstName: "Visal", LastName: "Hok", Email: "visalhok123@gmail.com", Password : "ABab1234!@#"})
-	//if result.Status != nil{
-	//	fmt.Println("Error")
-	//}
 }
 
 //Initialize all of the variable to be uses
@@ -88,7 +82,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		result = users.Login(request)
 	} else {
-		result = &LoginReply{AccessToken: "", RefreshToken: "", Status: &Status{
+		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
 	return result, nil
@@ -121,29 +115,29 @@ func (s *server) GetNewAccessToken(ctx context.Context, request *GetAccessTokenR
 	return result, nil
 }
 
-func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
-	var result *ChangePasswordReply
-
-	if helpers.CheckAppKey(request.GetAppKey()) {
-		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
-		//Check if there an error then the access token provided is not in the database
-		if err != nil {
-			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
-		} else {
-			//Check if the access token is expired
-			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
-				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
-					"had expired"}}
-			} else {
-
-			}
-
-		}
-	}
-
-	return result, nil
-}
+//func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
+//	var result *ChangePasswordReply
+//
+//	if helpers.CheckAppKey(request.GetAppKey()) {
+//		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+//		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+//		//Check if there an error then the access token provided is not in the database
+//		if err != nil {
+//			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
+//		} else {
+//			//Check if the access token is expired
+//			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
+//				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
+//					"had expired"}}
+//			} else {
+//
+//			}
+//
+//		}
+//	}
+//
+//	return result, nil
+//}
 
 func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*CreatePostReply, error) {
 	var result *CreatePostReply
@@ -158,7 +152,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
 			} else {
-				fmt.Println("Post create by: ", accessToken.Email)
+				fmt.Println("Post create by:", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
 			}
 
@@ -166,4 +160,20 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	}
 
 	return result, nil
+}
+
+func (s *server) GetPosts(context.Context, *GetPostRequest) (*GetPostReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPasswordAuthenCode(context.Context, *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error) {
+	panic("implement me")
+}
+
+func (s *server) ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
+	panic("implement me")
 }

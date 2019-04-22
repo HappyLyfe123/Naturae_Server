@@ -25,9 +25,9 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 
 	//Create a channel for storing the validity result from checking user input
-	checkStatusChannel := make(chan bool, 3)
+	checkDataChannel := make(chan bool, 3)
 	//Close the channel
-	defer close(checkStatusChannel)
+	defer close(checkDataChannel)
 
 	if !helpers.IsEmailValid(request.GetEmail()) || helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection()) {
 		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetEmailExistCode()),
@@ -36,21 +36,21 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 
 	//Check if first name is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsNameValid(request.GetFirstName())
+		checkDataChannel <- helpers.IsNameValid(request.GetFirstName())
 	}()
 
 	//Check if last name is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsNameValid(request.GetLastName())
+		checkDataChannel <- helpers.IsNameValid(request.GetLastName())
 	}()
 
 	//Check if password is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsPasswordValid(request.GetPassword())
+		checkDataChannel <- helpers.IsPasswordValid(request.GetPassword())
 	}()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
-	if <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel {
+	if <-checkDataChannel && <-checkDataChannel && <-checkDataChannel {
 
 		//Generate random bytes of data to be use as salt for the password
 		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
@@ -61,6 +61,15 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 			Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
 		//Save the user to the database
 		saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
+
+		//Generate access token
+		accessToken := helpers.GenerateAccessToken(request.GetEmail(), request.GetFirstName(), request.GetLastName())
+		//Save access token to database
+		saveAccessToken(connectedDB, accessToken)
+		//Generate refresh token
+		refreshToken := helpers.GenerateRefreshToken(request.GetEmail())
+		//Save refresh token to database
+		saveRefreshToken(connectedDB, refreshToken)
 
 		//Generate authentication code and expired time
 		authenCode, expiredTime := helpers.GenerateAuthenCode()
@@ -73,10 +82,11 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", request.GetEmail())
-		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetCreatedStatusCode()), Message: "account created"}}
+		return &pb.CreateAccountReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID,
+			Status: &pb.Status{Code: int32(helpers.GetCreatedStatusCode()), Message: "account created"}}
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetInvalidInformation()),
+		return &pb.CreateAccountReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{Code: int32(helpers.GetInvalidInformation()),
 			Message: "information provided are invalid"}}
 	}
 
