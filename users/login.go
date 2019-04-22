@@ -39,7 +39,7 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 		//Get the user access and refresh token id
 		accessToken, refreshToken, status := getUserToken(userInfo, request.GetEmail())
 		return &pb.LoginReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID, FirstName: accessToken.FirstName,
-			LastName: accessToken.LastName, Status: status}
+			LastName: accessToken.LastName, Email: request.GetEmail(), Status: status}
 	}
 
 }

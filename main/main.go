@@ -82,7 +82,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		result = users.Login(request)
 	} else {
-		result = &LoginReply{AccessToken: "", RefreshToken: "", Status: &Status{
+		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
 	return result, nil
