@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"crypto/sha512"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"math/big"
@@ -32,21 +31,11 @@ type RefreshToken struct {
 // @appKey : provided app key to be check
 func CheckAppKey(appKey string) bool {
 	//Compare the provided app key with current database app key
-	if strings.Compare(appKey, "") == 0 {
+	if strings.Compare(GetAppKey(), appKey) == 0 {
 		return true
 	} else {
 		return false
 	}
-}
-
-//CheckAccessToken : Check is access token is valid
-func CheckAccessToken(username, tokenID string) {
-	fmt.Println(GetDeniedStatusCode())
-}
-
-//CheckRefreshToken : Check if the token is valid
-func CheckRefreshToken(username, tokenID string) {
-
 }
 
 //GenerateAccessToken : Generate access token
@@ -68,6 +57,7 @@ func GenerateTokenID() string {
 	return ConvertByteToStringBase64(GenerateHash(GenerateRandomBytes(GetTokenLength()), nil))
 }
 
+//IsTokenExpired : check if the token had expired already
 func IsTokenExpired(expireTime time.Time) bool {
 	if time.Now().Before(expireTime) || time.Now().Equal(expireTime) {
 		return false
@@ -114,33 +104,19 @@ func GenerateRandomBytes(len int) []byte {
 
 //GenerateRandomNumber : generate a random between 100000 and 999999
 func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
-	//It going to loop until there are no error
-	for {
-		//Generate a number between 0 and the given number
-		randomNum, err := rand.Int(rand.Reader, big.NewInt(maxNum))
-		if err != nil {
-			log.Fatalf("Random number generator error: %v", err)
-		}
-		//Add minNum to the generated number
-		randomNum.Add(randomNum, big.NewInt(minNum))
-
-		return randomNum
-
+	//Generate a number between 0 and the given number
+	randomNum, err := rand.Int(rand.Reader, big.NewInt(maxNum))
+	if err != nil {
+		log.Fatalf("Random number generator error: %v", err)
 	}
+	//Add minNum to the generated number
+	return randomNum.Add(randomNum, big.NewInt(minNum))
 
 }
 
-//IsTokenValid : check if the token is valid
-func IsTokenValid(currDatabase *mongo.Database, collectionName, tokenID string) {
-	switch collectionName {
-	case GetAccessTokenCollection():
-
-	}
-}
-
-func GetAccessToken(currDatabase *mongo.Database, email string) (*AccessToken, error) {
+func GetAccessToken(currDatabase *mongo.Database, ID string) (*AccessToken, error) {
 	var result AccessToken
-	filter := bson.D{{Key: "email", Value: email}}
+	filter := bson.D{{Key: "id", Value: ID}}
 	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id

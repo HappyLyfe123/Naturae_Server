@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
@@ -165,4 +166,12 @@ func IsTimeValid(expiredTime time.Time) bool {
 	} else {
 		return true
 	}
+}
+
+func CreateUUID() string {
+	newID, err := uuid.NewUUID()
+	if err != nil {
+		log.Printf("Creating UUID error: %v", err)
+	}
+	return newID.String()
 }
