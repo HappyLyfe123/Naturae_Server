@@ -62,6 +62,15 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 		//Save the user to the database
 		saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
 
+		//Generate access token
+		accessToken := helpers.GenerateAccessToken(request.GetEmail(), request.GetFirstName(), request.GetLastName())
+		//Save access token to database
+		saveAccessToken(connectedDB, accessToken)
+		//Generate refresh token
+		refreshToken := helpers.GenerateRefreshToken(request.GetEmail())
+		//Save refresh token to database
+		saveRefreshToken(connectedDB, refreshToken)
+
 		//Generate authentication code and expired time
 		authenCode, expiredTime := helpers.GenerateAuthenCode()
 		//Create a struct for user's authentication
@@ -73,10 +82,11 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 
 		//Send the user a welcome message and user authentication number to the provided email address
 		log.Println("A new account was created for:", request.GetEmail())
-		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetCreatedStatusCode()), Message: "account created"}}
+		return &pb.CreateAccountReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID,
+			Status: &pb.Status{Code: int32(helpers.GetCreatedStatusCode()), Message: "account created"}}
 	} else {
 		//Either email, firstName, lastName, or password is invalid
-		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetInvalidInformation()),
+		return &pb.CreateAccountReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{Code: int32(helpers.GetInvalidInformation()),
 			Message: "information provided are invalid"}}
 	}
 
