@@ -25,9 +25,9 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 	connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 
 	//Create a channel for storing the validity result from checking user input
-	checkStatusChannel := make(chan bool, 3)
+	checkDataChannel := make(chan bool, 3)
 	//Close the channel
-	defer close(checkStatusChannel)
+	defer close(checkDataChannel)
 
 	if !helpers.IsEmailValid(request.GetEmail()) || helpers.EmailExist(request.GetEmail(), connectedDB, helpers.GetAccountInfoCollection()) {
 		return &pb.CreateAccountReply{Status: &pb.Status{Code: int32(helpers.GetEmailExistCode()),
@@ -36,21 +36,21 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 
 	//Check if first name is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsNameValid(request.GetFirstName())
+		checkDataChannel <- helpers.IsNameValid(request.GetFirstName())
 	}()
 
 	//Check if last name is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsNameValid(request.GetLastName())
+		checkDataChannel <- helpers.IsNameValid(request.GetLastName())
 	}()
 
 	//Check if password is in a valid format
 	go func() {
-		checkStatusChannel <- helpers.IsPasswordValid(request.GetPassword())
+		checkDataChannel <- helpers.IsPasswordValid(request.GetPassword())
 	}()
 
 	//Check if the email, firstName, lastName, and password is in a valid format and there no account with the email
-	if <-checkStatusChannel && <-checkStatusChannel && <-checkStatusChannel {
+	if <-checkDataChannel && <-checkDataChannel && <-checkDataChannel {
 
 		//Generate random bytes of data to be use as salt for the password
 		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())

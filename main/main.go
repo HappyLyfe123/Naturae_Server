@@ -6,6 +6,7 @@ import (
 	"Naturae_Server/post"
 	"Naturae_Server/users"
 	"context"
+	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
@@ -17,12 +18,6 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	//users.Login("visalhok123@gmail.com", "ABab1234!@#")
-	//Connect to all of the services that is needed to run the server
-	//result := users.CreateAccount(&pb.CreateAccountRequest{FirstName: "Visal", LastName: "Hok", Email: "visalhok123@gmail.com", Password : "ABab1234!@#"})
-	//if result.Status != nil{
-	//	fmt.Println("Error")
-	//}
 }
 
 //Initialize all of the variable to be uses
@@ -155,9 +150,9 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 		} else {
 			//Check if the access token is expired
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
-				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
-					"had expired"}}
+				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
 			} else {
+				fmt.Println("Post create by:", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
 			}
 

@@ -15,6 +15,8 @@ import (
 
 type AccessToken struct {
 	Email       string
+	FirstName   string
+	LastName    string
 	ID          string
 	Admin       bool
 	ExpiredTime time.Time
@@ -42,14 +44,14 @@ func CheckAppKey(appKey string) bool {
 func GenerateAccessToken(email string) *AccessToken {
 	//Create an access token that have a life span of 12 hours
 	return &AccessToken{Email: email, ID: GenerateTokenID(),
-		Admin: false, ExpiredTime: time.Now().Add(time.Hour * 12)}
+		Admin: false, ExpiredTime: time.Now().Add(time.Hour * 5000)}
 
 }
 
 //GenerateRefreshToken : Generate refresh token
 func GenerateRefreshToken(email string) *RefreshToken {
 	//Refresh token have a life span of 200 years
-	return &RefreshToken{Email: email, ID: GenerateTokenID(), ExpiredTime: time.Now().AddDate(200, 0, 0)}
+	return &RefreshToken{Email: email, ID: GenerateTokenID(), ExpiredTime: time.Now().AddDate(1, 0, 0)}
 }
 
 //GenerateTokenID : Generate an id for a token
