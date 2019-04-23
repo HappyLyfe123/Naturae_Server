@@ -15,18 +15,20 @@ type loginInfo struct {
 
 //Login : Let the user login into their account
 func Login(request *pb.LoginRequest) *pb.LoginReply {
-	userInfo := helpers.ConnectToDB(helpers.GetUserDatabase())
-	databaseResult, err := getLoginInfo(userInfo, request.GetEmail())
+	userDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+	databaseResult, err := getLoginInfo(userDB, request.GetEmail())
+	//There an error while communicating with the database
 	if err != nil {
-		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
+		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{
 			Code: helpers.GetNotFoundStatusCode(), Message: "No account has been found",
 		}}
 	} else if !databaseResult.IsAuthenticated {
-		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
+		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{
 			Code: helpers.GetAccountNotVerifyCode(), Message: "Account is not verify",
 		}}
 	}
 
+	//
 	checkHashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()),
 		helpers.ConvertStringToByte(databaseResult.Salt))
 
@@ -37,7 +39,7 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 
 	} else {
 		//Get the user access and refresh token id
-		accessToken, refreshToken, status := getUserToken(userInfo, request.GetEmail())
+		accessToken, refreshToken, status := getUserToken(userDB, request.GetEmail())
 		return &pb.LoginReply{AccessToken: accessToken.ID, RefreshToken: refreshToken.ID, FirstName: accessToken.FirstName,
 			LastName: accessToken.LastName, Email: request.GetEmail(), Status: status}
 	}
