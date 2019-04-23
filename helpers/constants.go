@@ -1,7 +1,6 @@
 package helpers
 
 const (
-	invalidName            = 100
 	invalidEmail           = 103
 	invalidPassword        = 102
 	invalidLoginCredential = 103
@@ -51,11 +50,6 @@ const (
 	appKey                          = "XjJzwDO6lBCQ5LbWlL1PCXIO&6jH@M&Mz8&BLq"
 )
 
-//GetInvalidNameCode : Return invalid name error code
-func GetInvalidNameCode() int32 {
-	return invalidName
-}
-
 //GetInvalidEmailCode : Return invalid email error code
 func GetInvalidEmailCode() int32 {
 	return invalidEmail
@@ -94,6 +88,11 @@ func GetAccountNotVerifyCode() int32 {
 //GetEmailExistCode : Return email exist error code
 func GetEmailExistCode() int32 {
 	return emailExist
+}
+
+//GetExpiredAuthenCode : Return expired authen error code
+func GetExpiredAuthenCode() int32 {
+	return expiredAuthenCode
 }
 
 //GetExpiredAccessTokenCode : Return expired access token code
