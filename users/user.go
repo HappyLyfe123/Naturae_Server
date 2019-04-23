@@ -93,16 +93,16 @@ func RefreshAccessToken(request *pb.GetAccessTokenRequest) *pb.GetAccessTokenRep
 		//Compare the refresh token id in the database to the one that the request provided. If the two string match
 		//then the server will generate a new access token for the user's. If not then the user will return an error
 		if strings.Compare(refreshTokenResult.ID, request.GetRefreshToken()) == 0 {
-			accessTokenID, expiredTime := helpers.ReplaceToken()
+			accessToken := helpers.GenerateAccessToken("", "", "")
 			//Set the filter to find the user
 			filter := bson.D{{"email", refreshTokenResult.Email}}
 			//Update the access token id and expired time in the database with the newly generated one
-			update := bson.D{{"$set", bson.D{{"id", accessTokenID}, {"expiredtime", expiredTime}}}}
+			update := bson.D{{"$set", bson.D{{"id", accessToken.ID}, {"expiredtime", accessToken.ExpiredTime}}}}
 			_, err := helpers.ConnectToCollection(currConnectedDB, helpers.GetAccessTokenCollection()).UpdateOne(context.Background(), filter, update)
 			if err != nil {
 				status = &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Server error"}
 			} else {
-				newAccessTokenID = accessTokenID
+				newAccessTokenID = accessToken.ID
 				status = &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Code has been generated"}
 			}
 		} else {
