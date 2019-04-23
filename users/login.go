@@ -22,7 +22,7 @@ func Login(request *pb.LoginRequest) *pb.LoginReply {
 	databaseResult, err := getLoginInfo(userInfo, request.GetEmail())
 	//Database communication error
 	if err != nil {
-		return &pb.LoginReply{AccessToken: "", RefreshToken: "", Status: &pb.Status{
+		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{
 			Code: helpers.GetNotFoundStatusCode(), Message: "No account has been found",
 		}}
 		//User had not authenticated the account yet

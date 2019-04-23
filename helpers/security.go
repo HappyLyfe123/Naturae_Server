@@ -45,7 +45,10 @@ func GenerateAccessToken(email, firstName, lastName string) *AccessToken {
 	//Create an access token that have a life span of 12 hours
 	return &AccessToken{ID: GenerateTokenID(), Email: email, FirstName: firstName, LastName: lastName,
 		Admin: false, ExpiredTime: time.Now().Add(time.Hour * 5000)}
+}
 
+func ReplaceToken() (string, time.Time) {
+	return GenerateTokenID(), time.Now().Add(time.Hour * 5000)
 }
 
 //GenerateRefreshToken : Generate refresh token
