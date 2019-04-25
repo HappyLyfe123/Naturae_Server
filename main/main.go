@@ -167,18 +167,30 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	return result, nil
 }
 
-func (s *server) GetPosts(context.Context, *GetPostRequest) (*GetPostReply, error) {
+func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
+	if helpers.CheckAppKey(request.AppKey) {
+
+	}
 	panic("implement me")
 }
 
-func (s *server) ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
+func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
+	if helpers.CheckAppKey(request.AppKey) {
+		users.ForgetPasswordCreateResetCode(request)
+	}
 	panic("implement me")
 }
 
-func (s *server) ForgetPasswordAuthenCode(context.Context, *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error) {
+func (s *server) ForgetPasswordAuthenCode(ctx context.Context, request *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error) {
+	if helpers.CheckAppKey(request.AppKey) {
+		users.ForgetPasswordVerifyCode(request)
+	}
 	panic("implement me")
 }
 
-func (s *server) ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
+func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
+	if helpers.CheckAppKey(request.AppKey) {
+		users.ForgetPasswordNewPassword(request)
+	}
 	panic("implement me")
 }

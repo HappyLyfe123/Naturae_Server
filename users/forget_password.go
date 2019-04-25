@@ -11,13 +11,15 @@ import (
 	"time"
 )
 
+//The structure for reset password code
 type ResetCode struct {
 	Email   string
 	Code    string
 	Expired time.Time
 }
 
-func CreateForgetPassowrdResetCode(request *pb.ForgetPasswordRequest) {
+//ForgetPasswordCreateResetCode: create an reset password code for the user
+func ForgetPasswordCreateResetCode(request *pb.ForgetPasswordRequest) {
 	userDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	forgetPasswordCollection := userDB.Collection("Forget_Password")
 	//Generate authentication code and expired time
@@ -32,18 +34,40 @@ func CreateForgetPassowrdResetCode(request *pb.ForgetPasswordRequest) {
 	sendResetPasswordCode(request.GetEmail(), resetCode)
 }
 
-func VerifyForgetPasswordCode(request *pb.ForgetPasswordAuthenRequest) {
+//VerifyForgetPasswordCode : verify if the code that the user entered to reset their password
+func ForgetPasswordVerifyCode(request *pb.ForgetPasswordAuthenRequest) {
 	userDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	forgetPasswordCollection := userDB.Collection("Forget_Password")
 	var result *ResetCode
-	err := forgetPasswordCollection.FindOne(context.Background(), bson.D{{"email", ""}}).Decode(result)
+	//Get the verification code from the server
+	err := forgetPasswordCollection.FindOne(context.Background(), bson.D{{"email", request.Email}}).Decode(result)
 	if err != nil {
 		log.Printf("Getting forget password reset code error: %v", err)
 	}
+	//Compare the verification code the user provided with the one that stored in the database
 	if strings.Compare(result.Code, request.AuthenCode) == 0 {
 
 	}
 
+}
+
+//ForgetPasswordNewPassword : update the user change the user password and salt
+func ForgetPasswordNewPassword(request *pb.ForgetPasswordNewPasswordRequest) {
+	//Check if the password is in a valid format
+	if helpers.IsPasswordValid(request.Password) {
+		userDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+		accountInfo := userDB.Collection(helpers.GetAccountInfoCollection())
+		//Generate random bytes of data to be use as salt for the password
+		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
+		//Generate a hash for the user password
+		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
+		filter := bson.D{{"email", request.Email}}
+		update := bson.D{{"$set", bson.D{{"password", hashPassword}, {"salt", salt}}}}
+		_, err := accountInfo.UpdateOne(context.Background(), filter, update)
+		if err != nil {
+			log.Printf("Error while saving user hash password and salt from forget password: %v", err)
+		}
+	}
 }
 
 //SendAuthenticationEmail : Send a confirmation email to the user to make sure it's the user email address
