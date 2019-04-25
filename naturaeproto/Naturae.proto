@@ -132,7 +132,8 @@ message ForgetPasswordReply{
 
 message ForgetPasswordAuthenRequest{
     string AppKey = 1;
-    int32 AuthenCode = 2;
+    string Email = 2;
+    string AuthenCode = 3;
 }
 
 message ForgetPasswordAuthenReply{
