@@ -18,6 +18,7 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
+	post.GetPost()
 }
 
 //Initialize all of the variable to be uses
@@ -26,7 +27,7 @@ func init() {
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
 	//Create listener for server
-	createServer()
+	//createServer()
 
 }
 
