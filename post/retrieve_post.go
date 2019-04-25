@@ -3,36 +3,37 @@ package post
 import (
 	"Naturae_Server/helpers"
 	"context"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"log"
 )
+
+type test struct {
+	Name string
+}
 
 func GetPost() {
 	connectedDB := helpers.ConnectToDB(helpers.GetPostDatabase())
 	postCollection := connectedDB.Collection(helpers.GetStorePostsCollection())
-	findOptions := options.Find()
 	var results []*ImageDescription
-	cur, err := postCollection.Find(context.TODO(), nil, findOptions)
+	filter := bson.D{{"latitude", bson.D{{"$gt", 0}}}}
+	cur, err := postCollection.Find(context.Background(), filter)
 	if err != nil {
-		log.Printf("Getting database result error %v: ", err)
+		log.Printf("Getting database result error: %v", err)
+		return
 	}
-	if cur != nil {
-		for cur.Next(context.TODO()) {
-			var elem ImageDescription
-			err := cur.Decode(&elem)
-			if err != nil {
-				log.Printf("Error while decoding get post result: %v", err)
-			}
-			results = append(results, &elem)
+	for cur.Next(context.TODO()) {
+		var elem ImageDescription
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Printf("Error while decoding get post result: %v", err)
+		}
+		results = append(results, &elem)
 
-		}
-		if err := cur.Err(); err != nil {
-			log.Println(err)
-		}
-		cur.Close(context.TODO())
-	} else {
-		log.Println("Collection is empty")
 	}
-
-	//fmt.Print(results)
+	if err := cur.Err(); err != nil {
+		log.Println(err)
+	}
+	cur.Close(context.TODO())
+	fmt.Print(results[0].OwnerEmail)
 }

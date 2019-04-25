@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log"
+	"math"
 	"net"
 )
 
@@ -18,7 +19,10 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	post.GetPost()
+	//post.GetPost()
+	Lat := 14.55
+	Lon := 25.00
+	fmt.Println(math.Acos(math.Sin(1.3963)*math.Sin(Lat)+math.Cos(1.3963)*math.Cos(Lat)*math.Cos(Lon-(-0.6981))) * 6371)
 }
 
 //Initialize all of the variable to be uses
