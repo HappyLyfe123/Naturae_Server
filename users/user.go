@@ -105,7 +105,7 @@ func saveRefreshToken(database *mongo.Database, token *helpers.RefreshToken) {
  */
 func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	var searchResult []string
-
+	log.Println("SEARCH USERS EXECUTED")
 	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	userEmail := request.GetUser()
 
@@ -114,7 +114,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		userAccount, err := getUserAccountInfo(dbConnection, userEmail)
 		searchResult = userAccount.Friends
 		if err != nil {
-			return &pb.UserListReply{User: nil,
+			return &pb.UserListReply{Users: nil,
 				Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Failed UserEmail Get"}}
 		}
 	} else {
@@ -123,7 +123,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		userAccount, err := getUserAccountInfo(dbConnection, queryEmail)
 		searchResult = userAccount.Friends
 		if err != nil {
-			return &pb.UserListReply{User: nil,
+			return &pb.UserListReply{Users: nil,
 				Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Failed QueryEmail Get"}}
 		}
 		/*Search via user query input instead, get all users with similar email(not working)
@@ -145,7 +145,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		*/
 	}
 
-	return &pb.UserListReply{User: searchResult,
+	return &pb.UserListReply{Users: searchResult,
 		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Okay"}}
 }
 

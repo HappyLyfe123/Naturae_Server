@@ -77,6 +77,7 @@ func (s *server) CreateAccount(ctx context.Context, request *pb.CreateAccountReq
 
 //Login user
 func (s *server) Login(ctx context.Context, request *pb.LoginRequest) (*pb.LoginReply, error) {
+	log.Println("Login Succeeded")
 	return users.Login(request), nil
 }
 
@@ -87,6 +88,7 @@ func (s *server) AccountAuthentication(ctx context.Context, request *pb.AccountA
 
 //User/Friend Search
 func (s *server) SearchUsers(ctx context.Context, request *pb.UserSearchRequest) (*pb.UserListReply, error) {
+	log.Println("SEARCH USERS MAIN REACHED")
 	return users.SearchUsers(request), nil
 }
 
