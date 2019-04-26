@@ -10,14 +10,14 @@ import (
 )
 
 //Current db account connected to
-var dbAccount *mongo.Client
+var dbClient *mongo.Client
 
 //ConnectToDBAccount : connect to the database client
 //Return : err if there an error
 func ConnectToDBAccount() {
 	var err error
 	//Connect to the mongo database server
-	dbAccount, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://%s:%s"+
+	dbClient, err = mongo.Connect(context.Background(), options.Client().ApplyURI(fmt.Sprintf("mongodb+srv://%s:%s"+
 		"@naturae-server-hxywc.gcp.mongodb.net/test", os.Getenv("DATABASE_USERNAME"), os.Getenv("DATABASE_PASSWORD"))))
 	if err != nil {
 		//Print out the error message
@@ -25,7 +25,7 @@ func ConnectToDBAccount() {
 		return
 	}
 	//Check if the database is connected
-	err = dbAccount.Ping(context.Background(), nil)
+	err = dbClient.Ping(context.Background(), nil)
 	if err != nil {
 		log.Fatalf("Conneting to Naturae database error: %v", err)
 	} else {
@@ -36,7 +36,7 @@ func ConnectToDBAccount() {
 
 //ConnectToDB : connect to a the specific database
 func ConnectToDB(databaseName string) *mongo.Database {
-	return dbAccount.Database(databaseName)
+	return dbClient.Database(databaseName)
 }
 
 //ConnectToCollection : connect to the collection in the database
@@ -55,7 +55,7 @@ func DropCollection(currCollection *mongo.Collection) {
 //CloseConnectionToDatabaseAccount : close the current collection to the database
 func CloseConnectionToDatabaseAccount() error {
 	//Disconnect from the database account
-	err := dbAccount.Disconnect(nil)
+	err := dbClient.Disconnect(nil)
 	if err != nil {
 		return err
 	}
