@@ -5,7 +5,7 @@ const (
 	invalidPassword        = 102
 	invalidLoginCredential = 103
 	invalidToken           = 104
-	invalidAuthenCode      = 105
+	invalidCode            = 105
 	accountNotVerify       = 106
 	invalidAppKey          = 107
 	emailExist             = 150
@@ -71,8 +71,8 @@ func GetInvalidTokenCode() int32 {
 }
 
 //GetInvalidAuthenCode : Return invalid authentication code
-func GetInvalidAuthenCode() int32 {
-	return invalidAuthenCode
+func GetInvalidCode() int32 {
+	return invalidCode
 }
 
 //GetInvalidAppKey : Return invalid app key work

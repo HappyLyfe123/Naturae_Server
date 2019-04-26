@@ -18,6 +18,10 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
+	//post.GetPost()
+	//Lat := 14.55
+	//Lon := 25.00
+	//fmt.Println(math.Acos(math.Sin(1.3963)*math.Sin(Lat)+math.Cos(1.3963)*math.Cos(Lat)*math.Cos(Lon-(-0.6981))) * 6371)
 }
 
 //Initialize all of the variable to be uses
@@ -155,25 +159,60 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 				fmt.Println("Post create by:", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
 			}
-
 		}
 	}
 
 	return result, nil
 }
 
-func (s *server) GetPosts(context.Context, *GetPostRequest) (*GetPostReply, error) {
+func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
+	if helpers.CheckAppKey(request.AppKey) {
+
+	}
 	panic("implement me")
 }
 
-func (s *server) ForgetPassword(context.Context, *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
-	panic("implement me")
+func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
+	var result *ForgetPasswordReply
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		result = users.ForgetPasswordCreateResetCode(request)
+	}
+	return result, nil
 }
 
-func (s *server) ForgetPasswordAuthenCode(context.Context, *ForgetPasswordAuthenRequest) (*ForgetPasswordAuthenReply, error) {
-	panic("implement me")
+func (s *server) ForgetPasswordVerifyCode(ctx context.Context, request *ForgetPasswordVerifyCodeRequest) (*ForgetPasswordVerifyCodeReply, error) {
+	var result *ForgetPasswordVerifyCodeReply
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		result = users.ForgetPasswordVerifyCode(request)
+	}
+	return result, nil
 }
 
-func (s *server) ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
-	panic("implement me")
+func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
+	var result *ForgetPasswordNewPasswordReply
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		result = users.ForgetPasswordNewPassword(request)
+	}
+	return result, nil
+}
+
+func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
+	var result *ChangePasswordReply
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		//Check if there an error then the access token provided is not in the database
+		if err != nil {
+			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
+		} else {
+			//Check if the access token is expired
+			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
+				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
+			} else {
+				result = users.ChangePassword(accessToken.Email, request.GetCurrentPassword(), request.GetNewPassword())
+			}
+		}
+	}
+
+	return result, nil
 }
