@@ -70,7 +70,6 @@ func ForgetPasswordNewPassword(request *pb.ForgetPasswordNewPasswordRequest) *pb
 		_, err := accountInfo.UpdateOne(context.Background(), filter, update)
 		if err != nil {
 			log.Printf("Error while saving user hash password and salt from forget password: %v", err)
-			sendResetPasswordSuccessMessage(request.Email)
 			return &pb.ForgetPasswordNewPasswordReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(),
 				Message: "server error"}}
 		}
