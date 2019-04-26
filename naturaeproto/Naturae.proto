@@ -16,8 +16,9 @@ service ServerRequests{
     rpc CreatePost (CreatePostRequest) returns (CreatePostReply){};
     rpc GetPosts (GetPostRequest) returns (GetPostReply){};
     rpc ForgetPassword (ForgetPasswordRequest) returns (ForgetPasswordReply){};
-    rpc ForgetPasswordAuthenCode (ForgetPasswordAuthenRequest) returns (ForgetPasswordAuthenReply){};
+    rpc ForgetPasswordVerifyCode (ForgetPasswordVerifyCodeRequest) returns (ForgetPasswordVerifyCodeReply){};
     rpc ForgetPasswordResetPassword (ForgetPasswordNewPasswordRequest) returns (ForgetPasswordNewPasswordReply){};
+    rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordReply){};
 }
 
 message HelloRequest{
@@ -130,13 +131,13 @@ message ForgetPasswordReply{
     Status status = 1;
 }
 
-message ForgetPasswordAuthenRequest{
+message ForgetPasswordVerifyCodeRequest{
     string AppKey = 1;
     string Email = 2;
-    string AuthenCode = 3;
+    string VerificationCode = 3;
 }
 
-message ForgetPasswordAuthenReply{
+message ForgetPasswordVerifyCodeReply{
     Status status = 1;
 }
 
@@ -147,6 +148,17 @@ message ForgetPasswordNewPasswordRequest{
 }
 
 message ForgetPasswordNewPasswordReply{
+    Status status = 1;
+}
+
+message ChangePasswordRequest{
+    string AppKey = 1;
+    string AccessToken = 2;
+    string CurrentPassword = 3;
+    string NewPassword = 4;
+}
+
+message ChangePasswordReply{
     Status status = 1;
 }
 

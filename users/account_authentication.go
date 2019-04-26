@@ -53,7 +53,7 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 
 		} else {
 			return &pb.AccountAuthenReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "",
-				Email: "", Status: &pb.Status{Code: helpers.GetInvalidAuthenCode(), Message: "Invalid authen code"}}
+				Email: "", Status: &pb.Status{Code: helpers.GetInvalidCode(), Message: "Invalid authen code"}}
 		}
 	} else {
 		//Create a new authen code for the user because the old one expired
