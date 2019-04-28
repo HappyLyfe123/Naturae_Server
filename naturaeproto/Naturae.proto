@@ -56,7 +56,10 @@ message LoginRequest {
 message LoginReply {
     string accessToken = 1;
     string refreshToken = 2;
-    Status status = 3;
+    string firstName = 3;
+    string lastName = 4;
+    string email = 5;
+    Status status = 6;
 }
 
 message AccountAuthenRequest {
@@ -148,4 +151,44 @@ message GetAccessTokenRequest{
 message GetAccessTokenReply{
     string accessToken = 1;
     Status status = 2;
+}
+
+message ForgetPasswordRequest{
+    string AppKey = 1;
+    string email = 2;
+}
+
+message ForgetPasswordReply{
+    Status status = 1;
+}
+
+message ForgetPasswordVerifyCodeRequest{
+    string AppKey = 1;
+    string Email = 2;
+    string VerificationCode = 3;
+}
+
+message ForgetPasswordVerifyCodeReply{
+    Status status = 1;
+}
+
+message ForgetPasswordNewPasswordRequest{
+    string AppKey = 1;
+    string Email = 2;
+    string Password = 3;
+}
+
+message ForgetPasswordNewPasswordReply{
+    Status status = 1;
+}
+
+message ChangePasswordRequest{
+    string AppKey = 1;
+    string AccessToken = 2;
+    string CurrentPassword = 3;
+    string NewPassword = 4;
+}
+
+message ChangePasswordReply{
+    Status status = 1;
 }

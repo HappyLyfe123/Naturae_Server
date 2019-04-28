@@ -192,3 +192,15 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 
 	return result, nil
 }
+
+func (s *server) SearchUsers(context.Context, *UserSearchRequest) (*UserListReply, error) {
+	panic("implement me")
+}
+
+func (s *server) AddFriend(context.Context, *FriendRequest) (*FriendReply, error) {
+	panic("implement me")
+}
+
+func (s *server) RemoveFriend(context.Context, *FriendRequest) (*FriendReply, error) {
+	panic("implement me")
+}
