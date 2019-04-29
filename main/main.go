@@ -18,6 +18,9 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
+	radLat := helpers.ConvertDegreeToRadian(33.78011703491211)
+	radLong := helpers.ConvertDegreeToRadian(-118.16455841064453)
+	post.RetrievePosts(helpers.ConvertMileToKM(50), radLat, radLong)
 
 }
 
@@ -27,7 +30,7 @@ func init() {
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
 	//Create listener for server
-	createServer()
+	//createServer()
 }
 
 //Close all of the connection to everything that the server is connected to
@@ -140,9 +143,8 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
 	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-		radLat := helpers.ConvertDegreeToRadian(float64(request.GetLat()))
-		radLong := helpers.ConvertDegreeToRadian(float64(request.GetLng()))
-		result = post.RetrievePosts(request.GetRadius(), radLat, radLong)
+		result = post.RetrievePosts(helpers.ConvertMileToKM(float64(request.GetRadius())), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
 			Reply: nil}
