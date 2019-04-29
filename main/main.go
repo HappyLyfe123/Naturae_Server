@@ -18,9 +18,6 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	radLat := helpers.ConvertDegreeToRadian(33.78011703491211)
-	radLong := helpers.ConvertDegreeToRadian(-118.16455841064453)
-	post.RetrievePosts(helpers.ConvertMileToKM(50), radLat, radLong)
 
 }
 
@@ -30,7 +27,7 @@ func init() {
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
 	//Create listener for server
-	//createServer()
+	createServer()
 }
 
 //Close all of the connection to everything that the server is connected to
