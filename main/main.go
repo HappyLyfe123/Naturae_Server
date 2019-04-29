@@ -18,10 +18,6 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	//post.GetPost()
-	//Lat := 14.55
-	//Lon := 25.00
-	//fmt.Println(math.Acos(math.Sin(1.3963)*math.Sin(Lat)+math.Cos(1.3963)*math.Cos(Lat)*math.Cos(Lon-(-0.6981))) * 6371)
 }
 
 //Initialize all of the variable to be uses
@@ -142,10 +138,16 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 }
 
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
+	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-
+		radLat := helpers.ConvertDegreeToRadian(float64(request.GetLat()))
+		radLong := helpers.ConvertDegreeToRadian(float64(request.GetLng()))
+		result = post.RetrievePosts(request.GetRadius(), radLat, radLong)
+	} else {
+		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
+			Reply: nil}
 	}
-	panic("implement me")
+	return result, nil
 }
 
 func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {

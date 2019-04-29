@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
+	"math"
 	"net/smtp"
 	"os"
 	"regexp"
@@ -174,4 +175,8 @@ func CreateUUID() string {
 		log.Printf("Creating UUID error: %v", err)
 	}
 	return newID.String()
+}
+
+func ConvertDegreeToRadian(numInDegree float64) float64 {
+	return numInDegree * (math.Pi / 180)
 }
