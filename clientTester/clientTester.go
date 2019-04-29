@@ -1,0 +1,88 @@
+package main
+
+import (
+	proto "Naturae_Server/naturaeproto"
+	"context"
+	"fmt"
+	"log"
+
+	"google.golang.org/grpc"
+)
+
+var client proto.ServerRequestsClient
+
+func main() {
+
+	//cred := credentials.NewTLS(&tls.Config{InsecureSkipVerify: true})
+	//conn, err := grpc.Dial("naturae.host:443", grpc.WithTransportCredentials(cred))
+	//conn, err := grpc.Dial("localhost:8080", grpc.WithTransportCredentials(cred))
+	conn, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
+	defer conn.Close()
+
+	if err != nil {
+		log.Fatalf("cannot dial server: %v", err)
+	}
+	client = proto.NewServerRequestsClient(conn)
+
+	/******** HELLO WORLD RPC TEST ********/
+	/*
+		client.SayHello(context.Background(), &proto.HelloRequest{
+			Name: "Sam",
+		})
+		fmt.Println("say hello sent")
+	*/
+	fmt.Println("")
+
+	/******** Search USERS RPC TEST ********/
+
+	replySearchUsers, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
+		User:  "limstevenlbw@gmail.com",
+		Query: "nothing",
+	})
+
+	if err != nil {
+		log.Fatalf("cannot call rpc SearchUsers: %v \n", err)
+	} else {
+		fmt.Println("say Search Users sent, with status")
+		fmt.Println(replySearchUsers.GetStatus())
+
+		fmt.Printf("%v\n", replySearchUsers.GetUsers())
+	}
+	fmt.Println("")
+
+	/******** Add USERS RPC TEST ********/
+	/*
+		replyAddFriend, err := client.AddFriend(context.Background(), &proto.FriendRequest{
+			Sender:   "limstevenlbw@gmail.com",
+			Receiver: "nanae@savage.com",
+		})
+		if err != nil {
+			log.Fatalf("cannot call rpc RemoveFriend: %v", err)
+		} else {
+			fmt.Println("say Add Friend sent, with status")
+			fmt.Println(replyAddFriend.GetStatus())
+		}
+	*/
+
+	/******** Remove USERS RPC TEST ********/
+	fmt.Println("")
+	replyRemoveFriend, err := client.RemoveFriend(context.Background(), &proto.FriendRequest{
+		Sender:   "limstevenlbw@gmail.com",
+		Receiver: "nanae@savage.com",
+	})
+	if err != nil {
+		log.Fatalf("cannot call rpc AddFriend: %v \n", err)
+	} else {
+		fmt.Println("say Remove Friend sent, with status")
+		fmt.Println(replyRemoveFriend.GetStatus())
+	}
+
+	/*
+		createAccount, _ := client.Login(context.Background(), &proto.LoginRequest{
+				AppKey: "fsdfdsfdsfsdfs",
+				Email:  "visalhok@yahoo.com",
+				Password : "ABCDabcd1!",
+		})
+		fmt.Println(createAccount.Status.GetMessage())
+	*/
+}

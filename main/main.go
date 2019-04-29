@@ -7,10 +7,11 @@ import (
 	"Naturae_Server/users"
 	"context"
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type server struct{}
@@ -56,6 +57,7 @@ func createServer() {
 }
 
 func (s *server) SayHello(ctx context.Context, in *HelloRequest) (*HelloReply, error) {
+	log.Println("Hello world")
 	return &HelloReply{
 		Message: "Hello " + in.Name,
 	}, nil
@@ -195,14 +197,17 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 	return result, nil
 }
 
-func (s *server) SearchUsers(context.Context, *UserSearchRequest) (*UserListReply, error) {
-	panic("implement me")
+//User/Friend Search
+func (s *server) SearchUsers(ctx context.Context, request *UserSearchRequest) (*UserListReply, error) {
+	return users.SearchUsers(request), nil
 }
 
-func (s *server) AddFriend(context.Context, *FriendRequest) (*FriendReply, error) {
-	panic("implement me")
+//Friend Adding
+func (s *server) AddFriend(ctx context.Context, request *FriendRequest) (*FriendReply, error) {
+	return users.AddFriend(request), nil
 }
 
-func (s *server) RemoveFriend(context.Context, *FriendRequest) (*FriendReply, error) {
-	panic("implement me")
+//Friend Removal
+func (s *server) RemoveFriend(ctx context.Context, request *FriendRequest) (*FriendReply, error) {
+	return users.RemoveFriend(request), nil
 }

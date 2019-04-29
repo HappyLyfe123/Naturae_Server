@@ -4,6 +4,7 @@ import (
 	"Naturae_Server/helpers"
 	pb "Naturae_Server/naturaeproto"
 	"bytes"
+	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
 )
@@ -14,6 +15,7 @@ type UserInfo struct {
 	LastName        string
 	Salt            string
 	Password        string
+	Friends         []string
 	IsAuthenticated bool
 }
 
