@@ -141,7 +141,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
 	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-		result = post.RetrievePosts(helpers.ConvertMileToKM(float64(request.GetRadius())), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+		result = post.RetrievePosts(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
 			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
