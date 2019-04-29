@@ -80,6 +80,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	var result *LoginReply
 	//Check if the app key is valid
 	if helpers.CheckAppKey(request.GetAppKey()) {
+		log.Printf("%s is trying to login", request.GetEmail())
 		result = users.Login(request)
 	} else {
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{

@@ -116,9 +116,9 @@ func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
 
 }
 
-func GetAccessToken(currDatabase *mongo.Database, ID string) (*AccessToken, error) {
+func GetAccessToken(currDatabase *mongo.Database, email string) (*AccessToken, error) {
 	var result AccessToken
-	filter := bson.D{{Key: "id", Value: ID}}
+	filter := bson.D{{Key: "email", Value: email}}
 	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
