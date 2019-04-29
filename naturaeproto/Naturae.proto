@@ -66,8 +66,9 @@ message LoginReply {
 
 message AccountAuthenRequest {
     string appKey = 1;
-    string email = 4;
-    string authenCode = 5;
+    string firstName = 2;
+    string email = 3;
+    string authenCode = 4;
 }
 
 message AccountAuthenReply {
@@ -98,26 +99,54 @@ message GetPostRequest {
     string appKey = 1;
     float lat = 2;
     float lng = 3;
-    int32 radius = 4;
+    int32 radius = 4; //in miles
 }
 
 message GetPostReply{
     Status status = 1;
-    repeated GetPostReplyStruct reply = 2;
+    repeated PostStruct reply = 2;
+
 }
 
-message GetPostReplyStruct{
+message PostStruct{
     string title = 3;
     string species = 4;
     string description = 5;
-    float lat = 6;
-    float lng = 7;
+    float latitude = 6;
+    float longitude = 7;
     string encodedImage = 8;
 }
 
 message Status {
     int32 Code = 1;
     string Message = 2;
+}
+
+/** MESSAGES FOR FRIEND'S LIST **/
+//Both values can be processed by the server to search for a list of users, their usage is mutually exclusive
+//If the identifier for the user is used, their friendslist is returned, if a query is sent, all matching registered users are returned
+message UserSearchRequest{
+    // string appKey = 1;
+    string user = 1;
+    string query = 2;
+}
+//A list of users that matched the parameters provided by the UserSearchRequest
+message UserListReply{
+    repeated string users = 1;
+    Status status = 2;
+}
+// The request message containing the users's to perform an action on
+message FriendRequest {
+    //string appKey = 1;
+    string sender = 1;
+    string receiver = 2;
+}
+
+//The reply message from the server
+message FriendReply{
+    Status status = 1;
+    // string accessToken = 1;
+    //string refreshToken = 2;
 }
 
 message GetAccessTokenRequest{
@@ -168,30 +197,4 @@ message ChangePasswordRequest{
 
 message ChangePasswordReply{
     Status status = 1;
-}
-
-/** MESSAGES FOR FRIEND'S LIST **/
-//Both values can be processed by the server to search for a list of users, their usage is mutually exclusive
-//If the identifier for the user is used, their friendslist is returned, if a query is sent, all matching registered users are returned
-message UserSearchRequest{
-   // string appKey = 1;
-    string user = 1;
-    string query = 2;
-}
-//A list of users that matched the parameters provided by the UserSearchRequest
-message UserListReply{
-    repeated string users = 1;
-    Status status = 2;
-}
-// The request message containing the users's to perform an action on
-message FriendRequest {
-    //string appKey = 1;
-    string sender = 1;
-    string receiver = 2; 
-}
-//The reply message from the server
-message FriendReply{
-    Status status = 1;
-   // string accessToken = 1;
-   //string refreshToken = 2;
 }
