@@ -20,15 +20,18 @@ type userAccount struct {
 	IsAuthenticated bool
 }
 
-func getLoginInfo(database *mongo.Database, email string) (*userInfo, error) {
-	var result userInfo
+func getLoginInfo(email string) (*UserInfo, error) {
+	var result UserInfo
+	userInfoDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	filter := bson.D{{Key: "email", Value: email}}
+	log.Println("Getting ", email, "account information")
 	//Connect to the collection database
-	userCollection := helpers.ConnectToCollection(database, helpers.GetAccountInfoCollection())
+	accountInfoCollection := userInfoDB.Collection(helpers.GetAccountInfoCollection())
 	//Make a request to the database
-	err := userCollection.FindOne(context.Background(), filter).Decode(&result)
+	err := accountInfoCollection.FindOne(context.Background(), filter).Decode(&result)
 	if err != nil {
-		return &userInfo{}, err
+		log.Printf("Getting user info error: %v", err)
+		return &UserInfo{}, err
 	}
 	return &result, nil
 

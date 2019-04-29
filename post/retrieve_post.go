@@ -9,7 +9,7 @@ import (
 	"math"
 )
 
-func RetrievePosts(radius int32, latitude, longitude float64) *pb.GetPostReply {
+func RetrievePosts(radius, latitude, longitude float64) *pb.GetPostReply {
 	connectedDB := helpers.ConnectToDB(helpers.GetPostDatabase())
 	postCollection := connectedDB.Collection(helpers.GetStorePostsCollection())
 	var results []*pb.PostStruct
@@ -27,15 +27,14 @@ func RetrievePosts(radius int32, latitude, longitude float64) *pb.GetPostReply {
 
 		}
 		//Convert the post latitude and longitude from degree to radian
-		postLatitude := helpers.ConvertDegreeToRadian(float64(elem.Lat))
-		postLongitude := helpers.ConvertDegreeToRadian(float64(elem.Lng))
+		postLatitude := helpers.ConvertDegreeToRadian(float64(elem.GetLatitude()))
+		postLongitude := helpers.ConvertDegreeToRadian(float64(elem.GetLongitude()))
 		//Check if the longitude and latitude of the post is within the radius
-		if math.Acos(math.Sin(latitude)*math.Sin(float64(postLatitude))+math.Cos(latitude)*math.Cos(float64(postLatitude))*
-			math.Cos(float64(postLongitude)-(longitude)))*6371 < float64(radius) {
+		if math.Acos(math.Sin(latitude)*math.Sin(postLatitude)+math.Cos(latitude)*math.Cos(postLatitude)*
+			math.Cos(longitude-postLongitude))*6371 < radius {
 			//If the longitude and latitude is within the radius then add the post to the result list
 			results = append(results, elem)
 		}
-
 	}
 	err = cur.Close(context.TODO())
 	if err != nil {

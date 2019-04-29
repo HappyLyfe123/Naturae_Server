@@ -180,3 +180,7 @@ func CreateUUID() string {
 func ConvertDegreeToRadian(numInDegree float64) float64 {
 	return numInDegree * (math.Pi / 180)
 }
+
+func ConvertMileToKM(numInMiles float64) float64 {
+	return numInMiles * 1.609344
+}

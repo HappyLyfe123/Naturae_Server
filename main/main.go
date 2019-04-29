@@ -80,6 +80,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	var result *LoginReply
 	//Check if the app key is valid
 	if helpers.CheckAppKey(request.GetAppKey()) {
+		log.Printf("%s is trying to login", request.GetEmail())
 		result = users.Login(request)
 	} else {
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
@@ -140,9 +141,8 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
 	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-		radLat := helpers.ConvertDegreeToRadian(float64(request.GetLat()))
-		radLong := helpers.ConvertDegreeToRadian(float64(request.GetLng()))
-		result = post.RetrievePosts(request.GetRadius(), radLat, radLong)
+		result = post.RetrievePosts(helpers.ConvertMileToKM(float64(request.GetRadius())), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
 			Reply: nil}

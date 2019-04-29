@@ -27,7 +27,7 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 	}
 
 	//Get the user information from the database
-	userInfoResult, _ := getLoginInfo(userInfoDB, request.GetEmail())
+	userInfoResult, _ := getLoginInfo(request.GetEmail())
 
 	//Check if the authentication code is still valid. If it's valid then the code will be check
 	if helpers.IsTimeValid(authenResult.ExpiredTime) {
