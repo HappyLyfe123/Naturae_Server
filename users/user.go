@@ -24,7 +24,6 @@ func getLoginInfo(email string) (*UserInfo, error) {
 	var result UserInfo
 	userInfoDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	filter := bson.D{{Key: "email", Value: email}}
-	log.Println("Getting ", email, "account information")
 	//Connect to the collection database
 	accountInfoCollection := userInfoDB.Collection(helpers.GetAccountInfoCollection())
 	//Make a request to the database
