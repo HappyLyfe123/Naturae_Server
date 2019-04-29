@@ -49,6 +49,10 @@ func ForgetPasswordVerifyCode(request *pb.ForgetPasswordVerifyCodeRequest) *pb.F
 	}
 	//Compare the verification code the user provided with the one that stored in the database
 	if strings.Compare(result.Code, request.GetVerificationCode()) == 0 {
+		_, err := forgetPasswordCollection.DeleteOne(context.Background(), bson.D{{"email", request.Email}})
+		if err != nil {
+			return &pb.ForgetPasswordVerifyCodeReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"}}
+		}
 		return &pb.ForgetPasswordVerifyCodeReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "code match"}}
 	}
 	return &pb.ForgetPasswordVerifyCodeReply{Status: &pb.Status{Code: helpers.GetInvalidCode(), Message: "code is invalid"}}
@@ -73,6 +77,8 @@ func ForgetPasswordNewPassword(request *pb.ForgetPasswordNewPasswordRequest) *pb
 			return &pb.ForgetPasswordNewPasswordReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(),
 				Message: "server error"}}
 		}
+		//Send the user an email that their account password had been reset
+		sendResetPasswordSuccessMessage(request.Email)
 		return &pb.ForgetPasswordNewPasswordReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(),
 			Message: "password is had been reset"}}
 	}

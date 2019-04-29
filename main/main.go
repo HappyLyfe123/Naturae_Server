@@ -19,10 +19,7 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-	//post.GetPost()
-	//Lat := 14.55
-	//Lon := 25.00
-	//fmt.Println(math.Acos(math.Sin(1.3963)*math.Sin(Lat)+math.Cos(1.3963)*math.Cos(Lat)*math.Cos(Lon-(-0.6981))) * 6371)
+
 }
 
 //Initialize all of the variable to be uses
@@ -32,7 +29,6 @@ func init() {
 	helpers.ConnectToDBAccount()
 	//Create listener for server
 	createServer()
-
 }
 
 //Close all of the connection to everything that the server is connected to
@@ -86,6 +82,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	var result *LoginReply
 	//Check if the app key is valid
 	if helpers.CheckAppKey(request.GetAppKey()) {
+		log.Printf("%s is trying to login", request.GetEmail())
 		result = users.Login(request)
 	} else {
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
@@ -121,35 +118,11 @@ func (s *server) GetNewAccessToken(ctx context.Context, request *GetAccessTokenR
 	return result, nil
 }
 
-//func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
-//	var result *ChangePasswordReply
-//
-//	if helpers.CheckAppKey(request.GetAppKey()) {
-//		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-//		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
-//		//Check if there an error then the access token provided is not in the database
-//		if err != nil {
-//			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
-//		} else {
-//			//Check if the access token is expired
-//			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
-//				result = &ChangePasswordReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token is " +
-//					"had expired"}}
-//			} else {
-//
-//			}
-//
-//		}
-//	}
-//
-//	return result, nil
-//}
-
 func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*CreatePostReply, error) {
 	var result *CreatePostReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &CreatePostReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
@@ -168,10 +141,15 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 }
 
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
+	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-
+		result = post.RetrievePosts(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
+	} else {
+		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
+			Reply: nil}
 	}
-	panic("implement me")
+	return result, nil
 }
 
 func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
@@ -202,7 +180,7 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 	var result *ChangePasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
