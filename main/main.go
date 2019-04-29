@@ -18,6 +18,7 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
+
 }
 
 //Initialize all of the variable to be uses
@@ -27,7 +28,6 @@ func init() {
 	helpers.ConnectToDBAccount()
 	//Create listener for server
 	createServer()
-
 }
 
 //Close all of the connection to everything that the server is connected to

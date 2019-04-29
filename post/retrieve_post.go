@@ -16,13 +16,15 @@ func RetrievePosts(radius int32, latitude, longitude float64) *pb.GetPostReply {
 	cur, err := postCollection.Find(context.Background(), bson.D{})
 	if err != nil {
 		log.Printf("Getting database result error: %v", err)
-		return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"}}
+		return internalServerError()
 	}
 	for cur.Next(context.TODO()) {
 		var elem *pb.PostStruct
 		err := cur.Decode(&elem)
 		if err != nil {
 			log.Printf("Error while decoding get post result: %v", err)
+			return internalServerError()
+
 		}
 		//Convert the post latitude and longitude from degree to radian
 		postLatitude := helpers.ConvertDegreeToRadian(float64(elem.Lat))
@@ -38,9 +40,13 @@ func RetrievePosts(radius int32, latitude, longitude float64) *pb.GetPostReply {
 	err = cur.Close(context.TODO())
 	if err != nil {
 		log.Println(err)
-		return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"},
-			Reply: nil}
+		return internalServerError()
 	}
 
 	return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "success"}, Reply: results}
+}
+
+func internalServerError() *pb.GetPostReply {
+	return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"},
+		Reply: nil}
 }
