@@ -57,7 +57,7 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 		//Generate a hash for the user password
 		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
 		//Create a new user
-		newUser := userAccount{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
+		newUser := UserInfo{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
 			Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), IsAuthenticated: false}
 		//Save the user to the database
 		saveNewUser(connectedDB, helpers.GetAccountInfoCollection(), &newUser)
@@ -83,7 +83,7 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 }
 
 //SaveNewUser : Save the user to database
-func saveNewUser(database *mongo.Database, collectionName string, user *userAccount) {
+func saveNewUser(database *mongo.Database, collectionName string, user *UserInfo) {
 	//Connect to the users collection in the database
 	accountInfoCollection := helpers.ConnectToCollection(database, collectionName)
 	//Save the user into the database

@@ -8,15 +8,6 @@ import (
 	"time"
 )
 
-type UserInfo struct {
-	Email           string
-	FirstName       string
-	LastName        string
-	Salt            string
-	Password        string
-	IsAuthenticated bool
-}
-
 //Login : Let the user login into their account
 func Login(request *pb.LoginRequest) *pb.LoginReply {
 	databaseResult, err := getLoginInfo(request.GetEmail())
@@ -61,7 +52,7 @@ func getUserToken(email string) (*helpers.AccessToken, *helpers.RefreshToken, *p
 	defer close(refreshTokenChan)
 	defer close(errorChan)
 	go func() {
-		accessToken, err := helpers.GetAccessTokenEmail(userDB, email)
+		accessToken, err := helpers.GetAccessToken(userDB, email)
 		if err != nil {
 			log.Printf("Login getting access token error: %v", err)
 			errorChan <- true

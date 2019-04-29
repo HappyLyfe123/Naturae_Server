@@ -11,7 +11,7 @@ import (
 )
 
 //create a struct for storing user info in database
-type userAccount struct {
+type UserInfo struct {
 	Email           string
 	FirstName       string
 	LastName        string

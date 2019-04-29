@@ -11,6 +11,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log"
 	"net"
+	"time"
 )
 
 type server struct{}
@@ -27,7 +28,7 @@ func init() {
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
 	//Create listener for server
-	createServer()
+	//createServer()
 }
 
 //Close all of the connection to everything that the server is connected to
@@ -80,12 +81,12 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	var result *LoginReply
 	//Check if the app key is valid
 	if helpers.CheckAppKey(request.GetAppKey()) {
-		log.Printf("%s is trying to login", request.GetEmail())
 		result = users.Login(request)
 	} else {
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
+	log.Printf("%s login at %v", request.GetEmail(), time.Now())
 	return result, nil
 }
 
@@ -120,7 +121,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	var result *CreatePostReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &CreatePostReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
@@ -138,13 +139,29 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	return result, nil
 }
 
+//GetPosts : get all of the post within the give location
 func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPostReply, error) {
 	var result *GetPostReply
 	if helpers.CheckAppKey(request.AppKey) {
-		result = post.RetrievePosts(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
-			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
+		result = post.GetPost(request.GetLat(), request.GetLng())
 	} else {
 		result = &GetPostReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
+			Reply: nil}
+	}
+	return result, nil
+}
+
+func (s *server) SearchPost(context.Context, *SearchPostRequest) (*SearchPostReply, error) {
+	panic("implement me")
+}
+
+func (s *server) GetPostPreview(ctx context.Context, request *GetPostPreviewRequest) (*GetPostPreviewReply, error) {
+	var result *GetPostPreviewReply
+	if helpers.CheckAppKey(request.AppKey) {
+		result = post.GetPostPreview(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
+	} else {
+		result = &GetPostPreviewReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
 			Reply: nil}
 	}
 	return result, nil
@@ -178,7 +195,7 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 	var result *ChangePasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}

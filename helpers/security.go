@@ -116,9 +116,10 @@ func GenerateRandomNumber(minNum, maxNum int64) *big.Int {
 
 }
 
-func GetAccessTokenEmail(currDatabase *mongo.Database, email string) (*AccessToken, error) {
+//GetAccessToken : get the user access token from the server using either email or id number
+func GetAccessToken(currDatabase *mongo.Database, param string) (*AccessToken, error) {
 	var result AccessToken
-	filter := bson.D{{Key: "email", Value: email}}
+	filter := bson.D{{"$or", bson.A{bson.D{{"email", param}}, bson.D{{"id", param}}}}}
 	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
@@ -129,22 +130,10 @@ func GetAccessTokenEmail(currDatabase *mongo.Database, email string) (*AccessTok
 	return &result, nil
 }
 
-func GetAccessTokenID(currDatabase *mongo.Database, id string) (*AccessToken, error) {
-	var result AccessToken
-	filter := bson.D{{Key: "id", Value: id}}
-	tokenCollection := ConnectToCollection(currDatabase, GetAccessTokenCollection())
-	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
-	//There no token id match token id
-	if err != nil {
-		return &result, err
-	}
-	//There already exist a token ID in the database
-	return &result, nil
-}
-
-func GetRefreshToken(currDatabase *mongo.Database, email string) (*RefreshToken, error) {
+//GetRefreshToken : get the user refresh token from the user using either
+func GetRefreshToken(currDatabase *mongo.Database, param string) (*RefreshToken, error) {
 	var result RefreshToken
-	filter := bson.D{{Key: "email", Value: email}}
+	filter := bson.D{{"$or", bson.A{bson.D{{"email", param}}, bson.D{{"id", param}}}}}
 	tokenCollection := ConnectToCollection(currDatabase, GetRefreshTokenCollection())
 	err := tokenCollection.FindOne(context.Background(), filter).Decode(&result)
 	//There no token id match token id
