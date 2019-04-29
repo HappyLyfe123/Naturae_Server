@@ -61,7 +61,7 @@ func getUserToken(email string) (*helpers.AccessToken, *helpers.RefreshToken, *p
 	defer close(refreshTokenChan)
 	defer close(errorChan)
 	go func() {
-		accessToken, err := helpers.GetAccessToken(userDB, email)
+		accessToken, err := helpers.GetAccessTokenEmail(userDB, email)
 		if err != nil {
 			log.Printf("Login getting access token error: %v", err)
 			errorChan <- true

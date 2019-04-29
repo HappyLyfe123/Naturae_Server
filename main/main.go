@@ -120,7 +120,7 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 	var result *CreatePostReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &CreatePostReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
@@ -178,7 +178,7 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 	var result *ChangePasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
-		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		accessToken, err := helpers.GetAccessTokenID(connectedDB, request.GetAccessToken())
 		//Check if there an error then the access token provided is not in the database
 		if err != nil {
 			result = &ChangePasswordReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
