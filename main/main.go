@@ -20,7 +20,6 @@ type server struct{}
 func main() {
 	//Close the connection to the database when the server is turn off
 	defer cleanUpServer()
-
 }
 
 //Initialize all of the variable to be uses

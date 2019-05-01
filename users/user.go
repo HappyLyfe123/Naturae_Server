@@ -19,6 +19,7 @@ type UserInfo struct {
 	Salt            string
 	Password        string
 	IsAuthenticated bool
+	Friends         []string
 }
 
 func getLoginInfo(email string) (*UserInfo, error) {
@@ -123,12 +124,11 @@ func RefreshAccessToken(request *pb.GetAccessTokenRequest) *pb.GetAccessTokenRep
  */
 func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	var searchResult []string
-	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	userEmail := request.GetUser()
 
 	//if userEmail is not nil, it means to retrieve the friendslist of the logged in user
 	if len(userEmail) > 0 {
-		userAccount, err := getLoginInfo(dbConnection, userEmail)
+		userAccount, err := getLoginInfo(userEmail)
 		searchResult = userAccount.Friends
 		if err != nil {
 			return &pb.UserListReply{Users: nil,
@@ -137,7 +137,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	} else {
 		//Search for exactly one user with an inputted email
 		queryEmail := request.GetQuery()
-		userAccount, err := getLoginInfo(dbConnection, queryEmail)
+		userAccount, err := getLoginInfo(queryEmail)
 		searchResult = userAccount.Friends
 		if err != nil {
 			return &pb.UserListReply{Users: nil,
