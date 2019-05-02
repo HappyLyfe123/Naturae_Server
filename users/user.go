@@ -157,13 +157,14 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
 	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	userCollection := helpers.ConnectToCollection(dbConnection, helpers.GetAccountInfoCollection())
+	convoCollection := helpers.ConnectToCollection(dbConnection, helpers.GetConversationsCollection())
 	//Set a filter for the database to search through, acquire the document where the email matches the param value
 	senderFilter := bson.D{{Key: "email", Value: request.GetSender()}}
 	receiverFilter := bson.D{{Key: "email", Value: request.GetReceiver()}}
-
 	cherr := make(chan error, 2)
 	//Update Interface, Push Friend Usernames to Friendslist of both users
 	go func() {
+		//Add the requested user to the client's friendslist
 		updateSender := bson.D{
 			{"$push", bson.D{
 				{"friends", request.GetReceiver()},
@@ -174,9 +175,16 @@ func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
 			senderFilter,
 			updateSender,
 		)
+
+		if err != nil {
+			//If previous operation successful, create a new conversation entry for the two users
+			createConversation(convoCollection, request.GetSender(), request.GetReceiver())
+		}
+
 		cherr <- err
 
 	}()
+	//Update the document of the other user
 	go func() {
 		updateReceiver := bson.D{
 			{"$push", bson.D{

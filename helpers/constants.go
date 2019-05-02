@@ -44,6 +44,7 @@ const (
 	postDatabase                    = "posts"
 	accountInfoCollection           = "Account_Information"
 	accessTokenCollection           = "Access_Token"
+	conversationsCollection         = "Conversations"
 	storePosts                      = "Posts"
 	refreshTokenCollection          = "Refresh_Token"
 	accountAuthenticationCollection = "Account_Authentication"
@@ -243,6 +244,11 @@ func GetAccessTokenCollection() string {
 //GetRefreshTokenCollection : Return get the name for refresh token collection
 func GetRefreshTokenCollection() string {
 	return refreshTokenCollection
+}
+
+//GetConversationsCollection : Get the name as a string for the conversations collection
+func GetConversationsCollection() string {
+	return conversationsCollection
 }
 
 //GetPostDescriptionCollection : Return the name of post description collection
