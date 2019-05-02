@@ -9,21 +9,24 @@ import (
 	"math"
 )
 
-func RetrievePosts(radius, latitude, longitude float64) *pb.GetPostReply {
-	connectedDB := helpers.ConnectToDB(helpers.GetPostDatabase())
-	postCollection := connectedDB.Collection(helpers.GetStorePostsCollection())
+//RetrievePosts : get all of the posts within the radius from the center of the user's map
+func GetPostPreview(radius, latitude, longitude float64) *pb.GetPostPreviewReply {
+	//Connect to post database
+	postDB := helpers.ConnectToDB(helpers.GetPostDatabase())
+	//Connect post location
+	postCollection := postDB.Collection(helpers.GetStorePostsCollection())
 	var results []*pb.PostStruct
 	cur, err := postCollection.Find(context.Background(), bson.D{})
 	if err != nil {
 		log.Printf("Getting database result error: %v", err)
-		return internalServerError()
+		return &pb.GetPostPreviewReply{Status: internalServerError(), Reply: nil}
 	}
 	for cur.Next(context.TODO()) {
 		var elem *pb.PostStruct
 		err := cur.Decode(&elem)
 		if err != nil {
 			log.Printf("Error while decoding get post result: %v", err)
-			return internalServerError()
+			return &pb.GetPostPreviewReply{Status: internalServerError(), Reply: nil}
 
 		}
 		//Convert the post latitude and longitude from degree to radian
@@ -39,13 +42,40 @@ func RetrievePosts(radius, latitude, longitude float64) *pb.GetPostReply {
 	err = cur.Close(context.TODO())
 	if err != nil {
 		log.Println(err)
-		return internalServerError()
+		return &pb.GetPostPreviewReply{Status: internalServerError(), Reply: nil}
 	}
 
+	return &pb.GetPostPreviewReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "success"}, Reply: results}
+}
+
+func GetPost(latitude, longitude float32) *pb.GetPostReply {
+	//Connect to post database
+	postDB := helpers.ConnectToDB(helpers.GetPostDatabase())
+	//Connect post location
+	postCollection := postDB.Collection(helpers.GetStorePostsCollection())
+	var results []*pb.PostStruct
+	cur, err := postCollection.Find(context.Background(), bson.D{{"latitude", latitude}, {"longitude", longitude}})
+	if err != nil {
+		log.Printf("Getting database result error: %v", err)
+		return &pb.GetPostReply{Status: internalServerError(), Reply: nil}
+	}
+	for cur.Next(context.TODO()) {
+		var elem *pb.PostStruct
+		err := cur.Decode(&elem)
+		if err != nil {
+			log.Printf("Error while decoding get post result: %v", err)
+			return &pb.GetPostReply{Status: internalServerError(), Reply: nil}
+		}
+		log.Println(elem.GetPostID())
+	}
+	err = cur.Close(context.TODO())
+	if err != nil {
+		log.Println(err)
+		return &pb.GetPostReply{Status: internalServerError(), Reply: nil}
+	}
 	return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "success"}, Reply: results}
 }
 
-func internalServerError() *pb.GetPostReply {
-	return &pb.GetPostReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"},
-		Reply: nil}
+func internalServerError() *pb.Status {
+	return &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"}
 }
