@@ -26,75 +26,75 @@ func main() {
 
 	/******** HELLO WORLD RPC TEST ********/
 	/*
-		client.SayHello(context.Background(), &proto.HelloRequest{
-			Name: "Sam",
-		})
-		fmt.Println("say hello sent")
+			client.SayHello(context.Background(), &proto.HelloRequest{
+				Name: "Sam",
+			})
+			fmt.Println("say hello sent")
+
+		fmt.Println("")
 	*/
-	fmt.Println("")
-
 	/******** Search Friends RPC TEST ********/
+	/*
+		replySearchFriends, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
+			User:  "limstevenlbw@gmail.com",
+			Query: "nothing",
+		})
 
-	replySearchFriends, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
-		User:  "limstevenlbw@gmail.com",
-		Query: "nothing",
-	})
+		if err != nil {
+			log.Fatalf("cannot call rpc SearchFriends: %v \n", err)
+		} else {
+			fmt.Println("say Search Friends sent, with status")
+			fmt.Println(replySearchFriends.GetStatus())
 
-	if err != nil {
-		log.Fatalf("cannot call rpc SearchFriends: %v \n", err)
-	} else {
-		fmt.Println("say Search Friends sent, with status")
-		fmt.Println(replySearchFriends.GetStatus())
-
-		fmt.Printf("%v\n", replySearchFriends.GetUsers())
-	}
-	fmt.Println("")
+			fmt.Printf("%v\n", replySearchFriends.GetUsers())
+		}
+	*/
+	//fmt.Println("")
 
 	/******** Search USERS RPC TEST ********/
+	/*
+		replySearchUsers, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
+			User:  "",
+			Query: "limstevenlbw@gmail.com",
+		})
 
-	replySearchUsers, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
-		User:  "",
-		Query: "limstevenlbw@gmail.com",
-	})
+		if err != nil {
+			log.Fatalf("cannot call rpc SearchUsers: %v \n", err)
+		} else {
+			fmt.Println("say Search Users sent, with status")
+			fmt.Println(replySearchUsers.GetStatus())
 
-	if err != nil {
-		log.Fatalf("cannot call rpc SearchUsers: %v \n", err)
-	} else {
-		fmt.Println("say Search Users sent, with status")
-		fmt.Println(replySearchUsers.GetStatus())
-
-		fmt.Printf("%v\n", replySearchUsers.GetUsers())
-	}
+			fmt.Printf("%v\n", replySearchUsers.GetUsers())
+		}
+	*/
 	fmt.Println("")
 
 	/******** Add USERS RPC TEST ********/
-	/*
-		replyAddFriend, err := client.AddFriend(context.Background(), &proto.FriendRequest{
-			Sender:   "limstevenlbw@gmail.com",
-			Receiver: "nanae@savage.com",
-		})
-		if err != nil {
-			log.Fatalf("cannot call rpc RemoveFriend: %v", err)
-		} else {
-			fmt.Println("say Add Friend sent, with status")
-			fmt.Println(replyAddFriend.GetStatus())
-		}
-	*/
+
+	replyAddFriend, err := client.AddFriend(context.Background(), &proto.FriendRequest{
+		Sender:   "limstevenlbw@gmail.com",
+		Receiver: "nanae@savage.com",
+	})
+	if err != nil {
+		log.Fatalf("cannot call rpc RemoveFriend: %v", err)
+	} else {
+		fmt.Println("say Add Friend sent, with status")
+		fmt.Println(replyAddFriend.GetStatus())
+	}
 
 	/******** Remove USERS RPC TEST ********/
-	/*
-		fmt.Println("")
-		replyRemoveFriend, err := client.RemoveFriend(context.Background(), &proto.FriendRequest{
-			Sender:   "limstevenlbw@gmail.com",
-			Receiver: "nanae@savage.com",
-		})
-		if err != nil {
-			log.Fatalf("cannot call rpc AddFriend: %v \n", err)
-		} else {
-			fmt.Println("say Remove Friend sent, with status")
-			fmt.Println(replyRemoveFriend.GetStatus())
-		}
-	*/
+
+	fmt.Println("")
+	replyRemoveFriend, err := client.RemoveFriend(context.Background(), &proto.FriendRequest{
+		Sender:   "limstevenlbw@gmail.com",
+		Receiver: "nanae@savage.com",
+	})
+	if err != nil {
+		log.Fatalf("cannot call rpc AddFriend: %v \n", err)
+	} else {
+		fmt.Println("say Remove Friend sent, with status")
+		fmt.Println(replyRemoveFriend.GetStatus())
+	}
 
 	/*
 		createAccount, _ := client.Login(context.Background(), &proto.LoginRequest{
