@@ -138,27 +138,14 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		//Search for exactly one user with an inputted email
 		queryEmail := request.GetQuery()
 		userAccount, err := getLoginInfo(queryEmail)
-		searchResult = userAccount.Friends
+		searchResult = append(searchResult, userAccount.Email)
 		if err != nil {
 			return &pb.UserListReply{Users: nil,
 				Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Failed Query Get: " + err.Error()}}
 		}
-		/*Search via user query input instead, get all users with similar email(not working)
-		queryString := strings.Split(queryEmail, " ")
-		querySplice := make([]bson.M, len(queryString))
-		for i, queryEmail := range queryString {
-			querySplice[i] = bson.M{"email": bson.M{
-				"$regex": bson.Regex{Pattern: ".*" + queryEmail + ".*", Options: "i"},
-			}}
-		}
 
-		}
-			//Connect to Account_Information collections
-			userCollection := helpers.ConnectToCollection(dbConnection, helpers.GetAccountInfoCollection())
-			//Make the search request
-			filter := bson.M{"$querySplice": querySplice}
-			//&filter?
-			err := userCollection.Find(nil, &filter).Limit(10).All(&searchResult)
+		/*Search via user query input instead, get all users with similar email(not working)
+		todo: implement Text-Searching
 		*/
 	}
 
