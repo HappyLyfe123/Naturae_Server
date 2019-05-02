@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-//create a struct for storing user info in database
+//UserInfo create a struct for storing user info in database
 type UserInfo struct {
 	Email           string
 	FirstName       string
@@ -117,11 +117,9 @@ func RefreshAccessToken(request *pb.GetAccessTokenRequest) *pb.GetAccessTokenRep
 	return &pb.GetAccessTokenReply{AccessToken: newAccessTokenID, Status: status}
 }
 
-/*
-*	Searches the database for matching users and returns the list
-* 	@UserSearchRequest - string user, string query
-* 	@UserListReply - repeated string users, Status status
- */
+//SearchUsers searches the database for matching users and returns the list
+//@UserSearchRequest - string user, string query
+//@UserListReply - repeated string users, Status status
 func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	var searchResult []string
 	userEmail := request.GetUser()
@@ -153,11 +151,10 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Okay"}}
 }
 
-//Adds a friend to a user's list of contacts
+//AddFriend adds a friend to a user's list of contacts
 func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
 	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	userCollection := helpers.ConnectToCollection(dbConnection, helpers.GetAccountInfoCollection())
-	convoCollection := helpers.ConnectToCollection(dbConnection, helpers.GetConversationsCollection())
 	//Set a filter for the database to search through, acquire the document where the email matches the param value
 	senderFilter := bson.D{{Key: "email", Value: request.GetSender()}}
 	receiverFilter := bson.D{{Key: "email", Value: request.GetReceiver()}}
@@ -176,11 +173,10 @@ func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
 			updateSender,
 		)
 
-		if err != nil {
-			//If previous operation successful, create a new conversation entry for the two users
-			createConversation(convoCollection, request.GetSender(), request.GetReceiver())
+		//If add friends was successful, execute this block
+		if err == nil {
+			err = CreateConversation(dbConnection, request.GetSender(), request.GetReceiver())
 		}
-
 		cherr <- err
 
 	}()
@@ -203,14 +199,13 @@ func AddFriend(request *pb.FriendRequest) *pb.FriendReply {
 	if <-cherr != nil || <-cherr != nil {
 		return &pb.FriendReply{
 			Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Error Adding Friends"}}
-	} else {
-		return &pb.FriendReply{
-			Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 	}
+	return &pb.FriendReply{
+		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 
 }
 
-//Removes a friend from a user's list of contacts
+//RemoveFriend removes a friend from a user's list of contacts
 func RemoveFriend(request *pb.FriendRequest) *pb.FriendReply {
 	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	userCollection := helpers.ConnectToCollection(dbConnection, helpers.GetAccountInfoCollection())
@@ -232,6 +227,12 @@ func RemoveFriend(request *pb.FriendRequest) *pb.FriendReply {
 			senderFilter,
 			updateSender,
 		)
+
+		//If remove friend was successful, execute this block
+		if err == nil {
+			err = RemoveConversation(dbConnection, request.GetSender(), request.GetReceiver())
+		}
+
 		cherr <- err
 	}()
 	go func() {
@@ -252,9 +253,8 @@ func RemoveFriend(request *pb.FriendRequest) *pb.FriendReply {
 	if <-cherr != nil || <-cherr != nil {
 		return &pb.FriendReply{
 			Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Error Removing Friends"}}
-	} else {
-		return &pb.FriendReply{
-			Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 	}
+	return &pb.FriendReply{
+		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 
 }
