@@ -56,6 +56,7 @@ func RemoveConversation(dbConnection *mongo.Database, user1 string, user2 string
 
 //GetRoomName retrieves a room name and returns it to the client by checking the two users that own it
 func GetRoomName(request *pb.RoomRequest) *pb.RoomReply {
+	var result Conversation
 	dbConnection := helpers.ConnectToDB(helpers.GetUserDatabase())
 	convoCollection := helpers.ConnectToCollection(dbConnection, helpers.GetConversationsCollection())
 	//Acquire the document that contains the array with specified users
@@ -63,6 +64,17 @@ func GetRoomName(request *pb.RoomRequest) *pb.RoomReply {
 		{"users", bson.D{{"$all", bson.A{request.GetUserOwner1(), request.GetUserOwner2()}}}},
 	}
 
-	conversation := convoCollection.FindOne(context.Background(), roomFilter)
+	//Acquire single mongo result and decode into struct
+	err := convoCollection.FindOne(context.Background(), roomFilter).Decode(&result)
+
+	if err != nil {
+		return &pb.RoomReply{RoomName: " ",
+			Status: &pb.Status{Code: helpers.GetNotFoundStatusCode(), Message: "Failure"}}
+	}
+
+	room := (&result).RoomName
+
+	return &pb.RoomReply{RoomName: room,
+		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 
 }
