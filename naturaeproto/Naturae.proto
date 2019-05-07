@@ -32,8 +32,11 @@ service ServerRequests{
 
     /**** Chat gRPC Functions ****/
     //Ensures that the local and remote logs are up to date
-    rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
-
+    //rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
+    //Sends a single message to update
+    //rpc SendMessage(ChatMessageRequest) returns (ChatMessageReply){}
+    //Retrieve the room name belonging to two users from the database
+    rpc GetRoomName(RoomRequest) returns (RoomReply){}
     
 }
 
@@ -179,8 +182,8 @@ message FriendReply{
     //string refreshToken = 2;
 }
 
- //Ensures that the local and remote logs are up to date
- //rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
+ //The local version of the chatlog
+ /*
 message ChatlogRequest{
     repeated ChatMessage = 1;
 }
@@ -189,9 +192,20 @@ message ChatMessage{
     string messageBody = 2;
     long timestampSent = 3;
 }
-
+//The updated remote version of the chatlog
 message ChatlogReply{
     repeated ChatMessage = 1;
+}
+*/
+
+message RoomRequest{
+    string userOwner1 = 1;
+    string userOwner2 = 2;
+}
+
+message RoomReply{
+    string roomName = 1;
+    Status status = 2;
 }
 
 message GetAccessTokenRequest{

@@ -227,3 +227,8 @@ func (s *server) AddFriend(ctx context.Context, request *FriendRequest) (*Friend
 func (s *server) RemoveFriend(ctx context.Context, request *FriendRequest) (*FriendReply, error) {
 	return users.RemoveFriend(request), nil
 }
+
+//Room Retrieval
+func (s *server) GetRoomName(ctx context.Context, request *RoomRequest) (*RoomReply, error){
+	return chat.GetRoomName(request), nil
+}
