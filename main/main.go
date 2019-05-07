@@ -10,9 +10,10 @@ import (
 	"log"
 	"net"
 
+	"time"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"time"
 )
 
 type server struct{}
@@ -226,4 +227,9 @@ func (s *server) AddFriend(ctx context.Context, request *FriendRequest) (*Friend
 //Friend Removal
 func (s *server) RemoveFriend(ctx context.Context, request *FriendRequest) (*FriendReply, error) {
 	return users.RemoveFriend(request), nil
+}
+
+//Room Retrieval
+func (s *server) GetRoomName(ctx context.Context, request *RoomRequest) (*RoomReply, error) {
+	return users.GetRoomName(request), nil
 }
