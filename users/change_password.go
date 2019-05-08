@@ -12,7 +12,7 @@ import (
 func ChangePassword(userEmail, currPassword, newPassword string) *pb.ChangePasswordReply {
 	userInfoDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	accountInfoCollection := userInfoDB.Collection(helpers.GetAccountInfoCollection())
-	accountInfo, err := getLoginInfo(userEmail)
+	accountInfo, err := getUserInfo(userEmail)
 	//Database communication error
 	if err != nil {
 		return &pb.ChangePasswordReply{Status: &pb.Status{Code: helpers.GetNotFoundStatusCode(), Message: "No account has been found"}}
