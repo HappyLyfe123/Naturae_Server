@@ -5,6 +5,7 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"math"
 )
@@ -16,12 +17,14 @@ func GetPostPreview(radius, latitude, longitude float64) *pb.GetPostPreviewReply
 	//Connect post location
 	postCollection := postDB.Collection(helpers.GetStorePostsCollection())
 	var results []*pb.PostStruct
-	cur, err := postCollection.Find(context.Background(), bson.D{})
+	findOptions := options.Find()
+	findOptions.SetLimit(1)
+	cur, err := postCollection.Find(context.Background(), bson.D{}, findOptions)
 	if err != nil {
 		log.Printf("Getting database result error: %v", err)
 		return &pb.GetPostPreviewReply{Status: internalServerError(), Reply: nil}
 	}
-	for cur.Next(context.TODO()) {
+	for cur.Next(context.Background()) {
 		var elem *pb.PostStruct
 		err := cur.Decode(&elem)
 		if err != nil {
@@ -34,10 +37,12 @@ func GetPostPreview(radius, latitude, longitude float64) *pb.GetPostPreviewReply
 		postLongitude := helpers.ConvertDegreeToRadian(float64(elem.GetLongitude()))
 		//Check if the longitude and latitude of the post is within the radius
 		if math.Acos(math.Sin(latitude)*math.Sin(postLatitude)+math.Cos(latitude)*math.Cos(postLatitude)*
-			math.Cos(longitude-postLongitude))*6371 < radius {
+			math.Cos(longitude-postLongitude))*6371 <= radius {
 			//If the longitude and latitude is within the radius then add the post to the result list
+			log.Println(elem.PostID)
 			results = append(results, elem)
 		}
+
 	}
 	err = cur.Close(context.TODO())
 	if err != nil {

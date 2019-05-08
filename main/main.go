@@ -7,13 +7,10 @@ import (
 	"Naturae_Server/users"
 	"context"
 	"fmt"
-	"log"
-	"net"
-
-	"time"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"log"
+	"net"
 )
 
 type server struct{}
@@ -28,6 +25,7 @@ func init() {
 	//Initialize global variable in the helper package
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
+	helpers.ConnectToS3()
 	//Create listener for server
 	createServer()
 }
@@ -88,7 +86,7 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
-	log.Printf("%s login at %v", request.GetEmail(), time.Now())
+	log.Printf("%s login", request.GetEmail())
 	return result, nil
 }
 
@@ -132,8 +130,8 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
 			} else {
-				fmt.Println("Post create by:", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
+				fmt.Println("Post create by:", accessToken.Email)
 			}
 		}
 	}
@@ -153,22 +151,28 @@ func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPos
 	return result, nil
 }
 
+//SearchPost : Search for a specific post
 func (s *server) SearchPost(context.Context, *SearchPostRequest) (*SearchPostReply, error) {
 	panic("implement me")
 }
 
+//GetPostPreview : get all of the post that is within the radius
 func (s *server) GetPostPreview(ctx context.Context, request *GetPostPreviewRequest) (*GetPostPreviewReply, error) {
 	var result *GetPostPreviewReply
 	if helpers.CheckAppKey(request.AppKey) {
-		result = post.GetPostPreview(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+		log.Println("Getting post preview")
+		result = post.GetPostPreview(float64(request.GetRadius()), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
 			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostPreviewReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
 			Reply: nil}
 	}
+
 	return result, nil
 }
 
+//ForgetPassword : Start the process of resetting user password by checking if the user email valid
+// then it will send an email with a verification code to the user
 func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
 	var result *ForgetPasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -177,6 +181,7 @@ func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequ
 	return result, nil
 }
 
+//ForgetPasswordVerifyCode : User to verifying forget password verification code
 func (s *server) ForgetPasswordVerifyCode(ctx context.Context, request *ForgetPasswordVerifyCodeRequest) (*ForgetPasswordVerifyCodeReply, error) {
 	var result *ForgetPasswordVerifyCodeReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -185,6 +190,7 @@ func (s *server) ForgetPasswordVerifyCode(ctx context.Context, request *ForgetPa
 	return result, nil
 }
 
+//ForgetPasswordResetPassword : reset the password for the user
 func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
 	var result *ForgetPasswordNewPasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -193,6 +199,7 @@ func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *Forge
 	return result, nil
 }
 
+//ChangePassword : change the user password
 func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
 	var result *ChangePasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -212,6 +219,10 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 	}
 
 	return result, nil
+}
+
+func (s *server) GetProfileImage(context.Context, *ProfileImageRequest) (*ProfileImageReply, error) {
+	panic("implement me")
 }
 
 //User/Friend Search

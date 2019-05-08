@@ -34,7 +34,6 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 		//Check if the user provided authentication code match. If it match then update the user's profile in the database
 		//that the user's had authenticated their account
 		if strings.Compare(authenResult.Code, request.GetAuthenCode()) == 0 {
-
 			//Set authenticated in user database from false to true
 			updateUserAuthenStatus(userInfoDB, request.GetEmail())
 			//Remove the user authentication code from the database
