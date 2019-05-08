@@ -5,7 +5,6 @@ import (
 	pb "Naturae_Server/naturaeproto"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"math"
 )
@@ -17,9 +16,7 @@ func GetPostPreview(radius, latitude, longitude float64) *pb.GetPostPreviewReply
 	//Connect post location
 	postCollection := postDB.Collection(helpers.GetStorePostsCollection())
 	var results []*pb.PostStruct
-	findOptions := options.Find()
-	findOptions.SetLimit(1)
-	cur, err := postCollection.Find(context.Background(), bson.D{}, findOptions)
+	cur, err := postCollection.Find(context.Background(), bson.D{})
 	if err != nil {
 		log.Printf("Getting database result error: %v", err)
 		return &pb.GetPostPreviewReply{Status: internalServerError(), Reply: nil}
