@@ -13,15 +13,15 @@ import (
 )
 
 type ImageDescription struct {
-	PostID      string
-	OwnerEmail  string
-	Title       string
-	Species     string
-	Description string
-	Latitude    float32
-	Longitude   float32
-	ImageURL    string
-	Date        time.Time
+	PostID       string
+	OwnerEmail   string
+	Title        string
+	Species      string
+	Description  string
+	Latitude     float32
+	Longitude    float32
+	EncodedImage string
+	Date         time.Time
 }
 
 //SavePost : save the user post to the database
@@ -32,10 +32,10 @@ func SavePost(request *pb.CreatePostRequest, ownerEmail string) *pb.CreatePostRe
 	//Save the image
 	if savePostToS3(postID, &request.EncodedImage) {
 		//Create an image url to be stored
-		imageURL := "https://s3-us-west-2.amazonaws.com/naturae-post-photos/" + postID
+		imageURL := "https://s3-us-west-2.amazonaws.com/naturae-post-photos/public-posts/" + postID
 		//Crate a structure to store the post
 		newPost := ImageDescription{PostID: postID, OwnerEmail: ownerEmail, Title: request.Title, Species: request.Species, Description: request.Description,
-			Latitude: request.GetLat(), Longitude: request.GetLng(), ImageURL: imageURL, Date: time.Now()}
+			Latitude: request.GetLat(), Longitude: request.GetLng(), EncodedImage: imageURL, Date: time.Now()}
 		postCollection := connectedDB.Collection(helpers.GetStorePostsCollection())
 		_, err := postCollection.InsertOne(context.Background(), newPost)
 		//Check if the post was able to save
@@ -53,16 +53,16 @@ func savePostToS3(postID string, image *string) bool {
 	saveImage, _ := base64.StdEncoding.DecodeString(*image)
 	params := &s3.PutObjectInput{
 		Bucket:        aws.String("naturae-post-photos"),
-		Key:           aws.String(postID),
+		Key:           aws.String("public-posts/" + postID),
 		Body:          bytes.NewReader(saveImage),
 		ContentLength: aws.Int64(int64(len(saveImage))),
 		ContentType:   aws.String("image/jpeg"),
 	}
-	resp, err := helpers.GetS3Session().PutObject(params)
+	_, err := helpers.GetS3Session().PutObject(params)
 	if err != nil {
 		log.Printf("Saving image to S3 bucket error: %v", err)
 		return false
 	}
-	log.Printf("Saving %s to S3 successfully with tag : %s", postID, resp.GoString())
+	log.Printf("Saving %s to S3 successfully to public post", postID)
 	return true
 }
