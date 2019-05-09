@@ -309,5 +309,5 @@ func GetProfileImage(email string) *pb.GetProfileImageReply {
 		log.Printf("Getting user info error in GetProfileImage : %v", err)
 		return &pb.GetProfileImageReply{EncodedImage: "", Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"}}
 	}
-	return &pb.GetProfileImageReply{EncodedImage: userInfo.ProfileImage, Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "successful"}}
+	return &pb.GetProfileImageReply{EncodedImage: userInfo.ProfileImage, Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "success"}}
 }
