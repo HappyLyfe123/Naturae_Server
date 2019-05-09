@@ -25,7 +25,6 @@ type UserInfo struct {
 	IsAuthenticated bool
 	ProfileImage    string
 	Friends         []string
-	ProfileImage    string
 }
 
 func getUserInfo(email string) (*UserInfo, error) {
@@ -137,7 +136,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		searchResult = userAccount.Friends
 		//For each friend found, retrieve profile image and store
 		for i := 0; i < len(searchResult); i++ {
-			friendAccount, _ := getLoginInfo(searchResult[i])
+			friendAccount, _ := getUserInfo(searchResult[i])
 			friendAvatarList = append(friendAvatarList, friendAccount.ProfileImage)
 		}
 		if err != nil {

@@ -56,7 +56,7 @@ func CreateAccount(request *pb.CreateAccountRequest) *pb.CreateAccountReply {
 		salt := helpers.GenerateRandomBytes(helpers.GetSaltLength())
 		//Generate a hash for the user password
 		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
-		var friendList []string
+		friendList := []string{""}
 		//Create a new user
 		newUser := UserInfo{Email: request.GetEmail(), FirstName: request.GetFirstName(), LastName: request.GetLastName(),
 			Salt: helpers.ConvertByteToStringBase64(salt), Password: helpers.ConvertByteToStringBase64(hashPassword), Friends: friendList, IsAuthenticated: false}

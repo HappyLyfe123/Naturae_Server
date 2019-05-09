@@ -25,20 +25,21 @@ func main() {
 	client = proto.NewServerRequestsClient(conn)
 
 	/******** GET ROOM NAME RPC TEST ******/
-	replyRoomName, err := client.GetRoomName(context.Background(), &proto.RoomRequest{
-		UserOwner1: "buffalo@jam.com",
-		UserOwner2: "nanaeaubry@gmail.com",
-	})
+	/*
+		replyRoomName, err := client.GetRoomName(context.Background(), &proto.RoomRequest{
+			UserOwner1: "buffalo@jam.com",
+			UserOwner2: "nanaeaubry@gmail.com",
+		})
 
-	if err != nil {
-		log.Fatalf("cannot call rpc replyRoomName: %v \n", err)
-	} else {
-		fmt.Println("say getRoom sent, with status")
-		fmt.Println(replyRoomName.GetStatus())
+		if err != nil {
+			log.Fatalf("cannot call rpc replyRoomName: %v \n", err)
+		} else {
+			fmt.Println("say getRoom sent, with status")
+			fmt.Println(replyRoomName.GetStatus())
 
-		fmt.Printf("%v\n", replyRoomName.GetRoomName())
-	}
-
+			fmt.Printf("%v\n", replyRoomName.GetRoomName())
+		}
+	*/
 	/******** HELLO WORLD RPC TEST ********/
 	/*
 			client.SayHello(context.Background(), &proto.HelloRequest{
@@ -49,41 +50,43 @@ func main() {
 		fmt.Println("")
 	*/
 	/******** Search Friends RPC TEST ********/
-	/*
-		replySearchFriends, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
-			User:  "limstevenlbw@gmail.com",
-			Query: "nothing",
-		})
 
-		if err != nil {
-			log.Fatalf("cannot call rpc SearchFriends: %v \n", err)
-		} else {
-			fmt.Println("say Search Friends sent, with status")
-			fmt.Println(replySearchFriends.GetStatus())
+	replySearchFriends, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
+		User:  "nanaeaubry@gmail.com",
+		Query: "nothing",
+	})
 
-			fmt.Printf("%v\n", replySearchFriends.GetUsers())
-		}
-	*/
+	if err != nil {
+		log.Fatalf("cannot call rpc SearchFriends: %v \n", err)
+	} else {
+		fmt.Println("say Search Friends sent, with status")
+		fmt.Println(replySearchFriends.GetStatus())
+
+		fmt.Printf("%v\n", replySearchFriends.GetUsers())
+		fmt.Printf("%v\n", replySearchFriends.GetAvatars())
+	}
+
 	//fmt.Println("")
 
 	/******** Search USERS RPC TEST ********/
-	/*
-			replySearchUsers, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
-				User:  "",
-				Query: "limstevenlbw@gmail.com",
-			})
 
-			if err != nil {
-				log.Fatalf("cannot call rpc SearchUsers: %v \n", err)
-			} else {
-				fmt.Println("say Search Users sent, with status")
-				fmt.Println(replySearchUsers.GetStatus())
+	replySearchUsers, err := client.SearchUsers(context.Background(), &proto.UserSearchRequest{
+		User:  "",
+		Query: "limstevenlbw@gmail.com",
+	})
 
-				fmt.Printf("%v\n", replySearchUsers.GetUsers())
-			}
+	if err != nil {
+		log.Fatalf("cannot call rpc SearchUsers: %v \n", err)
+	} else {
+		fmt.Println("say Search Users sent, with status")
+		fmt.Println(replySearchUsers.GetStatus())
 
-		fmt.Println("")
-	*/
+		fmt.Printf("%v\n", replySearchUsers.GetUsers())
+		fmt.Printf("%v\n", replySearchUsers.GetAvatars())
+	}
+
+	fmt.Println("")
+
 	/******** Add USERS RPC TEST ********/
 	/*
 		replyAddFriend, err := client.AddFriend(context.Background(), &proto.FriendRequest{
