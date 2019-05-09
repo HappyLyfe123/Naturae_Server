@@ -25,6 +25,7 @@ type UserInfo struct {
 	IsAuthenticated bool
 	ProfileImage    string
 	Friends         []string
+	ProfileImage    string
 }
 
 func getUserInfo(email string) (*UserInfo, error) {
@@ -127,14 +128,20 @@ func RefreshAccessToken(request *pb.GetAccessTokenRequest) *pb.GetAccessTokenRep
 //@UserListReply - repeated string users, Status status
 func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	var searchResult []string
+	var friendAvatarList []string
 	userEmail := request.GetUser()
 
 	//if userEmail is not nil, it means to retrieve the friendslist of the logged in user
 	if len(userEmail) > 0 {
 		userAccount, err := getUserInfo(userEmail)
 		searchResult = userAccount.Friends
+		//For each friend found, retrieve profile image and store
+		for i := 0; i < len(searchResult); i++ {
+			friendAccount, _ := getLoginInfo(searchResult[i])
+			friendAvatarList = append(friendAvatarList, friendAccount.ProfileImage)
+		}
 		if err != nil {
-			return &pb.UserListReply{Users: nil,
+			return &pb.UserListReply{Users: nil, Avatars: nil,
 				Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Failed UserEmail Get: " + err.Error()}}
 		}
 	} else {
@@ -142,8 +149,9 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		queryEmail := request.GetQuery()
 		userAccount, err := getUserInfo(queryEmail)
 		searchResult = append(searchResult, userAccount.Email)
+		friendAvatarList = append(friendAvatarList, userAccount.ProfileImage)
 		if err != nil {
-			return &pb.UserListReply{Users: nil,
+			return &pb.UserListReply{Users: nil, Avatars: nil,
 				Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "Failed Query Get: " + err.Error()}}
 		}
 
@@ -152,7 +160,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 		*/
 	}
 
-	return &pb.UserListReply{Users: searchResult,
+	return &pb.UserListReply{Users: searchResult, Avatars: friendAvatarList,
 		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Okay"}}
 }
 
