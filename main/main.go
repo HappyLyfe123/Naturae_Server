@@ -163,7 +163,7 @@ func (s *server) GetPostPreview(ctx context.Context, request *GetPostPreviewRequ
 	var result *GetPostPreviewReply
 	if helpers.CheckAppKey(request.AppKey) {
 		log.Println("Getting post preview")
-		result = post.GetPostPreview(float64(request.GetRadius()), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+		result = post.GetPostPreview(float64(request.GetRadius())/1000, helpers.ConvertDegreeToRadian(float64(request.GetLat())),
 			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostPreviewReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},

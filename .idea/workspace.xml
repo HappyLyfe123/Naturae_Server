@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdf9c54f-18fc-4e36-a9c4-3800abb51626" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clientTester/clientTester.go" beforeDir="false" afterPath="$PROJECT_DIR$/clientTester/clientTester.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/naturaeproto/Naturae.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/naturaeproto/Naturae.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/create_account.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/create_account.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="40" column="21" lean-forward="true" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
+            <state relative-caret-position="3896">
+              <caret line="272" column="51" selection-start-line="272" selection-start-column="51" selection-end-line="272" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -59,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/naturaeproto/Naturae.proto">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="59" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="59" />
+            <state relative-caret-position="3130">
+              <caret line="255" column="23" selection-start-line="255" selection-start-column="22" selection-end-line="255" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -134,18 +130,19 @@
         <option value="$PROJECT_DIR$/users/login.go" />
         <option value="$PROJECT_DIR$/users/change_password.go" />
         <option value="$PROJECT_DIR$/users/account_authentication.go" />
-        <option value="$PROJECT_DIR$/main/main.go" />
         <option value="$PROJECT_DIR$/post/retrieve_post.go" />
         <option value="$PROJECT_DIR$/users/forget_password.go" />
         <option value="$PROJECT_DIR$/users/create_account.go" />
         <option value="$PROJECT_DIR$/users/user.go" />
         <option value="$PROJECT_DIR$/clientTester/clientTester.go" />
+        <option value="$PROJECT_DIR$/main/main.go" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="840" />
     <option name="y" value="23" />
-    <option name="width" value="1680" />
+    <option name="width" value="840" />
     <option name="height" value="1027" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -261,8 +258,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14285715" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14285715" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -275,7 +273,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4981685" weight="0.24812834" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.4908425" visible="true" weight="0.32941177" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4908425" visible="true" weight="0.32941177" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50915754" side_tool="true" weight="0.32941177" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32941177" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -351,7 +349,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update all files" />
     <MESSAGE value="Add comment to all of the functions" />
     <MESSAGE value="Create checks for name, email, password" />
     <MESSAGE value="Update Save files" />
@@ -376,7 +373,8 @@
     <MESSAGE value="Fix get post preview" />
     <MESSAGE value="Fix forget password from saving the password as bytes to string" />
     <MESSAGE value="Fix create account friend list" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix create account friend list" />
+    <MESSAGE value="Fix chat" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix chat" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/main/quickstart.go" />
@@ -541,8 +539,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/naturaeproto/Naturae.proto">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="59" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="59" />
+        <state relative-caret-position="3130">
+          <caret line="255" column="23" selection-start-line="255" selection-start-column="22" selection-end-line="255" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -555,8 +553,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="40" column="21" lean-forward="true" selection-start-line="40" selection-start-column="21" selection-end-line="40" selection-end-column="21" />
+        <state relative-caret-position="3896">
+          <caret line="272" column="51" selection-start-line="272" selection-start-column="51" selection-end-line="272" selection-end-column="51" />
         </state>
       </provider>
     </entry>
