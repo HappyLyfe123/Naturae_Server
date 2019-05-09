@@ -10,7 +10,7 @@ import (
 
 //Login : Let the user login into their account
 func Login(request *pb.LoginRequest) *pb.LoginReply {
-	databaseResult, err := getLoginInfo(request.GetEmail())
+	databaseResult, err := getUserInfo(request.GetEmail())
 	//Database communication error
 	if err != nil {
 		return &pb.LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &pb.Status{

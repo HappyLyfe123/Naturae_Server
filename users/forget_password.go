@@ -70,7 +70,8 @@ func ForgetPasswordNewPassword(request *pb.ForgetPasswordNewPasswordRequest) *pb
 		//Generate a hash for the user password
 		hashPassword := helpers.GenerateHash(helpers.ConvertStringToByte(request.GetPassword()), salt)
 		filter := bson.D{{"email", request.Email}}
-		update := bson.D{{"$set", bson.D{{"password", hashPassword}, {"salt", salt}}}}
+		update := bson.D{{"$set", bson.D{{"password", helpers.ConvertByteToStringBase64(hashPassword)},
+			{"salt", helpers.ConvertByteToStringBase64(salt)}}}}
 		_, err := accountInfo.UpdateOne(context.Background(), filter, update)
 		if err != nil {
 			log.Printf("Error while saving user hash password and salt from forget password: %v", err)

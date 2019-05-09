@@ -21,6 +21,8 @@ service ServerRequests{
     rpc ForgetPasswordVerifyCode (ForgetPasswordVerifyCodeRequest) returns (ForgetPasswordVerifyCodeReply){};
     rpc ForgetPasswordResetPassword (ForgetPasswordNewPasswordRequest) returns (ForgetPasswordNewPasswordReply){};
     rpc ChangePassword (ChangePasswordRequest) returns (ChangePasswordReply){};
+    rpc GetProfileImage (GetProfileImageRequest) returns (GetProfileImageReply){};
+    rpc SetProfileImage(SetProfileImageRequest) returns (SetProfileImageReply){};
 
     /**** Friendslist gRPC Functions ****/
     // Query is sent to the server and a list of matching users is returned
@@ -35,9 +37,9 @@ service ServerRequests{
     //rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
     //Sends a single message to update
     //rpc SendMessage(ChatMessageRequest) returns (ChatMessageReply){}
-    //Retrieve the room name belonging to two users from the database
+
     rpc GetRoomName(RoomRequest) returns (RoomReply){}
-    
+
 }
 
 message HelloRequest{
@@ -183,22 +185,22 @@ message FriendReply{
     //string refreshToken = 2;
 }
 
- //The local version of the chatlog
- /*
+//Ensures that the local and remote logs are up to date
+//rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
+/*
 message ChatlogRequest{
-    repeated ChatMessage = 1;
+   repeated ChatMessage = 1;
 }
 message ChatMessage{
-    string userWhoSentIt = 1;
-    string messageBody = 2;
-    long timestampSent = 3;
+   string userWhoSentIt = 1;
+   string messageBody = 2;
+   long timestampSent = 3;
 }
-//The updated remote version of the chatlog
+
 message ChatlogReply{
-    repeated ChatMessage = 1;
+   repeated ChatMessage = 1;
 }
 */
-
 message RoomRequest{
     string userOwner1 = 1;
     string userOwner2 = 2;
@@ -208,6 +210,7 @@ message RoomReply{
     string roomName = 1;
     Status status = 2;
 }
+
 
 message GetAccessTokenRequest{
     string appKey = 1;
@@ -258,3 +261,23 @@ message ChangePasswordRequest{
 message ChangePasswordReply{
     Status status = 1;
 }
+message SetProfileImageRequest{
+    string AppKey = 1;
+    string AccessToken = 2;
+    string encodedImage = 3;
+}
+
+message SetProfileImageReply{
+    Status status = 1;
+}
+
+message GetProfileImageRequest{
+    string AppKey = 1;
+    string AccessToken = 2;
+}
+
+message GetProfileImageReply{
+    Status status = 1;
+    string encodedImage = 2;
+}
+

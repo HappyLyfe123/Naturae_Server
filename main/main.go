@@ -6,14 +6,10 @@ import (
 	"Naturae_Server/post"
 	"Naturae_Server/users"
 	"context"
-	"fmt"
-	"log"
-	"net"
-
-	"time"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"log"
+	"net"
 )
 
 type server struct{}
@@ -28,6 +24,7 @@ func init() {
 	//Initialize global variable in the helper package
 	helpers.ConnectToGmailAccount()
 	helpers.ConnectToDBAccount()
+	helpers.ConnectToS3()
 	//Create listener for server
 	createServer()
 }
@@ -85,10 +82,11 @@ func (s *server) Login(ctx context.Context, request *LoginRequest) (*LoginReply,
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		result = users.Login(request)
 	} else {
+		log.Println(request.GetEmail(), "fail to login")
 		result = &LoginReply{AccessToken: "", RefreshToken: "", FirstName: "", LastName: "", Email: "", Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
-	log.Printf("%s login at %v", request.GetEmail(), time.Now())
+	log.Printf("%s login", request.GetEmail())
 	return result, nil
 }
 
@@ -99,9 +97,11 @@ func (s *server) AccountAuthentication(ctx context.Context, request *AccountAuth
 	if helpers.CheckAppKey(request.GetAppKey()) {
 		result = users.AuthenticateAccount(request)
 	} else {
+		log.Println(request.GetEmail(), "failed to authenticated account")
 		result = &AccountAuthenReply{Status: &Status{
 			Code: helpers.GetInvalidAppKey(), Message: "Invalid app key"}}
 	}
+	log.Println(request.GetEmail(), "has authenticated the account")
 	return result, nil
 }
 
@@ -132,8 +132,8 @@ func (s *server) CreatePost(ctx context.Context, request *CreatePostRequest) (*C
 			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
 				result = &CreatePostReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
 			} else {
-				fmt.Println("Post create by:", accessToken.Email)
 				result = post.SavePost(request, accessToken.Email)
+				log.Println("Post create by:", accessToken.Email)
 			}
 		}
 	}
@@ -153,22 +153,28 @@ func (s *server) GetPosts(ctx context.Context, request *GetPostRequest) (*GetPos
 	return result, nil
 }
 
+//SearchPost : Search for a specific post
 func (s *server) SearchPost(context.Context, *SearchPostRequest) (*SearchPostReply, error) {
 	panic("implement me")
 }
 
+//GetPostPreview : get all of the post that is within the radius
 func (s *server) GetPostPreview(ctx context.Context, request *GetPostPreviewRequest) (*GetPostPreviewReply, error) {
 	var result *GetPostPreviewReply
 	if helpers.CheckAppKey(request.AppKey) {
-		result = post.GetPostPreview(float64(request.GetRadius()/1000), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
+		log.Println("Getting post preview")
+		result = post.GetPostPreview(float64(request.GetRadius()), helpers.ConvertDegreeToRadian(float64(request.GetLat())),
 			helpers.ConvertDegreeToRadian(float64(request.GetLng())))
 	} else {
 		result = &GetPostPreviewReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "invalid app key"},
 			Reply: nil}
 	}
+
 	return result, nil
 }
 
+//ForgetPassword : Start the process of resetting user password by checking if the user email valid
+// then it will send an email with a verification code to the user
 func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequest) (*ForgetPasswordReply, error) {
 	var result *ForgetPasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -177,6 +183,7 @@ func (s *server) ForgetPassword(ctx context.Context, request *ForgetPasswordRequ
 	return result, nil
 }
 
+//ForgetPasswordVerifyCode : User to verifying forget password verification code
 func (s *server) ForgetPasswordVerifyCode(ctx context.Context, request *ForgetPasswordVerifyCodeRequest) (*ForgetPasswordVerifyCodeReply, error) {
 	var result *ForgetPasswordVerifyCodeReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -185,6 +192,7 @@ func (s *server) ForgetPasswordVerifyCode(ctx context.Context, request *ForgetPa
 	return result, nil
 }
 
+//ForgetPasswordResetPassword : reset the password for the user
 func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error) {
 	var result *ForgetPasswordNewPasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -193,6 +201,7 @@ func (s *server) ForgetPasswordResetPassword(ctx context.Context, request *Forge
 	return result, nil
 }
 
+//ChangePassword : change the user password
 func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequest) (*ChangePasswordReply, error) {
 	var result *ChangePasswordReply
 	if helpers.CheckAppKey(request.GetAppKey()) {
@@ -211,6 +220,58 @@ func (s *server) ChangePassword(ctx context.Context, request *ChangePasswordRequ
 		}
 	}
 
+	return result, nil
+}
+
+func (s *server) GetProfileImage(ctx context.Context, request *GetProfileImageRequest) (*GetProfileImageReply, error) {
+	var result *GetProfileImageReply
+	//Check if the app key if valid
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		if err != nil {
+			result = &GetProfileImageReply{EncodedImage: "", Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
+		} else {
+			//Check if the token is expired
+			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
+				result = &GetProfileImageReply{EncodedImage: "", Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
+			} else {
+				//Get the user profile image
+				result = users.GetProfileImage(accessToken.Email)
+			}
+		}
+	} else {
+		result = &GetProfileImageReply{EncodedImage: "", Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "app key is invalid"}}
+	}
+	return result, nil
+}
+
+func (s *server) SetProfileImage(ctx context.Context, request *SetProfileImageRequest) (*SetProfileImageReply, error) {
+	var result *SetProfileImageReply
+	//Check if the user app key is valid
+	if helpers.CheckAppKey(request.GetAppKey()) {
+		connectedDB := helpers.ConnectToDB(helpers.GetUserDatabase())
+		accessToken, err := helpers.GetAccessToken(connectedDB, request.GetAccessToken())
+		if err != nil {
+			result = &SetProfileImageReply{Status: &Status{Code: helpers.GetInvalidTokenCode(), Message: "token is not valid"}}
+		} else {
+			//Check the if the token is still valid or if it expired
+			if helpers.IsTokenExpired(accessToken.ExpiredTime) {
+				result = &SetProfileImageReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
+			} else {
+				//Save the image to AWS S3
+				imageURL, saveImageResult := users.SaveProfileImage(request)
+				if saveImageResult {
+					//User the user information of the new profile image
+					result = users.UpdateProfileImage(accessToken.Email, imageURL)
+				} else {
+					result = &SetProfileImageReply{Status: &Status{Code: helpers.GetExpiredAccessTokenCode(), Message: "token had expired"}}
+				}
+			}
+		}
+	} else {
+		result = &SetProfileImageReply{Status: &Status{Code: helpers.GetInvalidAppKey(), Message: "app key is invalid"}}
+	}
 	return result, nil
 }
 

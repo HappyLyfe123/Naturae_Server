@@ -1,0 +1,129 @@
+2019/04/16 23:47:19 Connected to Naturae database account
+2019/04/16 23:47:19 listening on port 8080
+2019/04/17 00:14:14 Save nanaeaubry@gmail.com access token to access token database
+2019/04/17 00:14:24 Save nanaeaubry@gmail.com access token to access token database
+2019/04/17 00:14:41 Save nanaeaubry@gmail.com to the account information collection
+2019/04/17 01:08:28 Connected to Naturae database account
+2019/04/17 01:08:28 listening on port 8080
+2019/04/17 01:08:45 Save aubrynanae@gmail.com to the account information collection
+2019/04/17 01:08:45 Save aubrynanae@gmail.com access token to access token database
+2019/04/17 01:08:45 Save aubrynanae@gmail.com refresh token to refresh token database
+2019/04/17 01:08:45 Save aubrynanae@gmail.com to authentication code to DB
+2019/04/17 01:08:46 Email aubrynanae@gmail.com authentication code
+2019/04/17 01:08:46 A new account was created for: aubrynanae@gmail.com
+panic: send on closed channel
+
+goroutine 60 [running]:
+Naturae_Server/users.CreateAccount.func2(0xc00005f500, 0xc0000aa3f0)
+	/home/ubuntu/go/src/Naturae_Server/users/create_account.go:44 +0x5e
+created by Naturae_Server/users.CreateAccount
+	/home/ubuntu/go/src/Naturae_Server/users/create_account.go:43 +0x240
+2019/04/17 01:13:47 Connected to Naturae database account
+2019/04/17 01:13:47 listening on port 8080
+2019/04/17 01:14:14 Save nanae@savage.com to the account information collection
+2019/04/17 01:14:14 Save nanae@savage.com access token to access token database
+2019/04/17 01:14:14 Save nanae@savage.com refresh token to refresh token database
+2019/04/17 01:14:14 Save nanae@savage.com to authentication code to DB
+2019/04/17 01:14:15 Email nanae@savage.com authentication code
+2019/04/17 01:14:15 A new account was created for: nanae@savage.com
+2019/04/17 01:15:42 Save buffalo@jam.com to the account information collection
+2019/04/17 01:15:42 Save buffalo@jam.com access token to access token database
+2019/04/17 01:15:42 Save buffalo@jam.com refresh token to refresh token database
+2019/04/17 01:15:42 Save buffalo@jam.com to authentication code to DB
+2019/04/17 01:15:43 Email buffalo@jam.com authentication code
+2019/04/17 01:15:43 A new account was created for: buffalo@jam.com
+2019/04/17 03:02:26 Save inudraggun01@sbcglobal.net to the account information collection
+2019/04/17 03:02:26 Save inudraggun01@sbcglobal.net access token to access token database
+2019/04/17 03:02:26 Save inudraggun01@sbcglobal.net refresh token to refresh token database
+2019/04/17 03:02:26 Save inudraggun01@sbcglobal.net to authentication code to DB
+2019/04/17 03:02:27 Email inudraggun01@sbcglobal.net authentication code
+2019/04/17 03:02:27 A new account was created for: inudraggun01@sbcglobal.net
+2019/04/18 18:12:06 Save limstevenlbw@gmail.com to the account information collection
+2019/04/18 18:12:06 Save limstevenlbw@gmail.com access token to access token database
+2019/04/18 18:12:06 Save limstevenlbw@gmail.com refresh token to refresh token database
+2019/04/18 18:12:06 Save limstevenlbw@gmail.com to authentication code to DB
+2019/04/18 18:12:09 Email limstevenlbw@gmail.com authentication code
+2019/04/18 18:12:09 A new account was created for: limstevenlbw@gmail.com
+2019/04/29 02:04:57 Connected to Naturae database account
+2019/04/29 02:04:57 listening on port 8080
+Post create by: buffalo@jam.com
+Post create by: buffalo@jam.com
+2019/04/29 04:42:39 Connected to Naturae database account
+2019/04/29 04:42:39 listening on port 8080
+2019/04/29 06:22:45 Email visalhok@yahoo.com reset password code
+2019/04/29 06:25:03 Email visalhok@yahoo.com reset password code
+2019/04/29 06:27:17 Email visalhok@yahoo.com reset password code
+2019/04/29 06:31:37 Email visalhok@yahoo.com reset password code
+2019/04/29 06:37:28 Email visalhok@yahoo.com reset password code
+2019/04/29 06:42:29 Email visalhok@yahoo.com reset password code
+2019/04/29 06:43:21 Email visalhok@yahoo.com reset password code
+2019/04/29 06:44:40 Email visalhok@yahoo.com reset password code
+panic: implement me
+
+goroutine 367 [running]:
+main.(*server).SearchUsers(0x10de288, 0xc62dc0, 0xc0000d3290, 0xc00018f100, 0x10de288, 0xc0000d31d0, 0xa3dfe0)
+	/home/ubuntu/go/src/Naturae_Server/main/main.go:198 +0x39
+Naturae_Server/naturaeproto._ServerRequests_SearchUsers_Handler(0xab7420, 0x10de288, 0xc62dc0, 0xc0000d3290, 0xc00024e190, 0x0, 0x0, 0x0, 0xc00010edb0, 0x3)
+	/home/ubuntu/go/src/Naturae_Server/naturaeproto/Naturae.pb.go:2017 +0x241
+google.golang.org/grpc.(*Server).processUnaryRPC(0xc0001c0480, 0xc66f80, 0xc000378180, 0xc0001a4200, 0xc0000d21e0, 0x10b5d68, 0x0, 0x0, 0x0)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:972 +0x4a2
+google.golang.org/grpc.(*Server).handleStream(0xc0001c0480, 0xc66f80, 0xc000378180, 0xc0001a4200, 0x0)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:1251 +0xd61
+google.golang.org/grpc.(*Server).serveStreams.func1.1(0xc00010ed20, 0xc0001c0480, 0xc66f80, 0xc000378180, 0xc0001a4200)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:691 +0x9f
+created by google.golang.org/grpc.(*Server).serveStreams.func1
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:689 +0xa1
+2019/04/29 15:44:38 Connected to Naturae database account
+2019/04/29 15:44:38 listening on port 8080
+2019/04/29 15:59:50 visalhok@yahoo.com is trying to login
+2019/04/29 16:00:41 visalhok@yahoo.com is trying to login
+2019/04/29 16:18:24 Connected to Naturae database account
+2019/04/29 16:18:24 listening on port 8080
+Post create by: nanaeaubry@gmail.com
+Post create by: buffalo@jam.com
+Post create by: buffalo@jam.com
+2019/04/29 18:37:13 visalhok@yahoo.com is trying to login
+Post create by: nanaeaubry@gmail.com
+panic: implement me
+
+goroutine 912 [running]:
+main.(*server).SearchUsers(0x10df288, 0xc630a0, 0xc0007428d0, 0xc000676b00, 0x10df288, 0xc0007427b0, 0xa3dfe0)
+	/home/ubuntu/go/src/Naturae_Server/main/main.go:199 +0x39
+Naturae_Server/naturaeproto._ServerRequests_SearchUsers_Handler(0xab7420, 0x10df288, 0xc630a0, 0xc0007428d0, 0xc0002b6280, 0x0, 0x0, 0x0, 0xc000450960, 0x1f)
+	/home/ubuntu/go/src/Naturae_Server/naturaeproto/Naturae.pb.go:2017 +0x241
+google.golang.org/grpc.(*Server).processUnaryRPC(0xc000189500, 0xc67260, 0xc0001b8a80, 0xc0001a4200, 0xc0001b6a50, 0x10b6d68, 0x0, 0x0, 0x0)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:972 +0x4a2
+google.golang.org/grpc.(*Server).handleStream(0xc000189500, 0xc67260, 0xc0001b8a80, 0xc0001a4200, 0x0)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:1251 +0xd61
+google.golang.org/grpc.(*Server).serveStreams.func1.1(0xc0002d8e40, 0xc000189500, 0xc67260, 0xc0001b8a80, 0xc0001a4200)
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:691 +0x9f
+created by google.golang.org/grpc.(*Server).serveStreams.func1
+	/home/ubuntu/go/src/google.golang.org/grpc/server.go:689 +0xa1
+2019/05/05 03:30:35 Connected to Naturae database account
+2019/05/05 03:30:35 unable to listen on 8080 port: listen tcp 127.0.0.1:8080: bind: address already in use
+2019/05/05 03:30:43 Connected to Naturae database account
+2019/05/05 03:30:43 unable to listen on 8080 port: listen tcp 127.0.0.1:8080: bind: address already in use
+2019/05/08 04:06:32 Connected to Naturae database account
+2019/05/08 04:06:32 listening on port 8080
+2019/05/08 04:08:22 nanaeaubry@gmail.com login at 2019-05-08 04:08:22.80785143 +0000 UTC m=+110.496239024
+2019/05/08 04:55:16 nanaeaubry@gmail.com login at 2019-05-08 04:55:16.409874985 +0000 UTC m=+2924.098262579
+2019/05/08 05:46:04 woozymango@gmail.com login at 2019-05-08 05:46:04.93883706 +0000 UTC m=+5972.627224643
+2019/05/08 07:13:45 Hello world
+2019/05/08 07:14:50 Hello world
+2019/05/08 08:40:08 Save hello@yaho54o.com to the account information collection
+2019/05/08 08:40:08 Save hello@yaho54o.com to authentication code to DB
+2019/05/08 08:40:09 Email hello@yaho54o.com authentication code
+2019/05/08 08:40:09 A new account was created for: hello@yaho54o.com
+2019/05/08 08:41:52 hello@yaho54o.com login at 2019-05-08 08:41:52.179551067 +0000 UTC m=+16519.867938644
+2019/05/08 08:53:04 Save hello@hell0.com to the account information collection
+2019/05/08 08:53:04 Save hello@hell0.com to authentication code to DB
+2019/05/08 08:53:05 Email hello@hell0.com authentication code
+2019/05/08 08:53:05 A new account was created for: hello@hell0.com
+2019/05/08 08:53:20 Save hello@hell0.com access token to access token database
+2019/05/08 08:53:20 Save hello@hell0.com refresh token to refresh token database
+2019/05/08 19:49:59 Connected to Naturae database account
+2019/05/08 19:49:59 Successfully connected to S3 S3
+2019/05/08 19:49:59 listening on port 8080
+2019/05/08 19:50:57 Getting post preview
+2019/05/08 19:52:09 Getting post preview
+2019/05/08 19:53:01 Getting post preview

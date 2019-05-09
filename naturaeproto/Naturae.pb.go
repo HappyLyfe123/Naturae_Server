@@ -1263,6 +1263,19 @@ func (m *FriendReply) GetStatus() *Status {
 	return nil
 }
 
+//
+//message ChatlogRequest{
+//repeated ChatMessage = 1;
+//}
+//message ChatMessage{
+//string userWhoSentIt = 1;
+//string messageBody = 2;
+//long timestampSent = 3;
+//}
+//
+//message ChatlogReply{
+//repeated ChatMessage = 1;
+//}
 type RoomRequest struct {
 	UserOwner1           string   `protobuf:"bytes,1,opt,name=userOwner1,proto3" json:"userOwner1,omitempty"`
 	UserOwner2           string   `protobuf:"bytes,2,opt,name=userOwner2,proto3" json:"userOwner2,omitempty"`
@@ -1827,6 +1840,194 @@ func (m *ChangePasswordReply) GetStatus() *Status {
 	return nil
 }
 
+type SetProfileImageRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=AppKey,proto3" json:"AppKey,omitempty"`
+	AccessToken          string   `protobuf:"bytes,2,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	EncodedImage         string   `protobuf:"bytes,3,opt,name=encodedImage,proto3" json:"encodedImage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SetProfileImageRequest) Reset()         { *m = SetProfileImageRequest{} }
+func (m *SetProfileImageRequest) String() string { return proto.CompactTextString(m) }
+func (*SetProfileImageRequest) ProtoMessage()    {}
+func (*SetProfileImageRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{34}
+}
+
+func (m *SetProfileImageRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetProfileImageRequest.Unmarshal(m, b)
+}
+func (m *SetProfileImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetProfileImageRequest.Marshal(b, m, deterministic)
+}
+func (m *SetProfileImageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProfileImageRequest.Merge(m, src)
+}
+func (m *SetProfileImageRequest) XXX_Size() int {
+	return xxx_messageInfo_SetProfileImageRequest.Size(m)
+}
+func (m *SetProfileImageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProfileImageRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProfileImageRequest proto.InternalMessageInfo
+
+func (m *SetProfileImageRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *SetProfileImageRequest) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+func (m *SetProfileImageRequest) GetEncodedImage() string {
+	if m != nil {
+		return m.EncodedImage
+	}
+	return ""
+}
+
+type SetProfileImageReply struct {
+	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SetProfileImageReply) Reset()         { *m = SetProfileImageReply{} }
+func (m *SetProfileImageReply) String() string { return proto.CompactTextString(m) }
+func (*SetProfileImageReply) ProtoMessage()    {}
+func (*SetProfileImageReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{35}
+}
+
+func (m *SetProfileImageReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetProfileImageReply.Unmarshal(m, b)
+}
+func (m *SetProfileImageReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetProfileImageReply.Marshal(b, m, deterministic)
+}
+func (m *SetProfileImageReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetProfileImageReply.Merge(m, src)
+}
+func (m *SetProfileImageReply) XXX_Size() int {
+	return xxx_messageInfo_SetProfileImageReply.Size(m)
+}
+func (m *SetProfileImageReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetProfileImageReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetProfileImageReply proto.InternalMessageInfo
+
+func (m *SetProfileImageReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+type GetProfileImageRequest struct {
+	AppKey               string   `protobuf:"bytes,1,opt,name=AppKey,proto3" json:"AppKey,omitempty"`
+	AccessToken          string   `protobuf:"bytes,2,opt,name=AccessToken,proto3" json:"AccessToken,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetProfileImageRequest) Reset()         { *m = GetProfileImageRequest{} }
+func (m *GetProfileImageRequest) String() string { return proto.CompactTextString(m) }
+func (*GetProfileImageRequest) ProtoMessage()    {}
+func (*GetProfileImageRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{36}
+}
+
+func (m *GetProfileImageRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProfileImageRequest.Unmarshal(m, b)
+}
+func (m *GetProfileImageRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProfileImageRequest.Marshal(b, m, deterministic)
+}
+func (m *GetProfileImageRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProfileImageRequest.Merge(m, src)
+}
+func (m *GetProfileImageRequest) XXX_Size() int {
+	return xxx_messageInfo_GetProfileImageRequest.Size(m)
+}
+func (m *GetProfileImageRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProfileImageRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProfileImageRequest proto.InternalMessageInfo
+
+func (m *GetProfileImageRequest) GetAppKey() string {
+	if m != nil {
+		return m.AppKey
+	}
+	return ""
+}
+
+func (m *GetProfileImageRequest) GetAccessToken() string {
+	if m != nil {
+		return m.AccessToken
+	}
+	return ""
+}
+
+type GetProfileImageReply struct {
+	Status               *Status  `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	EncodedImage         string   `protobuf:"bytes,2,opt,name=encodedImage,proto3" json:"encodedImage,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetProfileImageReply) Reset()         { *m = GetProfileImageReply{} }
+func (m *GetProfileImageReply) String() string { return proto.CompactTextString(m) }
+func (*GetProfileImageReply) ProtoMessage()    {}
+func (*GetProfileImageReply) Descriptor() ([]byte, []int) {
+	return fileDescriptor_bdd2b78300d408eb, []int{37}
+}
+
+func (m *GetProfileImageReply) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetProfileImageReply.Unmarshal(m, b)
+}
+func (m *GetProfileImageReply) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetProfileImageReply.Marshal(b, m, deterministic)
+}
+func (m *GetProfileImageReply) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetProfileImageReply.Merge(m, src)
+}
+func (m *GetProfileImageReply) XXX_Size() int {
+	return xxx_messageInfo_GetProfileImageReply.Size(m)
+}
+func (m *GetProfileImageReply) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetProfileImageReply.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetProfileImageReply proto.InternalMessageInfo
+
+func (m *GetProfileImageReply) GetStatus() *Status {
+	if m != nil {
+		return m.Status
+	}
+	return nil
+}
+
+func (m *GetProfileImageReply) GetEncodedImage() string {
+	if m != nil {
+		return m.EncodedImage
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*HelloRequest)(nil), "naturaeproto.HelloRequest")
 	proto.RegisterType((*HelloReply)(nil), "naturaeproto.HelloReply")
@@ -1862,6 +2063,10 @@ func init() {
 	proto.RegisterType((*ForgetPasswordNewPasswordReply)(nil), "naturaeproto.ForgetPasswordNewPasswordReply")
 	proto.RegisterType((*ChangePasswordRequest)(nil), "naturaeproto.ChangePasswordRequest")
 	proto.RegisterType((*ChangePasswordReply)(nil), "naturaeproto.ChangePasswordReply")
+	proto.RegisterType((*SetProfileImageRequest)(nil), "naturaeproto.SetProfileImageRequest")
+	proto.RegisterType((*SetProfileImageReply)(nil), "naturaeproto.SetProfileImageReply")
+	proto.RegisterType((*GetProfileImageRequest)(nil), "naturaeproto.GetProfileImageRequest")
+	proto.RegisterType((*GetProfileImageReply)(nil), "naturaeproto.GetProfileImageReply")
 }
 
 func init() { proto.RegisterFile("naturaeproto/Naturae.proto", fileDescriptor_bdd2b78300d408eb) }
@@ -1950,6 +2155,7 @@ var fileDescriptor_bdd2b78300d408eb = []byte{
 	0x7f, 0x45, 0x43, 0x0a, 0xe4, 0xfe, 0x07, 0x70, 0x2d, 0x48, 0x46, 0x2d, 0x7c, 0xed, 0x8f, 0xc6,
 	0x11, 0xf2, 0x4c, 0xe0, 0x8b, 0xcc, 0xbf, 0xf9, 0x7e, 0xdc, 0x50, 0x7f, 0x3e, 0xfb, 0x27, 0x00,
 	0x00, 0xff, 0xff, 0x19, 0xc7, 0x44, 0x24, 0x19, 0x14, 0x00, 0x00,
+  
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1977,17 +2183,14 @@ type ServerRequestsClient interface {
 	ForgetPasswordVerifyCode(ctx context.Context, in *ForgetPasswordVerifyCodeRequest, opts ...grpc.CallOption) (*ForgetPasswordVerifyCodeReply, error)
 	ForgetPasswordResetPassword(ctx context.Context, in *ForgetPasswordNewPasswordRequest, opts ...grpc.CallOption) (*ForgetPasswordNewPasswordReply, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordReply, error)
+	GetProfileImage(ctx context.Context, in *GetProfileImageRequest, opts ...grpc.CallOption) (*GetProfileImageReply, error)
+	SetProfileImage(ctx context.Context, in *SetProfileImageRequest, opts ...grpc.CallOption) (*SetProfileImageReply, error)
 	// Query is sent to the server and a list of matching users is returned
 	SearchUsers(ctx context.Context, in *UserSearchRequest, opts ...grpc.CallOption) (*UserListReply, error)
 	// Unary client request to add a new friend for the user
 	AddFriend(ctx context.Context, in *FriendRequest, opts ...grpc.CallOption) (*FriendReply, error)
 	// Unary client request to remove an existing friend for the user
 	RemoveFriend(ctx context.Context, in *FriendRequest, opts ...grpc.CallOption) (*FriendReply, error)
-	//Ensures that the local and remote logs are up to date
-	//rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
-	//Sends a single message to update
-	//rpc SendMessage(ChatMessageRequest) returns (ChatMessageReply){}
-	//Retrieve the room name belonging to two users from the database
 	GetRoomName(ctx context.Context, in *RoomRequest, opts ...grpc.CallOption) (*RoomReply, error)
 }
 
@@ -2116,6 +2319,24 @@ func (c *serverRequestsClient) ChangePassword(ctx context.Context, in *ChangePas
 	return out, nil
 }
 
+func (c *serverRequestsClient) GetProfileImage(ctx context.Context, in *GetProfileImageRequest, opts ...grpc.CallOption) (*GetProfileImageReply, error) {
+	out := new(GetProfileImageReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/GetProfileImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serverRequestsClient) SetProfileImage(ctx context.Context, in *SetProfileImageRequest, opts ...grpc.CallOption) (*SetProfileImageReply, error) {
+	out := new(SetProfileImageReply)
+	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/SetProfileImage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serverRequestsClient) SearchUsers(ctx context.Context, in *UserSearchRequest, opts ...grpc.CallOption) (*UserListReply, error) {
 	out := new(UserListReply)
 	err := c.cc.Invoke(ctx, "/naturaeproto.ServerRequests/SearchUsers", in, out, opts...)
@@ -2167,17 +2388,14 @@ type ServerRequestsServer interface {
 	ForgetPasswordVerifyCode(context.Context, *ForgetPasswordVerifyCodeRequest) (*ForgetPasswordVerifyCodeReply, error)
 	ForgetPasswordResetPassword(context.Context, *ForgetPasswordNewPasswordRequest) (*ForgetPasswordNewPasswordReply, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordReply, error)
+	GetProfileImage(context.Context, *GetProfileImageRequest) (*GetProfileImageReply, error)
+	SetProfileImage(context.Context, *SetProfileImageRequest) (*SetProfileImageReply, error)
 	// Query is sent to the server and a list of matching users is returned
 	SearchUsers(context.Context, *UserSearchRequest) (*UserListReply, error)
 	// Unary client request to add a new friend for the user
 	AddFriend(context.Context, *FriendRequest) (*FriendReply, error)
 	// Unary client request to remove an existing friend for the user
 	RemoveFriend(context.Context, *FriendRequest) (*FriendReply, error)
-	//Ensures that the local and remote logs are up to date
-	//rpc SyncChat(ChatlogRequest) returns (ChatlogReply){}
-	//Sends a single message to update
-	//rpc SendMessage(ChatMessageRequest) returns (ChatMessageReply){}
-	//Retrieve the room name belonging to two users from the database
 	GetRoomName(context.Context, *RoomRequest) (*RoomReply, error)
 }
 
@@ -2419,6 +2637,42 @@ func _ServerRequests_ChangePassword_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ServerRequests_GetProfileImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProfileImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).GetProfileImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/GetProfileImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).GetProfileImage(ctx, req.(*GetProfileImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ServerRequests_SetProfileImage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetProfileImageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServerRequestsServer).SetProfileImage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/naturaeproto.ServerRequests/SetProfileImage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServerRequestsServer).SetProfileImage(ctx, req.(*SetProfileImageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ServerRequests_SearchUsers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserSearchRequest)
 	if err := dec(in); err != nil {
@@ -2546,6 +2800,14 @@ var _ServerRequests_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangePassword",
 			Handler:    _ServerRequests_ChangePassword_Handler,
+		},
+		{
+			MethodName: "GetProfileImage",
+			Handler:    _ServerRequests_GetProfileImage_Handler,
+		},
+		{
+			MethodName: "SetProfileImage",
+			Handler:    _ServerRequests_SetProfileImage_Handler,
 		},
 		{
 			MethodName: "SearchUsers",

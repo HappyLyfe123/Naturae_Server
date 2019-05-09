@@ -3,7 +3,11 @@ package users
 import (
 	"Naturae_Server/helpers"
 	pb "Naturae_Server/naturaeproto"
+	"bytes"
 	"context"
+	"encoding/base64"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"log"
 	"strings"
 
@@ -19,11 +23,12 @@ type UserInfo struct {
 	Salt            string
 	Password        string
 	IsAuthenticated bool
+	ProfileImage    string
 	Friends         []string
 	ProfileImage    string
 }
 
-func getLoginInfo(email string) (*UserInfo, error) {
+func getUserInfo(email string) (*UserInfo, error) {
 	var result UserInfo
 	userInfoDB := helpers.ConnectToDB(helpers.GetUserDatabase())
 	filter := bson.D{{Key: "email", Value: email}}
@@ -128,7 +133,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 
 	//if userEmail is not nil, it means to retrieve the friendslist of the logged in user
 	if len(userEmail) > 0 {
-		userAccount, err := getLoginInfo(userEmail)
+		userAccount, err := getUserInfo(userEmail)
 		searchResult = userAccount.Friends
 		//For each friend found, retrieve profile image and store
 		for i := 0; i < len(searchResult); i++ {
@@ -142,7 +147,7 @@ func SearchUsers(request *pb.UserSearchRequest) *pb.UserListReply {
 	} else {
 		//Search for exactly one user with an inputted email
 		queryEmail := request.GetQuery()
-		userAccount, err := getLoginInfo(queryEmail)
+		userAccount, err := getUserInfo(queryEmail)
 		searchResult = append(searchResult, userAccount.Email)
 		friendAvatarList = append(friendAvatarList, userAccount.ProfileImage)
 		if err != nil {
@@ -265,4 +270,52 @@ func RemoveFriend(request *pb.FriendRequest) *pb.FriendReply {
 	return &pb.FriendReply{
 		Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "Success"}}
 
+}
+
+//UpdateProfileImage : update the user info collection in the database with the new profile image url
+func UpdateProfileImage(email, imageURL string) *pb.SetProfileImageReply {
+	//Set the filter to find the user
+	filter := bson.D{{"email", email}}
+	//Update the IsAuthenticated field from false to true
+	update := bson.D{{"$set", bson.D{{"profileimage", imageURL}}}}
+	//Connect to the database and update the user profile
+	_, err := helpers.ConnectToDB(helpers.GetUserDatabase()).Collection(helpers.GetAccountInfoCollection()).UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		log.Println(err)
+		return &pb.SetProfileImageReply{Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(),
+			Message: "unable to save image"}}
+	}
+	return &pb.SetProfileImageReply{Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "profile image had been set"}}
+}
+
+//SaveProfileImage : save the profile image to AWS S3 bucket
+func SaveProfileImage(request *pb.SetProfileImageRequest) (string, bool) {
+	saveImage, _ := base64.StdEncoding.DecodeString(request.EncodedImage)
+	//Generate a profile image id for the image
+	postID := helpers.CreateUUID()
+	//Generate a url of were the image is being stored
+	imageURL := "https://s3-us-west-2.amazonaws.com/naturae-post-photos/profile-images/" + postID
+	params := &s3.PutObjectInput{
+		Bucket:        aws.String("naturae-post-photos"),
+		Key:           aws.String("profile-images/" + postID),
+		Body:          bytes.NewReader(saveImage),
+		ContentLength: aws.Int64(int64(len(saveImage))),
+		ContentType:   aws.String("image/jpeg"),
+	}
+	_, err := helpers.GetS3Session().PutObject(params)
+	if err != nil {
+		log.Printf("Saving profile images to S3 bucket error: %v", err)
+		return imageURL, false
+	}
+	log.Printf("Saving %s to profile images in S3 bucket successful ", postID)
+	return imageURL, true
+}
+
+func GetProfileImage(email string) *pb.GetProfileImageReply {
+	userInfo, err := getUserInfo(email)
+	if err != nil {
+		log.Printf("Getting user info error in GetProfileImage : %v", err)
+		return &pb.GetProfileImageReply{EncodedImage: "", Status: &pb.Status{Code: helpers.GetInternalServerErrorStatusCode(), Message: "server error"}}
+	}
+	return &pb.GetProfileImageReply{EncodedImage: userInfo.ProfileImage, Status: &pb.Status{Code: helpers.GetOkStatusCode(), Message: "success"}}
 }

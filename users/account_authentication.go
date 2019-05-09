@@ -27,14 +27,13 @@ func AuthenticateAccount(request *pb.AccountAuthenRequest) *pb.AccountAuthenRepl
 	}
 
 	//Get the user information from the database
-	userInfoResult, _ := getLoginInfo(request.GetEmail())
+	userInfoResult, _ := getUserInfo(request.GetEmail())
 
 	//Check if the authentication code is still valid. If it's valid then the code will be check
 	if helpers.IsTimeValid(authenResult.ExpiredTime) {
 		//Check if the user provided authentication code match. If it match then update the user's profile in the database
 		//that the user's had authenticated their account
 		if strings.Compare(authenResult.Code, request.GetAuthenCode()) == 0 {
-
 			//Set authenticated in user database from false to true
 			updateUserAuthenStatus(userInfoDB, request.GetEmail())
 			//Remove the user authentication code from the database

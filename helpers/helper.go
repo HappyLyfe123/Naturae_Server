@@ -28,6 +28,7 @@ type Email struct {
 	Body     string
 }
 
+//Status : The status of the request
 type Status struct {
 	Code    int32
 	Message string
@@ -170,6 +171,7 @@ func IsTimeValid(expiredTime time.Time) bool {
 	}
 }
 
+//CreateUUID : create an unique id
 func CreateUUID() string {
 	newID, err := uuid.NewUUID()
 	if err != nil {
@@ -178,10 +180,7 @@ func CreateUUID() string {
 	return newID.String()
 }
 
+//ConvertDegreeToRadian: convert degree to radian
 func ConvertDegreeToRadian(numInDegree float64) float64 {
 	return numInDegree * (math.Pi / 180)
-}
-
-func ConvertMileToKM(numInMiles float64) float64 {
-	return numInMiles * 1.609344
 }
