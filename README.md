@@ -1,13 +1,12 @@
 # Naturae Server
-This is the server implementation of Naturae, the client code can be found in this repository
-[Naturae UI](https://github.com/nanaeaubry/Naturae_UI)
+This is the server implementation of Naturae, the client code can be found in this repository,
+[Naturae UI](https://github.com/nanaeaubry/Naturae_UI) <br />
 In order to receive responses from the client, it must be connected to the running server on localhost or some other hosting method.
 In our case, we chose AWS, Amazon Web Services as our provider.
 
 ## Deployment
-The server requires that you have Golang installed on your system. Refer to this repository
-[Go] https://github.com/golang/go 
-for more information on how to install it. You must also have configured credentials for MongoDB, Amazon S3, and AWS(or some other provider) in order to run the server. For obvious reasons, we cannot provide our own. 
+The server requires that you have Golang installed on your system. Refer to the repository
+[Go]https://github.com/golang/go for more information on how to install it. You must also have configured credentials for MongoDB, Amazon S3, and AWS(or some other provider) in order to run the server. For obvious reasons, we cannot provide our own. 
 
 Once everything is setup, navigate to the main directory and run the command
 ```
@@ -21,12 +20,12 @@ protoc --go_out=plugins=grpc:. naturaeproto/Naturae.proto
 ```
 
 ## Built With
-* [Go] https://github.com/golang/go 
-* [AWS] https://aws.amazon.com/
-* [S3] https://aws.amazon.com/s3/
-* [MongoDB] https://www.mongodb.com/
-* [gRPC-go] https://github.com/grpc/grpc-go
-* [protobuf] https://github.com/protocolbuffers/protobuf
+* [Go]https://github.com/golang/go 
+* [AWS]https://aws.amazon.com/
+* [S3]https://aws.amazon.com/s3/
+* [MongoDB]https://www.mongodb.com/
+* [gRPC-go]https://github.com/grpc/grpc-go
+* [protobuf]https://github.com/protocolbuffers/protobuf
 
 ## Contributors
 
